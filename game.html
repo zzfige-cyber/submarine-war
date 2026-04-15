@@ -45,6 +45,17 @@
         let gameOver = false;   // 游戏结束标记
         let gameWin = false;    // 游戏胜利标记
         let assetsLoaded = false; // 素材加载完成标记
+        let hitFeedback = {     // 受击反馈
+            active: false,
+            startTime: 0,
+            duration: 300        // 反馈持续时间（毫秒）
+        };
+        let mineAmmo = {        // 水雷弹药系统
+            current: 3,         // 当前水雷数量
+            max: 3,             // 最大水雷数量
+            lastRegenTime: 0,   // 上次恢复时间
+            regenInterval: 2000 // 恢复间隔（毫秒）
+        };
 
         // 素材对象（存储所有图片资源）
         const assets = {
@@ -102,7 +113,13 @@
             height: 80,               // 舰船素材高度
             speed: 8,
             movingLeft: false,
-            movingRight: false
+            movingRight: false,
+            shake: {                   // 抖动效果
+                active: false,
+                startTime: 0,
+                duration: 300,         // 抖动持续时间
+                intensity: 5           // 抖动幅度
+            }
         };
 
         // 水雷配置（适配素材）
@@ -110,7 +127,7 @@
         const mineProps = {
             width: 40,    // 水雷素材宽度
             height: 60,   // 水雷素材高度
-            speed: 6
+            speed: 1.5    // 水下失重环境，水雷下沉速度较慢
         };
 
         // 敌方潜艇配置（适配素材）
@@ -118,8 +135,8 @@
         const subProps = {
             width: 160,   // 潜艇素材宽度
             height: 80,   // 潜艇素材高度
-            speed: 2,
-            missileCooldown: 3000, // 潜艇发射导弹冷却时间（毫秒）
+            speed: 1.5,   // 水下阻力，潜艇前进较慢
+            missileCooldown: 2000, // 潜艇发射导弹冷却时间（毫秒）
             lastMissileTime: {}    // 记录每个潜艇最后发射导弹的时间
         };
 
@@ -128,7 +145,7 @@
         const missileProps = {
             width: 80,    // 导弹素材宽度
             height: 30,   // 导弹素材高度
-            speed: 5
+            speed: 4      // 水下阻力，导弹速度适中
         };
 
         // 爆炸效果数组
@@ -140,7 +157,7 @@
 
         // 初始化敌方潜艇（生成4个潜艇，对应参考图数量）
         function initSubmarines() {
-            const positions = [350, 420, 500, 580]; // 潜艇垂直位置（适配背景）
+            const positions = [380, 450, 520, 590]; // 潜艇垂直位置（适配背景）
             positions.forEach((y, index) => {
                 submarines.push({
                     x: canvas.width + index * 200, // 右侧随机位置生成
@@ -153,6 +170,12 @@
 
         // 监听键盘事件
         document.addEventListener('keydown', (e) => {
+            // 游戏结束时，按回车键重新开始
+            if ((gameOver || gameWin) && e.key === 'Enter') {
+                location.reload();
+                return;
+            }
+            
             if (gameOver || gameWin || !assetsLoaded) return;
             
             switch(e.key) {
@@ -163,13 +186,18 @@
                     player.movingRight = true;
                     break;
                 case ' ': // 空格键发射水雷
-                    if (mines.length < 3) { // 限制同时存在的水雷数量
+                    // 检查是否有剩余水雷弹药
+                    if (mineAmmo.current > 0) {
+                        // 得分10分以上，水雷尺寸扩大100%
+                        const scale = score >= 10 ? 2 : 1;
                         mines.push({
-                            x: player.x + player.width / 2 - mineProps.width / 2,
+                            x: player.x + player.width / 2 - (mineProps.width * scale) / 2,
                             y: player.y + player.height - 20,
-                            width: mineProps.width,
-                            height: mineProps.height
+                            width: mineProps.width * scale,
+                            height: mineProps.height * scale
                         });
+                        // 消耗一个水雷
+                        mineAmmo.current--;
                     }
                     break;
             }
@@ -209,9 +237,57 @@
             ctx.fillText(`得分: ${score}`, canvas.width - 30, 50);
         }
 
+        // 绘制水雷弹药数量（左上角）
+        function drawMineAmmo() {
+            const iconSize = 30;
+            const spacing = 10;
+            const startX = 20;
+            const startY = 70;
+            
+            // 绘制水雷图标和数量
+            for (let i = 0; i < mineAmmo.max; i++) {
+                const x = startX + i * (iconSize + spacing);
+                if (i < mineAmmo.current) {
+                    // 有水雷的显示正常颜色
+                    ctx.globalAlpha = 1;
+                } else {
+                    // 没有水雷的显示半透明
+                    ctx.globalAlpha = 0.3;
+                }
+                ctx.drawImage(assets.mine, x, startY, iconSize, iconSize * 1.5);
+            }
+            ctx.globalAlpha = 1;
+            
+            // 绘制文字说明
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'left';
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.strokeText(`水雷: ${mineAmmo.current}/${mineAmmo.max}`, startX, startY + iconSize * 1.5 + 20);
+            ctx.fillText(`水雷: ${mineAmmo.current}/${mineAmmo.max}`, startX, startY + iconSize * 1.5 + 20);
+        }
+
         // 绘制玩家战船 - 使用素材
         function drawPlayer() {
-            ctx.drawImage(assets.playerShip, player.x, player.y, player.width, player.height);
+            let drawX = player.x;
+            let drawY = player.y;
+            
+            // 如果正在抖动，计算偏移量
+            if (player.shake.active) {
+                const elapsed = Date.now() - player.shake.startTime;
+                if (elapsed > player.shake.duration) {
+                    player.shake.active = false;
+                } else {
+                    // 使用正弦波产生来回抖动效果
+                    const progress = elapsed / player.shake.duration;
+                    const shakeOffset = Math.sin(progress * Math.PI * 8) * player.shake.intensity;
+                    drawX += shakeOffset;
+                    drawY += shakeOffset * 0.5;
+                }
+            }
+            
+            ctx.drawImage(assets.playerShip, drawX, drawY, player.width, player.height);
         }
 
         // 绘制水雷 - 使用素材
@@ -289,8 +365,23 @@
                 ctx.font = '30px Arial';
                 ctx.strokeText(`最终得分: ${score}`, canvas.width/2, canvas.height/2 + 20);
                 ctx.fillText(`最终得分: ${score}`, canvas.width/2, canvas.height/2 + 20);
-                ctx.strokeText('按F5重新开始游戏', canvas.width/2, canvas.height/2 + 70);
-                ctx.fillText('按F5重新开始游戏', canvas.width/2, canvas.height/2 + 70);
+                ctx.strokeText('按回车键重新开始游戏', canvas.width/2, canvas.height/2 + 70);
+                ctx.fillText('按回车键重新开始游戏', canvas.width/2, canvas.height/2 + 70);
+            }
+        }
+
+        // 绘制受击反馈（全屏轻微红色）
+        function drawHitFeedback() {
+            if (hitFeedback.active) {
+                const elapsed = Date.now() - hitFeedback.startTime;
+                if (elapsed > hitFeedback.duration) {
+                    hitFeedback.active = false;
+                    return;
+                }
+                // 计算透明度（从0.3逐渐淡出到0）
+                const alpha = 0.3 * (1 - elapsed / hitFeedback.duration);
+                ctx.fillStyle = `rgba(255, 0, 0, ${alpha})`;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
         }
 
@@ -315,6 +406,17 @@
             });
         }
 
+        // 更新水雷弹药恢复
+        function updateMineAmmo() {
+            if (mineAmmo.current < mineAmmo.max) {
+                const now = Date.now();
+                if (now - mineAmmo.lastRegenTime >= mineAmmo.regenInterval) {
+                    mineAmmo.current++;
+                    mineAmmo.lastRegenTime = now;
+                }
+            }
+        }
+
         // 更新潜艇位置和发射导弹
         function updateSubmarines() {
             submarines.forEach(sub => {
@@ -323,7 +425,7 @@
                 // 超出左侧画布后重置位置到右侧 
                 if (sub.x < -subProps.width) {
                     sub.x = canvas.width + Math.random() * 300;
-                    sub.y = 300 + Math.random() * 300; // 垂直随机位置
+                    sub.y = 380 + Math.random() * 210; // 垂直随机位置
                 }
 
                 // 随机发射导弹（冷却时间控制）
@@ -380,11 +482,11 @@
                         // 移除水雷和重置潜艇位置
                         mines.splice(mineIndex, 1);
                         sub.x = canvas.width + Math.random() * 300;
-                        sub.y = 100 + Math.random() * 300;
+                        sub.y = 380 + Math.random() * 210;
                         // 加分
                         score++;
                         // 满分判定胜利
-                        if (score >= 10) {
+                        if (score >= 20) {
                             gameWin = true;
                             gameOver = true;
                         }
@@ -412,6 +514,12 @@
                     missiles.splice(missileIndex, 1);
                     // 扣血
                     lives--;
+                    // 触发受击反馈
+                    hitFeedback.active = true;
+                    hitFeedback.startTime = Date.now();
+                    // 触发船体抖动
+                    player.shake.active = true;
+                    player.shake.startTime = Date.now();
                     // 生命值为0判定失败
                     if (lives <= 0) {
                         gameOver = true;
@@ -441,6 +549,7 @@
                 updateMines();
                 updateSubmarines();
                 updateMissiles();
+                updateMineAmmo(); // 更新水雷弹药恢复
                 
                 // 碰撞检测
                 checkMineSubCollision();
@@ -449,12 +558,14 @@
 
             // 绘制所有游戏元素（按层级）
             drawHearts();    // 最上层：红心
+            drawMineAmmo();  // 水雷弹药数量
             drawScore();     // 最上层：得分
             drawPlayer();    // 玩家战船
             drawMines();     // 水雷
             drawSubmarines();// 潜艇
             drawMissiles();  // 导弹
             drawExplosions();// 爆炸效果
+            drawHitFeedback();// 受击反馈（红色遮罩）
             drawGameStatus();// 游戏状态提示
 
             // 继续循环
