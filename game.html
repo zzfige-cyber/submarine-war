@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>潜艇大战（像素版）</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1a1a1a;
+        }
+        canvas {
+            border: 2px solid #fff;
+            /* 画布尺寸匹配背景图比例 */
+            width: 1200px;
+            height: 600px;
+            image-rendering: pixelated; /* 保持像素风格不模糊 */
+        }
+        .loading {
+            position: absolute;
+            color: #fff;
+            font-size: 24px;
+            font-family: Arial;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">正在加载游戏素材...</div>
+    <canvas id="gameCanvas" width="1200" height="600"></canvas>
+
+    <script>
+        // 获取画布和上下文
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false; // 禁用图像平滑，保持像素风格
+
+        // 游戏状态变量
+        let score = 0;          // 得分
+        let lives = 5;          // 生命值（红心数）
+        let gameOver = false;   // 游戏结束标记
+        let gameWin = false;    // 游戏胜利标记
+        let assetsLoaded = false; // 素材加载完成标记
+
+        // 素材对象（存储所有图片资源）
+        const assets = {
+            background: new Image(),
+            playerShip: new Image(),
+            submarine: new Image(),
+            heart: new Image(),
+            missile: new Image(),
+            mine: new Image(),
+            explosion: new Image() // 爆炸特效（简易像素图）
+        };
+
+        // 素材路径配置（请将此处替换为你的实际素材文件路径！）
+        // 建议将素材文件和HTML放在同一目录，直接填写文件名即可
+        const assetPaths = {
+            background: 'background.png',   // 游戏背景图
+            playerShip: 'player_ship.png',  // 玩家舰船
+            submarine: 'submarine.png',     // 敌方潜艇
+            heart: 'heart.png',             // 红心HP
+            missile: 'missile.png',         // 潜艇导弹
+            mine: 'mine.png',               // 玩家水雷
+            explosion: 'explosion.png'      // 爆炸特效（可选）
+        };
+
+        // 加载所有素材
+        let loadedCount = 0;
+        const totalAssets = Object.keys(assets).length;
+        
+        // 素材加载完成回调
+        function onAssetLoaded() {
+            loadedCount++;
+            if (loadedCount === totalAssets) {
+                assetsLoaded = true;
+                document.querySelector('.loading').style.display = 'none';
+                initGame(); // 素材加载完成后初始化游戏
+            }
+        }
+
+        // 绑定素材加载事件并设置路径
+        for (const key in assets) {
+            assets[key].src = assetPaths[key];
+            assets[key].onload = onAssetLoaded;
+            // 加载失败处理
+            assets[key].onerror = function() {
+                console.error(`素材 ${key} 加载失败，请检查路径: ${assetPaths[key]}`);
+                alert(`素材 ${key} 加载失败，请检查文件路径是否正确！`);
+            };
+        }
+
+        // 玩家战船（适配素材尺寸）
+        const player = {
+            x: canvas.width / 2 - 100, // 居中（舰船素材宽度约200px）
+            y: 120,                    // 海面位置
+            width: 200,               // 舰船素材宽度
+            height: 80,               // 舰船素材高度
+            speed: 8,
+            movingLeft: false,
+            movingRight: false
+        };
+
+        // 水雷配置（适配素材）
+        let mines = [];
+        const mineProps = {
+            width: 40,    // 水雷素材宽度
+            height: 60,   // 水雷素材高度
+            speed: 6
+        };
+
+        // 敌方潜艇配置（适配素材）
+        let submarines = [];
+        const subProps = {
+            width: 160,   // 潜艇素材宽度
+            height: 80,   // 潜艇素材高度
+            speed: 2,
+            missileCooldown: 3000, // 潜艇发射导弹冷却时间（毫秒）
+            lastMissileTime: {}    // 记录每个潜艇最后发射导弹的时间
+        };
+
+        // 导弹配置（适配素材）
+        let missiles = [];
+        const missileProps = {
+            width: 80,    // 导弹素材宽度
+            height: 30,   // 导弹素材高度
+            speed: 5
+        };
+
+        // 爆炸效果数组
+        let explosions = [];
+        const explosionProps = {
+            duration: 500, // 爆炸持续时间（毫秒）
+            size: 80       // 爆炸尺寸（适配像素风格）
+        };
+
+        // 初始化敌方潜艇（生成4个潜艇，对应参考图数量）
+        function initSubmarines() {
+            const positions = [350, 420, 500, 580]; // 潜艇垂直位置（适配背景）
+            positions.forEach((y, index) => {
+                submarines.push({
+                    x: canvas.width + index * 200, // 右侧随机位置生成
+                    y: y,
+                    id: index
+                });
+                subProps.lastMissileTime[index] = 0;
+            });
+        }
+
+        // 监听键盘事件
+        document.addEventListener('keydown', (e) => {
+            if (gameOver || gameWin || !assetsLoaded) return;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    player.movingLeft = true;
+                    break;
+                case 'ArrowRight':
+                    player.movingRight = true;
+                    break;
+                case ' ': // 空格键发射水雷
+                    if (mines.length < 3) { // 限制同时存在的水雷数量
+                        mines.push({
+                            x: player.x + player.width / 2 - mineProps.width / 2,
+                            y: player.y + player.height - 20,
+                            width: mineProps.width,
+                            height: mineProps.height
+                        });
+                    }
+                    break;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            switch(e.key) {
+                case 'ArrowLeft':
+                    player.movingLeft = false;
+                    break;
+                case 'ArrowRight':
+                    player.movingRight = false;
+                    break;
+            }
+        });
+
+        // 绘制红心（生命值）- 使用素材
+        function drawHearts() {
+            const heartSize = 40; // 红心素材尺寸
+            const spacing = 15;   // 红心间距
+            for (let i = 0; i < lives; i++) {
+                const x = 20 + i * (heartSize + spacing);
+                const y = 20;
+                ctx.drawImage(assets.heart, x, y, heartSize, heartSize);
+            }
+        }
+
+        // 绘制得分
+        function drawScore() {
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '36px Arial';
+            ctx.textAlign = 'right';
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            // 描边+填充，保证得分文字清晰
+            ctx.strokeText(`得分: ${score}`, canvas.width - 30, 50);
+            ctx.fillText(`得分: ${score}`, canvas.width - 30, 50);
+        }
+
+        // 绘制玩家战船 - 使用素材
+        function drawPlayer() {
+            ctx.drawImage(assets.playerShip, player.x, player.y, player.width, player.height);
+        }
+
+        // 绘制水雷 - 使用素材
+        function drawMines() {
+            mines.forEach(mine => {
+                ctx.drawImage(assets.mine, mine.x, mine.y, mineProps.width, mineProps.height);
+            });
+        }
+
+        // 绘制潜艇 - 使用素材
+        function drawSubmarines() {
+            submarines.forEach(sub => {
+                ctx.drawImage(assets.submarine, sub.x, sub.y, subProps.width, subProps.height);
+            });
+        }
+
+        // 绘制导弹 - 使用素材（旋转适配向上发射）
+        function drawMissiles() {
+            missiles.forEach(missile => {
+                ctx.save(); // 保存画布状态
+                // 平移到导弹中心，旋转180度（素材是向左的，需要向上发射）
+                ctx.translate(missile.x + missileProps.width/2, missile.y + missileProps.height/2);
+                ctx.rotate(Math.PI / 2); // 旋转90度（向上）
+                // 绘制导弹（注意坐标偏移）
+                ctx.drawImage(assets.missile, -missileProps.width/2, -missileProps.height/2, missileProps.width, missileProps.height);
+                ctx.restore(); // 恢复画布状态
+            });
+        }
+
+        // 绘制爆炸效果
+        function drawExplosions() {
+            explosions.forEach((explosion, index) => {
+                const elapsed = Date.now() - explosion.startTime;
+                if (elapsed > explosionProps.duration) {
+                    explosions.splice(index, 1); // 移除过期爆炸
+                    return;
+                }
+                // 爆炸透明度动画
+                const alpha = 1 - (elapsed / explosionProps.duration);
+                ctx.globalAlpha = alpha;
+                // 如果有爆炸素材则使用，否则绘制像素爆炸
+                if (assets.explosion.complete) {
+                    ctx.drawImage(assets.explosion, explosion.x - explosionProps.size/2, explosion.y - explosionProps.size/2, explosionProps.size, explosionProps.size);
+                } else {
+                    // 备用像素爆炸绘制
+                    ctx.fillStyle = '#FF8C00';
+                    ctx.beginPath();
+                    ctx.arc(explosion.x, explosion.y, explosionProps.size * alpha, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.fillStyle = '#FF0000';
+                    ctx.beginPath();
+                    ctx.arc(explosion.x, explosion.y, (explosionProps.size * alpha)/2, 0, Math.PI*2);
+                    ctx.fill();
+                }
+                ctx.globalAlpha = 1;
+            });
+        }
+
+        // 绘制游戏结束/胜利提示
+        function drawGameStatus() {
+            if (gameOver || gameWin) {
+                // 半透明遮罩
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                // 提示文字
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = '60px Arial';
+                ctx.textAlign = 'center';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 4;
+                const text = gameWin ? '游戏胜利！' : '游戏失败！';
+                ctx.strokeText(text, canvas.width/2, canvas.height/2 - 30);
+                ctx.fillText(text, canvas.width/2, canvas.height/2 - 30);
+                // 得分和重启提示
+                ctx.font = '30px Arial';
+                ctx.strokeText(`最终得分: ${score}`, canvas.width/2, canvas.height/2 + 20);
+                ctx.fillText(`最终得分: ${score}`, canvas.width/2, canvas.height/2 + 20);
+                ctx.strokeText('按F5重新开始游戏', canvas.width/2, canvas.height/2 + 70);
+                ctx.fillText('按F5重新开始游戏', canvas.width/2, canvas.height/2 + 70);
+            }
+        }
+
+        // 更新玩家位置（边界限制）
+        function updatePlayer() {
+            if (player.movingLeft && player.x > 0) {
+                player.x -= player.speed;
+            }
+            if (player.movingRight && player.x < canvas.width - player.width) {
+                player.x += player.speed;
+            }
+        }
+
+        // 更新水雷位置
+        function updateMines() {
+            mines.forEach((mine, index) => {
+                mine.y += mineProps.speed;
+                // 超出画布移除水雷
+                if (mine.y > canvas.height) {
+                    mines.splice(index, 1);
+                }
+            });
+        }
+
+        // 更新潜艇位置和发射导弹
+        function updateSubmarines() {
+            submarines.forEach(sub => {
+                // 潜艇向左移动
+                sub.x -= subProps.speed;
+                // 超出左侧画布后重置位置到右侧 
+                if (sub.x < -subProps.width) {
+                    sub.x = canvas.width + Math.random() * 300;
+                    sub.y = 300 + Math.random() * 300; // 垂直随机位置
+                }
+
+                // 随机发射导弹（冷却时间控制）
+                const now = Date.now();
+                if (now - subProps.lastMissileTime[sub.id] > subProps.missileCooldown) {
+                    if (Math.random() < 0.01) { // 1%的概率发射导弹
+                        missiles.push({
+                            x: sub.x + subProps.width/2 - missileProps.width/2,
+                            y: sub.y - missileProps.height,
+                            width: missileProps.width,
+                            height: missileProps.height
+                        });
+                        subProps.lastMissileTime[sub.id] = now;
+                    }
+                }
+            });
+        }
+
+        // 更新导弹位置
+        function updateMissiles() {
+            missiles.forEach((missile, index) => {
+                missile.y -= missileProps.speed; // 导弹向上飞（攻击玩家）
+                // 超出画布移除导弹
+                if (missile.y < -missileProps.height) {
+                    missiles.splice(index, 1);
+                }
+            });
+        }
+
+        // 碰撞检测：矩形碰撞（适配素材尺寸）
+        function checkCollision(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        // 检测水雷和潜艇的碰撞
+        function checkMineSubCollision() {
+            mines.forEach((mine, mineIndex) => {
+                submarines.forEach((sub, subIndex) => {
+                    if (checkCollision(mine, {
+                        x: sub.x,
+                        y: sub.y,
+                        width: subProps.width,
+                        height: subProps.height
+                    })) {
+                        // 爆炸效果
+                        explosions.push({
+                            x: mine.x + mineProps.width/2,
+                            y: mine.y + mineProps.height/2,
+                            startTime: Date.now()
+                        });
+                        // 移除水雷和重置潜艇位置
+                        mines.splice(mineIndex, 1);
+                        sub.x = canvas.width + Math.random() * 300;
+                        sub.y = 100 + Math.random() * 300;
+                        // 加分
+                        score++;
+                        // 满分判定胜利
+                        if (score >= 10) {
+                            gameWin = true;
+                            gameOver = true;
+                        }
+                    }
+                });
+            });
+        }
+
+        // 检测导弹和玩家的碰撞
+        function checkMissilePlayerCollision() {
+            missiles.forEach((missile, missileIndex) => {
+                if (checkCollision(missile, {
+                    x: player.x,
+                    y: player.y,
+                    width: player.width,
+                    height: player.height
+                })) {
+                    // 爆炸效果
+                    explosions.push({
+                        x: missile.x + missileProps.width/2,
+                        y: missile.y + missileProps.height/2,
+                        startTime: Date.now()
+                    });
+                    // 移除导弹
+                    missiles.splice(missileIndex, 1);
+                    // 扣血
+                    lives--;
+                    // 生命值为0判定失败
+                    if (lives <= 0) {
+                        gameOver = true;
+                    }
+                }
+            });
+        }
+
+        // 绘制背景（使用素材）
+        function drawBackground() {
+            ctx.drawImage(assets.background, 0, 0, canvas.width, canvas.height);
+        }
+
+        // 游戏主循环
+        function gameLoop() {
+            if (!assetsLoaded) return; // 素材未加载完成不执行
+            
+            // 清画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制背景
+            drawBackground();
+
+            if (!gameOver) {
+                // 更新游戏元素
+                updatePlayer();
+                updateMines();
+                updateSubmarines();
+                updateMissiles();
+                
+                // 碰撞检测
+                checkMineSubCollision();
+                checkMissilePlayerCollision();
+            }
+
+            // 绘制所有游戏元素（按层级）
+            drawHearts();    // 最上层：红心
+            drawScore();     // 最上层：得分
+            drawPlayer();    // 玩家战船
+            drawMines();     // 水雷
+            drawSubmarines();// 潜艇
+            drawMissiles();  // 导弹
+            drawExplosions();// 爆炸效果
+            drawGameStatus();// 游戏状态提示
+
+            // 继续循环
+            requestAnimationFrame(gameLoop);
+        }
+
+        // 初始化游戏
+        function initGame() {
+            initSubmarines();
+            gameLoop();
+        }
+
+        // 防止素材加载超时
+        setTimeout(() => {
+            if (!assetsLoaded) {
+                alert('素材加载超时，请检查文件路径或网络！');
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
