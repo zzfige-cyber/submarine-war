@@ -1,0 +1,128 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame1 {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+
+  .frame {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 27px 45px 167px 46px;
+    width: 1920px;
+    height: 1080px;
+    background-image: url(../image/mnzsgq0g-hfdeuc2.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    .autoWrapper2 {
+      display: flex;
+      align-items: flex-start;
+      align-self: stretch;
+      padding-right: 654px;
+      padding-left: 0;
+
+      .jimeng2026041442711 {
+        width: 74px;
+        height: 98px;
+      }
+
+      .jimeng2026041442712 {
+        margin-left: 10px;
+        width: 74px;
+        height: 98px;
+      }
+
+      .jimeng2026041442715 {
+        margin-left: 7px;
+        width: 74px;
+        height: 98px;
+      }
+
+      .autoWrapper {
+        position: relative;
+        margin-top: 68px;
+        margin-left: 249px;
+        width: 522px;
+        height: 294px;
+
+        .jimeng2026041481561 {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 522px;
+          height: 294px;
+        }
+
+        .jimeng2026041423271 {
+          position: absolute;
+          bottom: -121px;
+          left: 198px;
+          width: 99px;
+          height: 132px;
+        }
+      }
+    }
+
+    .autoWrapper3 {
+      display: flex;
+      align-items: flex-start;
+      align-self: stretch;
+      justify-content: space-between;
+      margin-top: 15px;
+      padding-right: 310px;
+      padding-left: 69px;
+
+      .jimeng2026041417301 {
+        margin-top: 49px;
+        width: 377px;
+        height: 212px;
+      }
+
+      .jimeng2026041417303 {
+        width: 377px;
+        height: 212px;
+      }
+    }
+
+    .jimeng2026041417304 {
+      margin-top: 36px;
+      margin-left: 1452px;
+      width: 377px;
+      height: 212px;
+    }
+  }
+
+  .jimeng2026041465321 {
+    position: absolute;
+    top: 513px;
+    left: 618px;
+    width: 161px;
+    height: 215px;
+    rotate: 90deg;
+  }
+
+  .jimeng2026041572961 {
+    position: absolute;
+    top: 701px;
+    left: 375px;
+    width: 404px;
+    height: 227px;
+  }
+
+  .jimeng2026041541801 {
+    position: absolute;
+    top: 637px;
+    left: 517px;
+    width: 90px;
+    height: 90px;
+  }
+}

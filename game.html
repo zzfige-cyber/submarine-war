@@ -3,459 +3,1184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>潜艇大战（像素版）</title>
+    <title>潜艇大战 - 深海猎手</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #1a1a1a;
+            background-color: #0a1628;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            overflow: hidden;
         }
-        canvas {
-            border: 2px solid #fff;
-            /* 画布尺寸匹配背景图比例 */
-            width: 1200px;
-            height: 600px;
-            image-rendering: pixelated; /* 保持像素风格不模糊 */
+        
+        #gameContainer {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            background: linear-gradient(180deg, #1a3a5c 0%, #0d2137 50%, #061220 100%);
+            border: 3px solid #2a5a8c;
+            border-radius: 10px;
+            overflow: hidden;
         }
-        .loading {
+        
+        /* 加载页面 */
+        #loadingScreen {
             position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #0d2137 0%, #061220 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .loadingTitle {
+            color: #4a9eff;
+            font-size: 36px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
+        }
+        
+        .loadingBar {
+            width: 400px;
+            height: 20px;
+            background: #1a3a5c;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #2a5a8c;
+        }
+        
+        .loadingProgress {
+            height: 100%;
+            background: linear-gradient(90deg, #4a9eff 0%, #6abfff 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .loadingText {
+            color: #8ab4c7;
+            margin-top: 15px;
+            font-size: 18px;
+        }
+        
+        /* 技能配置面板 */
+        #skillPanel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #0d2137 0%, #061220 100%);
+            display: none;
+            flex-direction: column;
+            padding: 30px;
+            z-index: 900;
+        }
+        
+        .skillTitle {
+            color: #4a9eff;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .skillPoints {
+            color: #ffd700;
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .skillItem {
+            background: rgba(26, 58, 92, 0.5);
+            border: 2px solid #2a5a8c;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .skillInfo {
+            flex: 1;
+        }
+        
+        .skillName {
             color: #fff;
-            font-size: 24px;
-            font-family: Arial;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .skillDesc {
+            color: #8ab4c7;
+            font-size: 14px;
+        }
+        
+        .skillControls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .skillBtn {
+            width: 40px;
+            height: 40px;
+            background: #2a5a8c;
+            border: 2px solid #4a9eff;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.2s;
+        }
+        
+        .skillBtn:hover:not(:disabled) {
+            background: #4a9eff;
+        }
+        
+        .skillBtn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .skillLevel {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .skillDot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #1a3a5c;
+            border: 2px solid #4a9eff;
+        }
+        
+        .skillDot.active {
+            background: #4a9eff;
+            box-shadow: 0 0 10px rgba(74, 158, 255, 0.8);
+        }
+        
+        .startGameBtn {
+            width: 200px;
+            height: 50px;
+            margin: 20px auto 0;
+            background: #2a5a8c;
+            border: 2px solid #4a9eff;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .startGameBtn:hover:not(:disabled) {
+            background: #4a9eff;
+            box-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
+        }
+        
+        .startGameBtn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        /* 游戏画布 */
+        #gameCanvas {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* 座舱边框效果 */
+        .cockpitFrame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border: 20px solid transparent;
+            border-image: linear-gradient(135deg, #1a3a5c 0%, #2a5a8c 50%, #1a3a5c 100%) 1;
+        }
+        
+        .cockpitCorner {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 3px solid #4a9eff;
+        }
+        
+        .cockpitCorner.topLeft {
+            top: 10px;
+            left: 10px;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .cockpitCorner.topRight {
+            top: 10px;
+            right: 10px;
+            border-left: none;
+            border-bottom: none;
+        }
+        
+        .cockpitCorner.bottomLeft {
+            bottom: 10px;
+            left: 10px;
+            border-right: none;
+            border-top: none;
+        }
+        
+        .cockpitCorner.bottomRight {
+            bottom: 10px;
+            right: 10px;
+            border-left: none;
+            border-top: none;
         }
     </style>
 </head>
 <body>
-    <div class="loading">正在加载游戏素材...</div>
-    <canvas id="gameCanvas" width="1200" height="600"></canvas>
+    <div id="gameContainer">
+        <!-- 加载页面 -->
+        <div id="loadingScreen">
+            <div class="loadingTitle">🚢 深海猎手</div>
+            <div class="loadingBar">
+                <div class="loadingProgress" id="loadingProgress"></div>
+            </div>
+            <div class="loadingText" id="loadingText">加载中... 0%</div>
+        </div>
+        
+        <!-- 技能配置面板 -->
+        <div id="skillPanel">
+            <div class="skillTitle">⚓ 舰船配置</div>
+            <div class="skillPoints">剩余技能点: <span id="remainingPoints">5</span> / 5</div>
+            
+            <div class="skillItem">
+                <div class="skillInfo">
+                    <div class="skillName">⚡ 移动速度</div>
+                    <div class="skillDesc">满级3点，提升舰船机动性</div>
+                </div>
+                <div class="skillControls">
+                    <button class="skillBtn" id="speedMinus" onclick="adjustSkill('speed', -1)">-</button>
+                    <div class="skillLevel" id="speedLevel">
+                        <div class="skillDot"></div>
+                        <div class="skillDot"></div>
+                        <div class="skillDot"></div>
+                    </div>
+                    <button class="skillBtn" id="speedPlus" onclick="adjustSkill('speed', 1)">+</button>
+                </div>
+            </div>
+            
+            <div class="skillItem">
+                <div class="skillInfo">
+                    <div class="skillName">🛡️ 装甲血量</div>
+                    <div class="skillDesc">满级3点，增加舰船耐久</div>
+                </div>
+                <div class="skillControls">
+                    <button class="skillBtn" id="hpMinus" onclick="adjustSkill('hp', -1)">-</button>
+                    <div class="skillLevel" id="hpLevel">
+                        <div class="skillDot"></div>
+                        <div class="skillDot"></div>
+                        <div class="skillDot"></div>
+                    </div>
+                    <button class="skillBtn" id="hpPlus" onclick="adjustSkill('hp', 1)">+</button>
+                </div>
+            </div>
+            
+            <div class="skillItem">
+                <div class="skillInfo">
+                    <div class="skillName">💣 弹药库</div>
+                    <div class="skillDesc">满级2点，增加水雷携带量</div>
+                </div>
+                <div class="skillControls">
+                    <button class="skillBtn" id="ammoMinus" onclick="adjustSkill('ammo', -1)">-</button>
+                    <div class="skillLevel" id="ammoLevel">
+                        <div class="skillDot"></div>
+                        <div class="skillDot"></div>
+                    </div>
+                    <button class="skillBtn" id="ammoPlus" onclick="adjustSkill('ammo', 1)">+</button>
+                </div>
+            </div>
+            
+            <button class="startGameBtn" id="startGameBtn" onclick="startGame()" disabled>开始游戏</button>
+        </div>
+        
+        <!-- 游戏画布 -->
+        <canvas id="gameCanvas" width="1920" height="1080"></canvas>
+        
+        <!-- 座舱边框 -->
+        <div class="cockpitFrame" id="cockpitFrame" style="display: none;">
+            <div class="cockpitCorner topLeft"></div>
+            <div class="cockpitCorner topRight"></div>
+            <div class="cockpitCorner bottomLeft"></div>
+            <div class="cockpitCorner bottomRight"></div>
+        </div>
+    </div>
 
     <script>
-        // 获取画布和上下文
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        ctx.imageSmoothingEnabled = false; // 禁用图像平滑，保持像素风格
-
-        // 游戏状态变量
-        let score = 0;          // 得分
-        let lives = 5;          // 生命值（红心数）
-        let gameOver = false;   // 游戏结束标记
-        let gameWin = false;    // 游戏胜利标记
-        let assetsLoaded = false; // 素材加载完成标记
-        let hitFeedback = {     // 受击反馈
-            active: false,
-            startTime: 0,
-            duration: 300        // 反馈持续时间（毫秒）
-        };
-        let mineAmmo = {        // 水雷弹药系统
-            current: 3,         // 当前水雷数量
-            max: 3,             // 最大水雷数量
-            lastRegenTime: 0,   // 上次恢复时间
-            regenInterval: 2000 // 恢复间隔（毫秒）
+        // ==================== 游戏配置 ====================
+        const GAME_CONFIG = {
+            canvas: {
+                width: 1920,
+                height: 1080
+            },
+            skillSystem: {
+                totalPoints: 5,
+                maxLevel: {
+                    speed: 3,
+                    hp: 3,
+                    ammo: 2
+                }
+            },
+            player: {
+                baseSpeed: 5,
+                baseMaxHp: 100,
+                baseAmmo: 3
+            }
         };
 
-        // 素材对象（存储所有图片资源）
+        // ==================== 游戏状态 ====================
+        let gameState = {
+            currentScreen: 'loading', // loading, skill, game
+            loadingProgress: 0,
+            skillPoints: {
+                speed: 0,
+                hp: 0,
+                ammo: 0
+            },
+            assetsLoaded: false
+        };
+
+        // ==================== 素材系统 ====================
         const assets = {
             background: new Image(),
             playerShip: new Image(),
+            playerShipArmor: new Image(),
+            playerShipTurbo: new Image(),
             submarine: new Image(),
-            heart: new Image(),
+            goldSubmarine: new Image(),
             missile: new Image(),
             mine: new Image(),
-            explosion: new Image() // 爆炸特效（简易像素图）
+            explosion: new Image(),
+            powerUpHp: new Image(),
+            powerUpRange: new Image(),
+            cockpitFrame: new Image()
         };
 
-        // 素材路径配置（请将此处替换为你的实际素材文件路径！）
-        // 建议将素材文件和HTML放在同一目录，直接填写文件名即可
         const assetPaths = {
-            background: 'background.png',   // 游戏背景图
-            playerShip: 'player_ship.png',  // 玩家舰船
-            submarine: 'submarine.png',     // 敌方潜艇
-            heart: 'heart.png',             // 红心HP
-            missile: 'missile.png',         // 潜艇导弹
-            mine: 'mine.png',               // 玩家水雷
-            explosion: 'explosion.png'      // 爆炸特效（可选）
+            background: 'assets/background.png',
+            playerShip: 'assets/player_ship.png',
+            playerShipArmor: 'assets/player_ship_armor.png',
+            playerShipTurbo: 'assets/player_ship_turbo.png',
+            submarine: 'assets/submarine.png',
+            goldSubmarine: 'assets/gold_submarine.png',
+            missile: 'assets/missile.png',
+            mine: 'assets/mine.png',
+            explosion: 'assets/explosion.png',
+            powerUpHp: 'assets/powerup_hp.png',
+            powerUpRange: 'assets/powerup_range.png',
+            cockpitFrame: 'assets/cockpit_frame.png'
         };
 
-        // 加载所有素材
-        let loadedCount = 0;
-        const totalAssets = Object.keys(assets).length;
+        // ==================== 加载系统 ====================
+        function initLoading() {
+            const totalAssets = Object.keys(assets).length;
+            let loadedCount = 0;
+
+            function updateProgress() {
+                loadedCount++;
+                const progress = Math.floor((loadedCount / totalAssets) * 100);
+                gameState.loadingProgress = progress;
+                
+                document.getElementById('loadingProgress').style.width = progress + '%';
+                document.getElementById('loadingText').textContent = `加载素材... ${progress}%`;
+
+                if (loadedCount === totalAssets) {
+                    gameState.assetsLoaded = true;
+                    console.log('所有素材加载完成');
+                    setTimeout(() => {
+                        showSkillPanel();
+                    }, 500);
+                }
+            }
+
+            // 立即开始加载素材
+            document.getElementById('loadingText').textContent = `加载素材... 0%`;
+            
+            for (const key in assets) {
+                assets[key].src = assetPaths[key];
+                
+                // 检查是否已经缓存
+                if (assets[key].complete) {
+                    console.log(`素材 ${key} 已缓存`);
+                    updateProgress();
+                } else {
+                    assets[key].onload = () => {
+                        console.log(`素材 ${key} 加载成功`);
+                        updateProgress();
+                    };
+                    assets[key].onerror = () => {
+                        console.warn(`素材 ${key} 加载失败，使用备用方案`);
+                        updateProgress();
+                    };
+                }
+            }
+        }
+
+        // ==================== 技能系统 ====================
+        function showSkillPanel() {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('skillPanel').style.display = 'flex';
+            gameState.currentScreen = 'skill';
+            updateSkillUI();
+        }
+
+        function adjustSkill(skill, delta) {
+            const currentLevel = gameState.skillPoints[skill];
+            const maxLevel = GAME_CONFIG.skillSystem.maxLevel[skill];
+            const usedPoints = Object.values(gameState.skillPoints).reduce((a, b) => a + b, 0);
+            const remainingPoints = GAME_CONFIG.skillSystem.totalPoints - usedPoints;
+
+            if (delta > 0 && currentLevel < maxLevel && remainingPoints > 0) {
+                gameState.skillPoints[skill]++;
+            } else if (delta < 0 && currentLevel > 0) {
+                gameState.skillPoints[skill]--;
+            }
+
+            updateSkillUI();
+        }
+
+        function updateSkillUI() {
+            const usedPoints = Object.values(gameState.skillPoints).reduce((a, b) => a + b, 0);
+            const remainingPoints = GAME_CONFIG.skillSystem.totalPoints - usedPoints;
+
+            document.getElementById('remainingPoints').textContent = remainingPoints;
+
+            // 更新各技能显示
+            ['speed', 'hp', 'ammo'].forEach(skill => {
+                const level = gameState.skillPoints[skill];
+                const maxLevel = GAME_CONFIG.skillSystem.maxLevel[skill];
+                const dots = document.querySelectorAll(`#${skill}Level .skillDot`);
+                
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index < level);
+                });
+
+                // 更新按钮状态
+                document.getElementById(`${skill}Minus`).disabled = level === 0;
+                document.getElementById(`${skill}Plus`).disabled = level >= maxLevel || remainingPoints === 0;
+            });
+
+            // 更新开始游戏按钮
+            document.getElementById('startGameBtn').disabled = remainingPoints > 0;
+        }
+
+        // ==================== 游戏初始化 ====================
+        let gameLoopId = null;
         
-        // 素材加载完成回调
-        function onAssetLoaded() {
-            loadedCount++;
-            if (loadedCount === totalAssets) {
-                assetsLoaded = true;
-                document.querySelector('.loading').style.display = 'none';
-                initGame(); // 素材加载完成后初始化游戏
+        function startGame() {
+            document.getElementById('skillPanel').style.display = 'none';
+            document.getElementById('gameCanvas').style.display = 'block';
+            document.getElementById('cockpitFrame').style.display = 'block';
+            gameState.currentScreen = 'game';
+            
+            initGame();
+            
+            // 确保只有一个游戏循环在运行
+            if (gameLoopId === null) {
+                gameLoop();
             }
         }
 
-        // 绑定素材加载事件并设置路径
-        for (const key in assets) {
-            assets[key].src = assetPaths[key];
-            assets[key].onload = onAssetLoaded;
-            // 加载失败处理
-            assets[key].onerror = function() {
-                console.error(`素材 ${key} 加载失败，请检查路径: ${assetPaths[key]}`);
-                alert(`素材 ${key} 加载失败，请检查文件路径是否正确！`);
+        // ==================== 游戏主逻辑 ====================
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 游戏对象
+        let player, submarines, missiles, mines, explosions, powerUps, fragments;
+        let score, hp, maxHp, mp, gameOver;
+        let mineAmmo, maxMineAmmo, mineRegenTime;
+        let superWeaponReady;
+
+        function initGame() {
+            // 根据技能点计算属性
+            const speedLevel = gameState.skillPoints.speed;
+            const hpLevel = gameState.skillPoints.hp;
+            const ammoLevel = gameState.skillPoints.ammo;
+
+            // 初始化玩家 - 适应1920x1080分辨率
+            player = {
+                x: canvas.width / 2 - 105,
+                y: 320,
+                width: 210,
+                height: 84,
+                speed: GAME_CONFIG.player.baseSpeed + speedLevel * 2,
+                maxHp: GAME_CONFIG.player.baseMaxHp + hpLevel * 50,
+                hp: GAME_CONFIG.player.baseMaxHp + hpLevel * 50,
+                visualType: speedLevel >= 3 ? 'turbo' : (hpLevel >= 2 ? 'armor' : 'normal')
             };
+
+            // 初始化游戏状态
+            score = 0;
+            hp = player.maxHp;
+            maxHp = player.maxHp;
+            mp = 0;
+            gameOver = false;
+            superWeaponReady = false;
+
+            // 弹药系统
+            maxMineAmmo = GAME_CONFIG.player.baseAmmo + ammoLevel * 2;
+            mineAmmo = maxMineAmmo;
+            mineRegenTime = 0;
+
+            // 游戏对象数组
+            submarines = [];
+            missiles = [];
+            mines = [];
+            explosions = [];
+            powerUps = [];
+            fragments = [];
+
+            // 初始化潜艇
+            initSubmarines();
         }
 
-        // 玩家战船（适配素材尺寸）
-        const player = {
-            x: canvas.width / 2 - 100, // 居中（舰船素材宽度约200px）
-            y: 120,                    // 海面位置
-            width: 200,               // 舰船素材宽度
-            height: 80,               // 舰船素材高度
-            speed: 8,
-            movingLeft: false,
-            movingRight: false,
-            shake: {                   // 抖动效果
-                active: false,
-                startTime: 0,
-                duration: 300,         // 抖动持续时间
-                intensity: 5           // 抖动幅度
-            }
-        };
-
-        // 水雷配置（适配素材）
-        let mines = [];
-        const mineProps = {
-            width: 40,    // 水雷素材宽度
-            height: 60,   // 水雷素材高度
-            speed: 1.5    // 水下失重环境，水雷下沉速度较慢
-        };
-
-        // 敌方潜艇配置（适配素材）
-        let submarines = [];
-        const subProps = {
-            width: 160,   // 潜艇素材宽度
-            height: 80,   // 潜艇素材高度
-            speed: 1.5,   // 水下阻力，潜艇前进较慢
-            missileCooldown: 2000, // 潜艇发射导弹冷却时间（毫秒）
-            lastMissileTime: {}    // 记录每个潜艇最后发射导弹的时间
-        };
-
-        // 导弹配置（适配素材）
-        let missiles = [];
-        const missileProps = {
-            width: 80,    // 导弹素材宽度
-            height: 30,   // 导弹素材高度
-            speed: 4      // 水下阻力，导弹速度适中
-        };
-
-        // 爆炸效果数组
-        let explosions = [];
-        const explosionProps = {
-            duration: 500, // 爆炸持续时间（毫秒）
-            size: 80       // 爆炸尺寸（适配像素风格）
-        };
-
-        // 初始化敌方潜艇（生成4个潜艇，对应参考图数量）
         function initSubmarines() {
-            const positions = [380, 450, 520, 590]; // 潜艇垂直位置（适配背景）
+            // 初始生成6艘潜艇，适应1920x1080分辨率
+            const positions = [680, 760, 840, 920, 1000, 1080];
             positions.forEach((y, index) => {
                 submarines.push({
-                    x: canvas.width + index * 200, // 右侧随机位置生成
+                    x: canvas.width + index * 250,
                     y: y,
-                    id: index
+                    width: 240,
+                    height: 120,
+                    id: index,
+                    isGold: false,
+                    lastMissileTime: 0
                 });
-                subProps.lastMissileTime[index] = 0;
             });
         }
+        
+        // 获取当前难度系数 (随分数增加) - 提升30%难度节奏
+        function getDifficultyMultiplier() {
+            // 基础难度1.0，每15分增加0.2，最高2.8
+            return Math.min(1.0 + score * 0.0133, 2.8);
+        }
+        
+        // 获取潜艇速度
+        function getSubmarineSpeed() {
+            return 1.7 * getDifficultyMultiplier();
+        }
+        
+        // 获取导弹发射间隔
+        function getMissileCooldown() {
+            // 从2500ms逐渐降低到900ms
+            return Math.max(2500 - score * 26, 900);
+        }
+        
+        // 获取导弹发射概率
+        function getMissileChance() {
+            // 从0.007逐渐增加到0.028
+            return Math.min(0.007 + score * 0.00042, 0.028);
+        }
+        
+        // 检查位置是否与其他潜艇重叠
+        function isOverlapping(x, y, width, height, excludeSub = null) {
+            const minDistance = 150; // 最小间距
+            for (const sub of submarines) {
+                if (sub === excludeSub) continue;
+                
+                const dx = (x + width/2) - (sub.x + sub.width/2);
+                const dy = (y + height/2) - (sub.y + sub.height/2);
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < minDistance) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-        // 监听键盘事件
-        document.addEventListener('keydown', (e) => {
-            // 游戏结束时，按回车键重新开始
-            if ((gameOver || gameWin) && e.key === 'Enter') {
-                location.reload();
+        // ==================== 游戏循环 ====================
+        function gameLoop() {
+            if (gameState.currentScreen !== 'game') {
+                gameLoopId = null;
                 return;
             }
-            
-            if (gameOver || gameWin || !assetsLoaded) return;
-            
-            switch(e.key) {
-                case 'ArrowLeft':
-                    player.movingLeft = true;
-                    break;
-                case 'ArrowRight':
-                    player.movingRight = true;
-                    break;
-                case ' ': // 空格键发射水雷
-                    // 检查是否有剩余水雷弹药
-                    if (mineAmmo.current > 0) {
-                        // 得分10分以上，水雷尺寸扩大100%
-                        const scale = score >= 10 ? 2 : 1;
-                        mines.push({
-                            x: player.x + player.width / 2 - (mineProps.width * scale) / 2,
-                            y: player.y + player.height - 20,
-                            width: mineProps.width * scale,
-                            height: mineProps.height * scale
-                        });
-                        // 消耗一个水雷
-                        mineAmmo.current--;
-                    }
-                    break;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制背景
+            drawBackground();
+
+            if (!gameOver) {
+                update();
             }
-        });
 
-        document.addEventListener('keyup', (e) => {
-            switch(e.key) {
-                case 'ArrowLeft':
-                    player.movingLeft = false;
-                    break;
-                case 'ArrowRight':
-                    player.movingRight = false;
-                    break;
-            }
-        });
+            draw();
 
-        // 绘制红心（生命值）- 使用素材
-        function drawHearts() {
-            const heartSize = 40; // 红心素材尺寸
-            const spacing = 15;   // 红心间距
-            for (let i = 0; i < lives; i++) {
-                const x = 20 + i * (heartSize + spacing);
-                const y = 20;
-                ctx.drawImage(assets.heart, x, y, heartSize, heartSize);
-            }
+            gameLoopId = requestAnimationFrame(gameLoop);
         }
 
-        // 绘制得分
-        function drawScore() {
-            ctx.fillStyle = '#FFFFFF';
-            ctx.font = '36px Arial';
-            ctx.textAlign = 'right';
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 2;
-            // 描边+填充，保证得分文字清晰
-            ctx.strokeText(`得分: ${score}`, canvas.width - 30, 50);
-            ctx.fillText(`得分: ${score}`, canvas.width - 30, 50);
+        function update() {
+            // 更新玩家
+            updatePlayer();
+
+            // 更新水雷
+            updateMines();
+
+            // 更新潜艇
+            updateSubmarines();
+
+            // 更新导弹
+            updateMissiles();
+
+            // 更新爆炸
+            updateExplosions();
+
+            // 更新道具
+            updatePowerUps();
+
+            // 更新碎片
+            updateFragments();
+
+            // 弹药恢复
+            updateMineRegen();
+
+            // 碰撞检测
+            checkCollisions();
         }
 
-        // 绘制水雷弹药数量（左上角）
-        function drawMineAmmo() {
-            const iconSize = 30;
-            const spacing = 10;
-            const startX = 20;
-            const startY = 70;
-            
-            // 绘制水雷图标和数量
-            for (let i = 0; i < mineAmmo.max; i++) {
-                const x = startX + i * (iconSize + spacing);
-                if (i < mineAmmo.current) {
-                    // 有水雷的显示正常颜色
-                    ctx.globalAlpha = 1;
-                } else {
-                    // 没有水雷的显示半透明
-                    ctx.globalAlpha = 0.3;
-                }
-                ctx.drawImage(assets.mine, x, startY, iconSize, iconSize * 1.5);
-            }
-            ctx.globalAlpha = 1;
-            
-            // 绘制文字说明
-            ctx.fillStyle = '#FFFFFF';
-            ctx.font = '16px Arial';
-            ctx.textAlign = 'left';
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 2;
-            ctx.strokeText(`水雷: ${mineAmmo.current}/${mineAmmo.max}`, startX, startY + iconSize * 1.5 + 20);
-            ctx.fillText(`水雷: ${mineAmmo.current}/${mineAmmo.max}`, startX, startY + iconSize * 1.5 + 20);
-        }
-
-        // 绘制玩家战船 - 使用素材
-        function drawPlayer() {
-            let drawX = player.x;
-            let drawY = player.y;
-            
-            // 如果正在抖动，计算偏移量
-            if (player.shake.active) {
-                const elapsed = Date.now() - player.shake.startTime;
-                if (elapsed > player.shake.duration) {
-                    player.shake.active = false;
-                } else {
-                    // 使用正弦波产生来回抖动效果
-                    const progress = elapsed / player.shake.duration;
-                    const shakeOffset = Math.sin(progress * Math.PI * 8) * player.shake.intensity;
-                    drawX += shakeOffset;
-                    drawY += shakeOffset * 0.5;
-                }
-            }
-            
-            ctx.drawImage(assets.playerShip, drawX, drawY, player.width, player.height);
-        }
-
-        // 绘制水雷 - 使用素材
-        function drawMines() {
-            mines.forEach(mine => {
-                ctx.drawImage(assets.mine, mine.x, mine.y, mineProps.width, mineProps.height);
-            });
-        }
-
-        // 绘制潜艇 - 使用素材
-        function drawSubmarines() {
-            submarines.forEach(sub => {
-                ctx.drawImage(assets.submarine, sub.x, sub.y, subProps.width, subProps.height);
-            });
-        }
-
-        // 绘制导弹 - 使用素材（旋转适配向上发射）
-        function drawMissiles() {
-            missiles.forEach(missile => {
-                ctx.save(); // 保存画布状态
-                // 平移到导弹中心，旋转180度（素材是向左的，需要向上发射）
-                ctx.translate(missile.x + missileProps.width/2, missile.y + missileProps.height/2);
-                ctx.rotate(Math.PI / 2); // 旋转90度（向上）
-                // 绘制导弹（注意坐标偏移）
-                ctx.drawImage(assets.missile, -missileProps.width/2, -missileProps.height/2, missileProps.width, missileProps.height);
-                ctx.restore(); // 恢复画布状态
-            });
-        }
-
-        // 绘制爆炸效果
-        function drawExplosions() {
-            explosions.forEach((explosion, index) => {
-                const elapsed = Date.now() - explosion.startTime;
-                if (elapsed > explosionProps.duration) {
-                    explosions.splice(index, 1); // 移除过期爆炸
-                    return;
-                }
-                // 爆炸透明度动画
-                const alpha = 1 - (elapsed / explosionProps.duration);
-                ctx.globalAlpha = alpha;
-                // 如果有爆炸素材则使用，否则绘制像素爆炸
-                if (assets.explosion.complete) {
-                    ctx.drawImage(assets.explosion, explosion.x - explosionProps.size/2, explosion.y - explosionProps.size/2, explosionProps.size, explosionProps.size);
-                } else {
-                    // 备用像素爆炸绘制
-                    ctx.fillStyle = '#FF8C00';
-                    ctx.beginPath();
-                    ctx.arc(explosion.x, explosion.y, explosionProps.size * alpha, 0, Math.PI*2);
-                    ctx.fill();
-                    ctx.fillStyle = '#FF0000';
-                    ctx.beginPath();
-                    ctx.arc(explosion.x, explosion.y, (explosionProps.size * alpha)/2, 0, Math.PI*2);
-                    ctx.fill();
-                }
-                ctx.globalAlpha = 1;
-            });
-        }
-
-        // 绘制游戏结束/胜利提示
-        function drawGameStatus() {
-            if (gameOver || gameWin) {
-                // 半透明遮罩
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                // 提示文字
-                ctx.fillStyle = '#FFFFFF';
-                ctx.font = '60px Arial';
-                ctx.textAlign = 'center';
-                ctx.strokeStyle = '#000000';
-                ctx.lineWidth = 4;
-                const text = gameWin ? '游戏胜利！' : '游戏失败！';
-                ctx.strokeText(text, canvas.width/2, canvas.height/2 - 30);
-                ctx.fillText(text, canvas.width/2, canvas.height/2 - 30);
-                // 得分和重启提示
-                ctx.font = '30px Arial';
-                ctx.strokeText(`最终得分: ${score}`, canvas.width/2, canvas.height/2 + 20);
-                ctx.fillText(`最终得分: ${score}`, canvas.width/2, canvas.height/2 + 20);
-                ctx.strokeText('按回车键重新开始游戏', canvas.width/2, canvas.height/2 + 70);
-                ctx.fillText('按回车键重新开始游戏', canvas.width/2, canvas.height/2 + 70);
-            }
-        }
-
-        // 绘制受击反馈（全屏轻微红色）
-        function drawHitFeedback() {
-            if (hitFeedback.active) {
-                const elapsed = Date.now() - hitFeedback.startTime;
-                if (elapsed > hitFeedback.duration) {
-                    hitFeedback.active = false;
-                    return;
-                }
-                // 计算透明度（从0.3逐渐淡出到0）
-                const alpha = 0.3 * (1 - elapsed / hitFeedback.duration);
-                ctx.fillStyle = `rgba(255, 0, 0, ${alpha})`;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-            }
-        }
-
-        // 更新玩家位置（边界限制）
         function updatePlayer() {
-            if (player.movingLeft && player.x > 0) {
+            // 键盘控制
+            if (keys.ArrowLeft && player.x > 0) {
                 player.x -= player.speed;
             }
-            if (player.movingRight && player.x < canvas.width - player.width) {
+            if (keys.ArrowRight && player.x < canvas.width - player.width) {
                 player.x += player.speed;
             }
         }
 
-        // 更新水雷位置
         function updateMines() {
-            mines.forEach((mine, index) => {
-                mine.y += mineProps.speed;
-                // 超出画布移除水雷
+            for (let i = mines.length - 1; i >= 0; i--) {
+                const mine = mines[i];
+                mine.y += mine.speed;
                 if (mine.y > canvas.height) {
-                    mines.splice(index, 1);
-                }
-            });
-        }
-
-        // 更新水雷弹药恢复
-        function updateMineAmmo() {
-            if (mineAmmo.current < mineAmmo.max) {
-                const now = Date.now();
-                if (now - mineAmmo.lastRegenTime >= mineAmmo.regenInterval) {
-                    mineAmmo.current++;
-                    mineAmmo.lastRegenTime = now;
+                    mines.splice(i, 1);
                 }
             }
         }
 
-        // 更新潜艇位置和发射导弹
         function updateSubmarines() {
-            submarines.forEach(sub => {
-                // 潜艇向左移动
-                sub.x -= subProps.speed;
-                // 超出左侧画布后重置位置到右侧 
-                if (sub.x < -subProps.width) {
-                    sub.x = canvas.width + Math.random() * 300;
-                    sub.y = 380 + Math.random() * 210; // 垂直随机位置
+            const speed = getSubmarineSpeed();
+            const missileCooldown = getMissileCooldown();
+            const missileChance = getMissileChance();
+            
+            for (let i = submarines.length - 1; i >= 0; i--) {
+                const sub = submarines[i];
+                sub.x -= speed;
+
+                if (sub.x < -240) {
+                    if (sub.isGold) {
+                        submarines.splice(i, 1);
+                    } else {
+                        // 重置位置时检查重叠
+                        let newX = canvas.width + Math.random() * 300;
+                        let newY = 680 + Math.random() * 320;
+                        let attempts = 0;
+                        while (isOverlapping(newX, newY, sub.width, sub.height, sub) && attempts < 10) {
+                            newY = 680 + Math.random() * 320;
+                            attempts++;
+                        }
+                        sub.x = newX;
+                        sub.y = newY;
+                    }
                 }
 
-                // 随机发射导弹（冷却时间控制）
+                // 发射导弹 - 使用动态难度，限制屏幕上最多8枚导弹
+                if (!sub.isGold && missiles.length < 8 && Date.now() - sub.lastMissileTime > missileCooldown) {
+                    if (Math.random() < missileChance) {
+                        fireMissile(sub);
+                        sub.lastMissileTime = Date.now();
+                    }
+                }
+            }
+
+            // 动态补充潜艇 - 根据分数增加密度，但限制最大数量
+            const targetSubCount = Math.min(6 + Math.floor(score / 6), 14); // 最多14艘，增长更快
+            const normalSubCount = submarines.filter(s => !s.isGold).length;
+            if (normalSubCount < targetSubCount) {
+                if (Math.random() < 0.02) { // 2%概率每帧补充
+                    spawnNewSubmarine();
+                }
+            }
+
+            // 生成金色潜艇
+            if (score >= 5 && !submarines.some(s => s.isGold)) {
+                if (Date.now() % 10000 < 50) { // 每10秒检查一次
+                    spawnGoldSubmarine();
+                }
+            }
+        }
+        
+        function spawnNewSubmarine() {
+            let x = canvas.width + 150;
+            let y = 680 + Math.random() * 320;
+            const width = 240;
+            const height = 120;
+            
+            // 尝试找到不重叠的位置（最多尝试10次）
+            let attempts = 0;
+            while (isOverlapping(x, y, width, height) && attempts < 10) {
+                y = 680 + Math.random() * 320;
+                attempts++;
+            }
+            
+            // 如果找到合适位置才生成
+            if (!isOverlapping(x, y, width, height)) {
+                submarines.push({
+                    x: x,
+                    y: y,
+                    width: width,
+                    height: height,
+                    id: 'sub_' + Date.now(),
+                    isGold: false,
+                    lastMissileTime: 0
+                });
+            }
+        }
+
+        function fireMissile(sub) {
+            // 导弹先斜向发射，然后转为垂直
+            const direction = Math.random() > 0.5 ? 1 : -1;
+            missiles.push({
+                x: sub.x + 120,
+                y: sub.y,
+                width: 120,
+                height: 45,
+                phase: 'diagonal', // diagonal, vertical
+                direction: direction,
+                startY: sub.y,
+                targetHeight: sub.y - 150
+            });
+        }
+
+        function updateMissiles() {
+            const missileSpeed = 2.3 * getDifficultyMultiplier(); // 提升基础速度
+            for (let i = missiles.length - 1; i >= 0; i--) {
+                const missile = missiles[i];
+                if (missile.phase === 'diagonal') {
+                    missile.x -= missileSpeed * 0.7;
+                    missile.y -= missileSpeed * 0.7;
+                    if (missile.y <= missile.targetHeight) {
+                        missile.phase = 'vertical';
+                    }
+                } else {
+                    missile.y -= missileSpeed * 0.9;
+                }
+
+                if (missile.y < -50) {
+                    missiles.splice(i, 1);
+                }
+            }
+        }
+
+        function updateExplosions() {
+            for (let i = explosions.length - 1; i >= 0; i--) {
+                const exp = explosions[i];
+                if (Date.now() - exp.startTime > 500) {
+                    explosions.splice(i, 1);
+                }
+            }
+        }
+
+        function updatePowerUps() {
+            for (let i = powerUps.length - 1; i >= 0; i--) {
+                const pu = powerUps[i];
+                pu.y -= 3;
+                if (pu.y < -60) {
+                    powerUps.splice(i, 1);
+                }
+            }
+        }
+
+        function updateFragments() {
+            for (let i = fragments.length - 1; i >= 0; i--) {
+                const frag = fragments[i];
+                frag.y += frag.speedY;
+                frag.x += frag.speedX;
+                frag.alpha -= 0.01;
+                
+                if (frag.alpha <= 0) {
+                    fragments.splice(i, 1);
+                }
+            }
+        }
+
+        function updateMineRegen() {
+            if (mineAmmo < maxMineAmmo) {
                 const now = Date.now();
-                if (now - subProps.lastMissileTime[sub.id] > subProps.missileCooldown) {
-                    if (Math.random() < 0.01) { // 1%的概率发射导弹
-                        missiles.push({
-                            x: sub.x + subProps.width/2 - missileProps.width/2,
-                            y: sub.y - missileProps.height,
-                            width: missileProps.width,
-                            height: missileProps.height
-                        });
-                        subProps.lastMissileTime[sub.id] = now;
+                if (now - mineRegenTime >= 2000) {
+                    mineAmmo++;
+                    mineRegenTime = now;
+                }
+            }
+        }
+
+        function spawnGoldSubmarine() {
+            let x = canvas.width + 150;
+            let y = 700 + Math.random() * 250;
+            const width = 240;
+            const height = 120;
+            
+            // 尝试找到不重叠的位置（最多尝试10次）
+            let attempts = 0;
+            while (isOverlapping(x, y, width, height) && attempts < 10) {
+                y = 700 + Math.random() * 250;
+                attempts++;
+            }
+            
+            // 如果找到合适位置才生成
+            if (!isOverlapping(x, y, width, height)) {
+                submarines.push({
+                    x: x,
+                    y: y,
+                    width: width,
+                    height: height,
+                    id: 'gold_' + Date.now(),
+                    isGold: true,
+                    lastMissileTime: 0
+                });
+            }
+        }
+
+        // ==================== 绘制函数 ====================
+        function draw() {
+            drawPlayer();
+            drawSubmarines();
+            drawMissiles();
+            drawMines();
+            drawExplosions();
+            drawPowerUps();
+            drawFragments();
+            drawUI();
+            
+            // 绘制游戏结束或胜利画面
+            if (gameOver) {
+                drawGameOver();
+            }
+        }
+        
+        // 游戏结束菜单选项
+        let gameOverOption = 0; // 0 = 重新挑战, 1 = 重新配置
+        
+        function drawGameOver() {
+            // 半透明遮罩
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // 失败画面
+            ctx.fillStyle = '#ff4444';
+            ctx.font = 'bold 72px Arial';
+            ctx.fillText('💥 任务失败', canvas.width / 2, canvas.height / 2 - 150);
+            
+            ctx.fillStyle = '#fff';
+            ctx.font = '36px Arial';
+            ctx.fillText(`最终得分: ${score}`, canvas.width / 2, canvas.height / 2 - 30);
+            
+            // 选项1: 重新挑战
+            if (gameOverOption === 0) {
+                ctx.fillStyle = '#4a9eff';
+                ctx.fillRect(canvas.width / 2 - 200, canvas.height / 2 + 50, 400, 60);
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 28px Arial';
+            } else {
+                ctx.fillStyle = '#2a5a8c';
+                ctx.fillRect(canvas.width / 2 - 200, canvas.height / 2 + 50, 400, 60);
+                ctx.fillStyle = '#8ab4c7';
+                ctx.font = '28px Arial';
+            }
+            ctx.fillText('🔄 重新挑战', canvas.width / 2, canvas.height / 2 + 80);
+            
+            // 选项2: 重新配置战船
+            if (gameOverOption === 1) {
+                ctx.fillStyle = '#4a9eff';
+                ctx.fillRect(canvas.width / 2 - 200, canvas.height / 2 + 130, 400, 60);
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 28px Arial';
+            } else {
+                ctx.fillStyle = '#2a5a8c';
+                ctx.fillRect(canvas.width / 2 - 200, canvas.height / 2 + 130, 400, 60);
+                ctx.fillStyle = '#8ab4c7';
+                ctx.font = '28px Arial';
+            }
+            ctx.fillText('⚙️ 重新配置战船', canvas.width / 2, canvas.height / 2 + 160);
+            
+            // 提示文字
+            ctx.fillStyle = '#8ab4c7';
+            ctx.font = '20px Arial';
+            ctx.fillText('↑↓ 选择选项    回车键确认', canvas.width / 2, canvas.height / 2 + 250);
+        }
+
+        function drawBackground() {
+            // 使用图片背景
+            if (assets.background.complete && assets.background.naturalWidth > 0) {
+                ctx.drawImage(assets.background, 0, 0, canvas.width, canvas.height);
+            } else {
+                // 备用渐变背景
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, '#1a3a5c');
+                gradient.addColorStop(0.5, '#0d2137');
+                gradient.addColorStop(1, '#061220');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        function drawPlayer() {
+            // 根据技能等级选择图片
+            let shipImage = assets.playerShip;
+            if (player.visualType === 'turbo') {
+                shipImage = assets.playerShipTurbo;
+            } else if (player.visualType === 'armor') {
+                shipImage = assets.playerShipArmor;
+            }
+            
+            // 绘制舰船图片
+            if (shipImage.complete && shipImage.naturalWidth > 0) {
+                ctx.drawImage(shipImage, player.x, player.y, player.width, player.height);
+            } else {
+                // 备用绘制
+                let shipColor = '#4a9eff';
+                if (player.visualType === 'turbo') shipColor = '#ff6b4a';
+                else if (player.visualType === 'armor') shipColor = '#7a8a9a';
+                
+                ctx.fillStyle = shipColor;
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+            }
+        }
+
+        function drawSubmarines() {
+            submarines.forEach(sub => {
+                const subImage = sub.isGold ? assets.goldSubmarine : assets.submarine;
+                
+                // 绘制潜艇图片
+                if (subImage && subImage.complete && subImage.naturalWidth > 0) {
+                    ctx.drawImage(subImage, sub.x, sub.y, sub.width, sub.height);
+                } else {
+                    // 备用绘制
+                    ctx.fillStyle = sub.isGold ? '#ffd700' : '#8b4513';
+                    ctx.fillRect(sub.x, sub.y, sub.width, sub.height);
+                }
+            });
+        }
+
+        function drawMissiles() {
+            missiles.forEach(missile => {
+                // 绘制导弹图片
+                if (assets.missile.complete && assets.missile.naturalWidth > 0) {
+                    ctx.save();
+                    ctx.translate(missile.x + missile.width/2, missile.y + missile.height/2);
+                    
+                    if (missile.phase === 'diagonal') {
+                        // 斜向阶段：根据方向旋转，-90度表示朝上偏左/右
+                        ctx.rotate(missile.direction * Math.PI / 4 - Math.PI / 2);
+                    } else {
+                        // 垂直阶段：朝上（-90度）
+                        ctx.rotate(-Math.PI / 2);
+                    }
+                    
+                    ctx.drawImage(assets.missile, -missile.width/2, -missile.height/2, missile.width, missile.height);
+                    ctx.restore();
+                } else {
+                    // 备用绘制
+                    ctx.save();
+                    ctx.translate(missile.x + missile.width/2, missile.y + missile.height/2);
+                    ctx.fillStyle = '#ff4444';
+                    
+                    if (missile.phase === 'diagonal') {
+                        ctx.rotate(missile.direction * Math.PI / 4 - Math.PI / 2);
+                    } else {
+                        ctx.rotate(-Math.PI / 2);
+                    }
+                    
+                    ctx.fillRect(-missile.width/2, -missile.height/2, missile.width, missile.height);
+                    ctx.restore();
+                }
+            });
+        }
+
+        function drawMines() {
+            mines.forEach(mine => {
+                // 绘制水雷图片
+                if (assets.mine.complete && assets.mine.naturalWidth > 0) {
+                    ctx.drawImage(assets.mine, mine.x, mine.y, mine.width, mine.height);
+                } else {
+                    // 备用绘制
+                    ctx.fillStyle = '#4444ff';
+                    ctx.beginPath();
+                    ctx.arc(mine.x + mine.width/2, mine.y + mine.height/2, mine.width/2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+        }
+
+        function drawExplosions() {
+            explosions.forEach(exp => {
+                const elapsed = Date.now() - exp.startTime;
+                const alpha = 1 - elapsed / 500;
+                const size = 120 * (1 + elapsed / 500);
+                
+                // 绘制爆炸图片
+                if (assets.explosion.complete && assets.explosion.naturalWidth > 0) {
+                    ctx.save();
+                    ctx.globalAlpha = alpha;
+                    ctx.drawImage(assets.explosion, exp.x - size, exp.y - size, size * 2, size * 2);
+                    ctx.restore();
+                } else {
+                    // 备用绘制
+                    ctx.fillStyle = `rgba(255, 150, 50, ${alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(exp.x, exp.y, size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+        }
+
+        function drawPowerUps() {
+            powerUps.forEach(pu => {
+                const puImage = pu.type === 'hp' ? assets.powerUpHp : assets.powerUpRange;
+                
+                // 绘制道具图片
+                if (puImage && puImage.complete && puImage.naturalWidth > 0) {
+                    ctx.drawImage(puImage, pu.x, pu.y, pu.width, pu.height);
+                } else {
+                    // 备用绘制
+                    ctx.font = '48px Arial';
+                    if (pu.type === 'hp') {
+                        ctx.fillText('❤️', pu.x, pu.y + 45);
+                    } else {
+                        ctx.fillText('💥', pu.x, pu.y + 45);
                     }
                 }
             });
         }
 
-        // 更新导弹位置
-        function updateMissiles() {
-            missiles.forEach((missile, index) => {
-                missile.y -= missileProps.speed; // 导弹向上飞（攻击玩家）
-                // 超出画布移除导弹
-                if (missile.y < -missileProps.height) {
-                    missiles.splice(index, 1);
-                }
+        function drawFragments() {
+            fragments.forEach(frag => {
+                ctx.fillStyle = `rgba(139, 69, 19, ${frag.alpha})`;
+                ctx.fillRect(frag.x, frag.y, frag.size, frag.size);
             });
         }
 
-        // 碰撞检测：矩形碰撞（适配素材尺寸）
+        function drawUI() {
+            // 左上角 - HP和MP
+            ctx.fillStyle = '#fff';
+            ctx.font = '24px Arial';
+            ctx.textAlign = 'left';
+            
+            // HP条
+            ctx.fillText('HP', 45, 60);
+            ctx.fillStyle = '#333';
+            ctx.fillRect(90, 38, 225, 30);
+            ctx.fillStyle = hp > maxHp * 0.3 ? '#44ff44' : '#ff4444';
+            ctx.fillRect(90, 38, 225 * (hp / maxHp), 30);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(90, 38, 225, 30);
+            
+            // MP条
+            ctx.fillStyle = '#fff';
+            ctx.fillText('MP', 45, 105);
+            ctx.fillStyle = '#333';
+            ctx.fillRect(90, 83, 225, 30);
+            ctx.fillStyle = '#4444ff';
+            ctx.fillRect(90, 83, 225 * (mp / 100), 30);
+            ctx.strokeStyle = '#fff';
+            ctx.strokeRect(90, 83, 225, 30);
+            
+            // 超级武器提示
+            if (mp >= 100) {
+                ctx.fillStyle = '#ffd700';
+                ctx.font = 'bold 21px Arial';
+                ctx.fillText('按 Z 使用超级武器!', 90, 143);
+            }
+            
+            // 右上角 - 弹药和分数
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#fff';
+            ctx.font = '24px Arial';
+            
+            // 水雷数量
+            ctx.fillText(`💣 ${mineAmmo}/${maxMineAmmo}`, canvas.width - 45, 60);
+            
+            // 分数
+            ctx.font = '36px Arial';
+            ctx.fillText(`得分: ${score}`, canvas.width - 45, 105);
+        }
+
+        // ==================== 碰撞检测 ====================
+        function checkCollisions() {
+            // 水雷 vs 潜艇
+            for (let mIndex = mines.length - 1; mIndex >= 0; mIndex--) {
+                const mine = mines[mIndex];
+                for (let sIndex = submarines.length - 1; sIndex >= 0; sIndex--) {
+                    const sub = submarines[sIndex];
+                    if (checkCollision(mine, sub)) {
+                        // 触发连锁爆炸
+                        triggerChainExplosion(sub);
+                        
+                        mines.splice(mIndex, 1);
+                        
+                        break; // 水雷已销毁，跳出潜艇循环
+                    }
+                }
+            }
+
+            // 导弹 vs 玩家
+            for (let mIndex = missiles.length - 1; mIndex >= 0; mIndex--) {
+                const missile = missiles[mIndex];
+                if (checkCollision(missile, player)) {
+                    createExplosion(player.x + player.width/2, player.y + player.height/2);
+                    missiles.splice(mIndex, 1);
+                    hp -= 20;
+                    
+                    if (hp <= 0) {
+                        gameOver = true;
+                    }
+                }
+            }
+
+            // 玩家 vs 道具
+            for (let pIndex = powerUps.length - 1; pIndex >= 0; pIndex--) {
+                const pu = powerUps[pIndex];
+                if (checkCollision(pu, player)) {
+                    if (pu.type === 'hp') {
+                        hp = Math.min(hp + maxHp * 0.3, maxHp);
+                    } else {
+                        // 爆炸范围提升
+                    }
+                    powerUps.splice(pIndex, 1);
+                }
+            }
+        }
+
         function checkCollision(rect1, rect2) {
             return rect1.x < rect2.x + rect2.width &&
                    rect1.x + rect1.width > rect2.x &&
@@ -463,127 +1188,191 @@
                    rect1.y + rect1.height > rect2.y;
         }
 
-        // 检测水雷和潜艇的碰撞
-        function checkMineSubCollision() {
-            mines.forEach((mine, mineIndex) => {
-                submarines.forEach((sub, subIndex) => {
-                    if (checkCollision(mine, {
-                        x: sub.x,
-                        y: sub.y,
-                        width: subProps.width,
-                        height: subProps.height
-                    })) {
-                        // 爆炸效果
-                        explosions.push({
-                            x: mine.x + mineProps.width/2,
-                            y: mine.y + mineProps.height/2,
-                            startTime: Date.now()
-                        });
-                        // 移除水雷和重置潜艇位置
-                        mines.splice(mineIndex, 1);
-                        sub.x = canvas.width + Math.random() * 300;
-                        sub.y = 380 + Math.random() * 210;
-                        // 加分
-                        score++;
-                        // 满分判定胜利
-                        if (score >= 20) {
-                            gameWin = true;
-                            gameOver = true;
-                        }
-                    }
-                });
+        function createExplosion(x, y) {
+            explosions.push({
+                x: x,
+                y: y,
+                startTime: Date.now()
             });
         }
 
-        // 检测导弹和玩家的碰撞
-        function checkMissilePlayerCollision() {
-            missiles.forEach((missile, missileIndex) => {
-                if (checkCollision(missile, {
-                    x: player.x,
-                    y: player.y,
-                    width: player.width,
-                    height: player.height
-                })) {
-                    // 爆炸效果
-                    explosions.push({
-                        x: missile.x + missileProps.width/2,
-                        y: missile.y + missileProps.height/2,
-                        startTime: Date.now()
+        // 连锁爆炸函数
+        function triggerChainExplosion(initialSub) {
+            const chainRadius = 300; // 连锁爆炸半径
+            const explodedSubs = []; // 记录被炸掉的潜艇
+            
+            // 找到所有在爆炸范围内的潜艇
+            for (let i = submarines.length - 1; i >= 0; i--) {
+                const sub = submarines[i];
+                const dx = sub.x + sub.width/2 - (initialSub.x + initialSub.width/2);
+                const dy = sub.y + sub.height/2 - (initialSub.y + initialSub.height/2);
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance <= chainRadius) {
+                    explodedSubs.push({
+                        sub: sub,
+                        index: i,
+                        distance: distance
                     });
-                    // 移除导弹
-                    missiles.splice(missileIndex, 1);
-                    // 扣血
-                    lives--;
-                    // 触发受击反馈
-                    hitFeedback.active = true;
-                    hitFeedback.startTime = Date.now();
-                    // 触发船体抖动
-                    player.shake.active = true;
-                    player.shake.startTime = Date.now();
-                    // 生命值为0判定失败
-                    if (lives <= 0) {
-                        gameOver = true;
+                }
+            }
+            
+            // 按距离排序，近的先爆炸
+            explodedSubs.sort((a, b) => a.distance - b.distance);
+            
+            // 依次爆炸
+            explodedSubs.forEach((item, idx) => {
+                setTimeout(() => {
+                    const sub = item.sub;
+                    createExplosion(sub.x + sub.width/2, sub.y + sub.height/2);
+                    createFragments(sub.x + sub.width/2, sub.y + sub.height/2);
+                    
+                    if (sub.isGold) {
+                        dropPowerUp(sub.x, sub.y);
+                    }
+                    
+                    // 从数组中移除
+                    const subIndex = submarines.indexOf(sub);
+                    if (subIndex > -1) {
+                        submarines.splice(subIndex, 1);
+                    }
+                    
+                    score++;
+                    mp = Math.min(mp + 10, 100);
+                }, idx * 100); // 每个延迟100ms
+            });
+            
+            // 如果只有初始潜艇被炸（没有连锁），立即处理
+            if (explodedSubs.length === 0) {
+                createExplosion(initialSub.x + initialSub.width/2, initialSub.y + initialSub.height/2);
+                createFragments(initialSub.x + initialSub.width/2, initialSub.y + initialSub.height/2);
+                
+                if (initialSub.isGold) {
+                    dropPowerUp(initialSub.x, initialSub.y);
+                }
+                
+                const index = submarines.indexOf(initialSub);
+                if (index > -1) {
+                    submarines.splice(index, 1);
+                }
+                
+                score++;
+                mp = Math.min(mp + 10, 100);
+            }
+        }
+
+        function createFragments(x, y) {
+            for (let i = 0; i < 12; i++) {
+                fragments.push({
+                    x: x,
+                    y: y,
+                    size: 8 + Math.random() * 16,
+                    speedX: (Math.random() - 0.5) * 6,
+                    speedY: 2 + Math.random() * 3,
+                    alpha: 1
+                });
+            }
+        }
+
+        function dropPowerUp(x, y) {
+            const type = Math.random() > 0.5 ? 'hp' : 'range';
+            powerUps.push({
+                x: x,
+                y: y,
+                width: 60,
+                height: 60,
+                type: type
+            });
+        }
+
+        // ==================== 输入处理 ====================
+        const keys = {};
+
+        document.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+
+            if (gameState.currentScreen === 'game') {
+                // 游戏结束菜单导航
+                if (gameOver) {
+                    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                        // 上下键切换选项
+                        gameOverOption = gameOverOption === 0 ? 1 : 0;
+                        return;
+                    }
+                    
+                    if (e.key === 'Enter') {
+                        if (gameOverOption === 0) {
+                            // 重新挑战 - 重置选项并重新开始
+                            gameOverOption = 0;
+                            initGame();
+                        } else {
+                            // 重新配置战船 - 返回技能面板
+                            gameOverOption = 0;
+                            gameState.currentScreen = 'skill';
+                            document.getElementById('gameCanvas').style.display = 'none';
+                            document.getElementById('cockpitFrame').style.display = 'none';
+                            document.getElementById('skillPanel').style.display = 'flex';
+                            // 重置技能点
+                            gameState.skillPoints = { speed: 0, hp: 0, ammo: 0 };
+                            updateSkillUI();
+                        }
+                        return;
                     }
                 }
-            });
-        }
-
-        // 绘制背景（使用素材）
-        function drawBackground() {
-            ctx.drawImage(assets.background, 0, 0, canvas.width, canvas.height);
-        }
-
-        // 游戏主循环
-        function gameLoop() {
-            if (!assetsLoaded) return; // 素材未加载完成不执行
-            
-            // 清画布
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // 绘制背景
-            drawBackground();
-
-            if (!gameOver) {
-                // 更新游戏元素
-                updatePlayer();
-                updateMines();
-                updateSubmarines();
-                updateMissiles();
-                updateMineAmmo(); // 更新水雷弹药恢复
                 
-                // 碰撞检测
-                checkMineSubCollision();
-                checkMissilePlayerCollision();
+                if (e.key === ' ' && mineAmmo > 0 && !gameOver) {
+                    mines.push({
+                        x: player.x + player.width / 2 - 30,
+                        y: player.y + player.height,
+                        width: 60,
+                        height: 90,
+                        speed: 5
+                    });
+                    mineAmmo--;
+                    mineRegenTime = Date.now();
+                }
+
+                if ((e.key === 'z' || e.key === 'Z') && !gameOver) {
+                    if (mp >= 100) {
+                        useSuperWeapon();
+                    }
+                }
             }
+        });
 
-            // 绘制所有游戏元素（按层级）
-            drawHearts();    // 最上层：红心
-            drawMineAmmo();  // 水雷弹药数量
-            drawScore();     // 最上层：得分
-            drawPlayer();    // 玩家战船
-            drawMines();     // 水雷
-            drawSubmarines();// 潜艇
-            drawMissiles();  // 导弹
-            drawExplosions();// 爆炸效果
-            drawHitFeedback();// 受击反馈（红色遮罩）
-            drawGameStatus();// 游戏状态提示
+        document.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
 
-            // 继续循环
-            requestAnimationFrame(gameLoop);
+        function useSuperWeapon() {
+            mp = 0;
+            
+            // 清空所有敌方导弹
+            missiles.forEach(missile => {
+                createExplosion(missile.x + missile.width/2, missile.y + missile.height/2);
+            });
+            missiles = [];
+            
+            // 时停效果 - 消灭所有潜艇
+            submarines.forEach(sub => {
+                createExplosion(sub.x + sub.width/2, sub.y + sub.height/2);
+                createFragments(sub.x + sub.width/2, sub.y + sub.height/2);
+                // 金色潜艇掉落道具
+                if (sub.isGold) {
+                    dropPowerUp(sub.x, sub.y);
+                }
+                score++;
+            });
+            
+            submarines = [];
+            
+            setTimeout(() => {
+                initSubmarines();
+            }, 500);
         }
 
-        // 初始化游戏
-        function initGame() {
-            initSubmarines();
-            gameLoop();
-        }
-
-        // 防止素材加载超时
-        setTimeout(() => {
-            if (!assetsLoaded) {
-                alert('素材加载超时，请检查文件路径或网络！');
-            }
-        }, 5000);
+        // ==================== 启动游戏 ====================
+        window.onload = initLoading;
     </script>
 </body>
 </html>
