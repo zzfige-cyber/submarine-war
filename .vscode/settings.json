@@ -1,0 +1,13 @@
+{
+  "python.analysis.typeCheckingMode": "off",
+  "python.analysis.diagnosticMode": "off",
+  "python.analysis.autoImportCompletions": false,
+  "python.analysis.autoSearchPaths": false,
+  "python.analysis.indexing": false,
+  "python.analysis.packageIndexDepths": [],
+  "python.analysis.useImportHeuristic": false,
+  "python.analysis.enablePytestSupport": false,
+  "python.analysis.inlayHints.functionReturnTypes": false,
+  "python.analysis.inlayHints.variableTypes": false,
+  "python.analysis.inlayHints.callArgumentNames": false
+}
