@@ -1,0 +1,73 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame {
+  position: relative;
+  width: 355px;
+  height: 268px;
+
+  .rectangle17 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 346px;
+    height: 268px;
+  }
+
+  .rectangle18 {
+    position: absolute;
+    top: 74px;
+    left: 297px;
+    width: 58px;
+    height: 84px;
+  }
+
+  .rectangle16 {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 315px;
+    height: 230px;
+    background-image: url(../image/mo5muuih-abcacrh.svg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    .text {
+      position: absolute;
+      top: 15px;
+      left: 200px;
+      width: 106px;
+      height: 90px;
+      line-height: 45px;
+      letter-spacing: 0;
+      color: #838383;
+      font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 50px;
+    }
+
+    .sTargame {
+      position: absolute;
+      top: 71px;
+      left: 85px;
+      width: 208px;
+      height: 91px;
+      line-height: 37px;
+      letter-spacing: -2.97px;
+      color: #838383;
+      font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 60px;
+    }
+  }
+
+  .jimeng2026041817311 {
+    position: absolute;
+    top: 108px;
+    left: 23px;
+    opacity: 0.5;
+    width: 83px;
+    height: 103px;
+    rotate: -18deg;
+  }
+}

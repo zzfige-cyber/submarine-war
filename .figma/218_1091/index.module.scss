@@ -1,0 +1,58 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame {
+  position: relative;
+  width: 522px;
+  height: 223px;
+
+  .rectangle {
+    position: absolute;
+    top: 94px;
+    left: 9px;
+    width: 165px;
+    height: 85px;
+  }
+
+  .rectangle2 {
+    position: absolute;
+    top: 91px;
+    left: 358px;
+    width: 66px;
+    height: 82px;
+  }
+
+  .rectangle3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 522px;
+    height: 223px;
+    rotate: -180deg;
+  }
+
+  .rectangle4 {
+    position: absolute;
+    top: 75px;
+    left: 213px;
+    width: 72px;
+    height: 27px;
+  }
+
+  .image8 {
+    position: absolute;
+    top: 137px;
+    left: 84px;
+    width: 121px;
+    height: 68px;
+  }
+
+  .image9 {
+    position: absolute;
+    top: 137px;
+    left: 197px;
+    width: 121px;
+    height: 68px;
+  }
+}

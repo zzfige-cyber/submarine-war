@@ -19,15 +19,14 @@
             background-color: #0a1628;
             font-family: 'Microsoft YaHei', Arial, sans-serif;
             overflow: hidden;
+            margin: 0;
+            padding: 0;
         }
         
         #gameContainer {
-            position: relative;
             width: 1920px;
             height: 1080px;
             background: linear-gradient(180deg, #1a3a5c 0%, #0d2137 50%, #061220 100%);
-            border: 3px solid #2a5a8c;
-            border-radius: 10px;
             overflow: hidden;
         }
         
@@ -38,7 +37,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, #0d2137 0%, #061220 100%);
+            background: #222222;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -46,155 +45,399 @@
             z-index: 1000;
         }
         
-        .loadingTitle {
-            color: #4a9eff;
-            font-size: 36px;
-            margin-bottom: 30px;
-            text-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
+        .loadingLogo {
+            width: 528px;
+            height: 345px;
+            object-fit: contain;
         }
         
-        .loadingBar {
-            width: 400px;
-            height: 20px;
-            background: #1a3a5c;
-            border-radius: 10px;
+        .loadingBarContainer {
+            display: flex;
+            align-items: center;
+            margin-top: 127px;
+            width: 520px;
+            height: 14px;
+            background: #5f5f5f;
             overflow: hidden;
-            border: 2px solid #2a5a8c;
         }
         
         .loadingProgress {
             height: 100%;
-            background: linear-gradient(90deg, #4a9eff 0%, #6abfff 100%);
+            background: #b5fe12;
             width: 0%;
             transition: width 0.3s;
         }
         
         .loadingText {
-            color: #8ab4c7;
-            margin-top: 15px;
-            font-size: 18px;
+            margin-top: 14px;
+            color: #ffffff;
+            font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+            font-size: 24px;
+            letter-spacing: -1.2px;
         }
         
-        /* 技能配置面板 */
+        /* 技能配置面板 - 使用截图作为背景 */
         #skillPanel {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, #0d2137 0%, #061220 100%);
+            background: transparent;
             display: none;
-            flex-direction: column;
-            padding: 30px;
             z-index: 900;
+            overflow: hidden;
         }
         
-        .skillTitle {
-            color: #4a9eff;
-            font-size: 28px;
-            text-align: center;
-            margin-bottom: 10px;
+        /* 背景层 - 技能配置界面背景图 */
+        .skillBg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('assets/skill_bg.png?v=2');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: 1;
         }
         
-        .skillPoints {
-            color: #ffd700;
-            font-size: 20px;
-            text-align: center;
-            margin-bottom: 30px;
+        /* 技能面板容器 - 使用截图作为背景 */
+        .skillPanelWrapper {
+            position: absolute;
+            top: 150px;
+            left: 200px;
+            width: 518px;
+            height: 556px;
+            background-image: url('.figma/image/screenshot_211_626.png');
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 10;
         }
         
-        .skillItem {
-            background: rgba(26, 58, 92, 0.5);
-            border: 2px solid #2a5a8c;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* 剩余技能点数值 - 定位到截图上的位置 */
+        .skillPointsValue {
+            position: absolute;
+            top: 110px;
+            left: 350px;
+            color: #d9fa05;
+            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+            font-size: 34px;
+            font-weight: 700;
+            transform: rotate(12deg);
         }
         
-        .skillInfo {
-            flex: 1;
+        /* 技能按钮区域 - 绝对定位到截图上的位置 */
+        .skillButtonsContainer {
+            position: absolute;
+            top: -15px;
+            left: -35px;
+            width: 100%;
+            height: 100%;
         }
         
-        .skillName {
-            color: #fff;
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-        
-        .skillDesc {
-            color: #8ab4c7;
-            font-size: 14px;
-        }
-        
-        .skillControls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .skillBtn {
-            width: 40px;
-            height: 40px;
-            background: #2a5a8c;
-            border: 2px solid #4a9eff;
-            color: #fff;
-            font-size: 20px;
+        /* 减号按钮 - 移动速度 */
+        .skillBtnMinus1 {
+            position: absolute;
+            top: 238px;
+            left: 340px;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
             cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.2s;
+            padding: 0;
+            transform: rotate(2deg);
         }
         
-        .skillBtn:hover:not(:disabled) {
-            background: #4a9eff;
+        /* 加号按钮 - 移动速度 */
+        .skillBtnPlus1 {
+            position: absolute;
+            top: 240px;
+            left: 455px;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            transform: rotate(2deg);
         }
         
-        .skillBtn:disabled {
-            opacity: 0.3;
+        /* 减号按钮 - 装甲厚度 */
+        .skillBtnMinus2 {
+            position: absolute;
+            top: 328px;
+            left: 355px;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            transform: rotate(-2deg);
+        }
+        
+        /* 加号按钮 - 装甲厚度 */
+        .skillBtnPlus2 {
+            position: absolute;
+            top: 328px;
+            left: 470px;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            transform: rotate(-2deg);
+        }
+        
+        /* 减号按钮 - 弹药库 */
+        .skillBtnMinus3 {
+            position: absolute;
+            top: 420px;
+            left: 365px;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            transform: rotate(-4deg);
+        }
+        
+        /* 加号按钮 - 弹药库 */
+        .skillBtnPlus3 {
+            position: absolute;
+            top: 408px;
+            left: 480px;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            transform: rotate(-4deg);
+        }
+        
+        .skillButtonsContainer button img {
+            width: 100%;
+            height: 28px;
+        }
+        
+        /* hpPlus按钮内图片特殊定位 */
+        #hpPlusImg {
+            position: relative;
+            top: -15px;
+        }
+        
+        .skillButtonsContainer button:disabled {
             cursor: not-allowed;
+            opacity: 0.5;
         }
         
-        .skillLevel {
+        .skillButtonsContainer button:not(:disabled) {
+            transition: transform 0.2s ease;
+        }
+        
+        .skillButtonsContainer button:not(:disabled):hover {
+            transform: scale(1.3);
+        }
+        
+        /* 技能点指示器 - 定位到截图上的位置 */
+        .skillDotsContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        /* 技能点 - 移动速度 */
+        .skillDotsRow1 {
+            position: absolute;
+            top: 230px;
+            left: 350px;
             display: flex;
-            gap: 5px;
+            align-items: center;
+            gap: 4px;
+            transform: rotate(2deg);
+        }
+        
+        /* 技能点 - 装甲厚度 */
+        .skillDotsRow2 {
+            position: absolute;
+            top: 312px;
+            left: 365px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transform: rotate(-5deg);
+        }
+        
+        /* 技能点 - 弹药库 */
+        .skillDotsRow3 {
+            position: absolute;
+            top: 408px;
+            left: 385px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transform: rotate(-4deg);
         }
         
         .skillDot {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #1a3a5c;
-            border: 2px solid #4a9eff;
+            width: 17px;
+            height: 17px;
         }
         
-        .skillDot.active {
-            background: #4a9eff;
-            box-shadow: 0 0 10px rgba(74, 158, 255, 0.8);
+        /* hpLevel内第二个skillDot使用static定位 */
+        #hpLevel > .skillDot:nth-child(2) {
+            position: static;
+        }
+        
+        .skillDot img {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* 玩家船只展示 */
+        .playerShipDisplay {
+            position: absolute;
+            top: 486px;
+            left: 850px;
+            width: 522px;
+            height: 223px;
+            z-index: 15;
+        }
+        
+        /* 船只重量动画 - 下沉又上浮 */
+        @keyframes shipWeightBounce {
+            0% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(15px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        
+        .ship-weight-animation {
+            animation: shipWeightBounce 0.6s ease-out;
+        }
+        
+        .playerShipDisplay img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        /* 涡轮增压层 - 在最下层 */
+        .shipTurbo {
+            z-index: 1;
+            display: none;
+        }
+        
+        .shipTurbo.active {
+            display: block;
+        }
+        
+        /* 涡轮增压特定样式 */
+        #shipTurbo {
+            width: 115px;
+            top: 27px;
+            left: 13px;
+        }
+        
+        /* 弹药库层 */
+        .shipAmmo {
+            z-index: 2;
+            display: none;
+        }
+        
+        .shipAmmo.active {
+            display: block;
+        }
+        
+        /* 弹药库特定样式 */
+        #shipAmmo {
+            width: 60px;
+            left: 364px;
+            top: 19px;
+            z-index: 2;
+        }
+        
+        /* 船只基础层 */
+        .shipBase {
+            z-index: 3;
+        }
+        
+        /* 船只基础特定样式 */
+        #shipBase {
+            top: 0px;
+        }
+        
+        /* 装甲层 - 在最上层 */
+        .shipArmor {
+            z-index: 4;
+            display: none;
+        }
+        
+        .shipArmor.active {
+            display: block;
+        }
+        
+        /* 装甲特定样式 */
+        #shipArmor {
+            width: 240px;
+            left: 84px;
+            top: 55px;
+        }
+        
+        /* 开始游戏按钮 - 使用图片素材 */
+        .startGameBtnWrapper {
+            position: absolute;
+            top: 660px;
+            left: 349px;
+            z-index: 20;
         }
         
         .startGameBtn {
-            width: 200px;
-            height: 50px;
-            margin: 20px auto 0;
-            background: #2a5a8c;
-            border: 2px solid #4a9eff;
-            color: #fff;
-            font-size: 20px;
+            width: 355px;
+            height: 268px;
+            border: none;
+            background: transparent;
             cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.3s;
+            padding: 0;
         }
         
-        .startGameBtn:hover:not(:disabled) {
-            background: #4a9eff;
-            box-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
+        .startGameBtn img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         
         .startGameBtn:disabled {
-            opacity: 0.3;
             cursor: not-allowed;
+        }
+        
+        .startGameBtn:not(:disabled) {
+            transition: transform 0.2s ease;
+        }
+        
+        .startGameBtn:not(:disabled):hover {
+            transform: scale(1.05);
         }
         
         /* 游戏画布 */
@@ -204,133 +447,279 @@
             height: 100%;
         }
         
-        /* 座舱边框效果 */
-        .cockpitFrame {
+        /* 受攻击闪红效果 */
+        #damageFlash {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background: rgba(255, 0, 0, 0);
             pointer-events: none;
-            border: 20px solid transparent;
-            border-image: linear-gradient(135deg, #1a3a5c 0%, #2a5a8c 50%, #1a3a5c 100%) 1;
+            z-index: 500;
+            transition: background 0.1s ease-out;
         }
         
-        .cockpitCorner {
+        #damageFlash.active {
+            background: rgba(255, 0, 0, 0.25);
+        }
+        
+        /* 游戏结束画面 */
+        #gameOverScreen {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            border: 3px solid #4a9eff;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            z-index: 1000;
         }
         
-        .cockpitCorner.topLeft {
-            top: 10px;
-            left: 10px;
-            border-right: none;
-            border-bottom: none;
+        #gameOverScreen.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        .cockpitCorner.topRight {
-            top: 10px;
-            right: 10px;
-            border-left: none;
-            border-bottom: none;
+        .gameOverOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            transition: background 0.5s ease;
         }
         
-        .cockpitCorner.bottomLeft {
-            bottom: 10px;
-            left: 10px;
-            border-right: none;
-            border-top: none;
+        #gameOverScreen.active .gameOverOverlay {
+            background: rgba(0, 0, 0, 0.65);
         }
         
-        .cockpitCorner.bottomRight {
-            bottom: 10px;
-            right: 10px;
-            border-left: none;
-            border-top: none;
+        .gameOverContent {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
+        
+        .gameOverTitle {
+            width: 1000px;
+            height: auto;
+            margin-top: -60px;
+            z-index: 2;
+        }
+        
+        .scorePanel {
+            position: absolute;
+            top: 260px;
+            left: 336px;
+            width: 514px;
+            height: auto;
+            margin-bottom: 20px;
+            z-index: 3;
+        }
+        
+        .scorePanelBg {
+            width: 100%;
+            height: auto;
+        }
+        
+        .finalScore {
+            position: absolute;
+            top: 50%;
+            left: 55%;
+            transform: translateY(-50%);
+            color: #e8f05c;
+            font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+            font-size: 50px;
+            font-weight: bold;
+        }
+        
+        .gameOverButtons {
+            position: relative;
+            width: 972px;
+            height: 179px;
+            margin-top: 20px;
+        }
+        
+        .gameOverBtn {
+            position: absolute;
+            height: auto;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0.6;
+        }
+        
+        .gameOverBtn:hover,
+        .gameOverBtn.active {
+            opacity: 1;
+            transform: scale(1.08);
+        }
+        
+        #btnRetry {
+            width: 488px;
+            height: 172px;
+            left: 49px;
+            top: 0px;
+            opacity: 1;
+        }
+        
+        #btnRetry:hover,
+        #btnRetry.active {
+            transform: scale(1.1);
+        }
+        
+        #btnConfig {
+            width: 492px;
+            height: 207px;
+            left: 459px;
+            top: -33px;
+            opacity: 1;
+        }
+        
     </style>
 </head>
 <body>
     <div id="gameContainer">
         <!-- 加载页面 -->
         <div id="loadingScreen">
-            <div class="loadingTitle">🚢 深海猎手</div>
-            <div class="loadingBar">
+            <img src="assets/logo.png" alt="潜艇大作战" class="loadingLogo">
+            <div class="loadingBarContainer">
                 <div class="loadingProgress" id="loadingProgress"></div>
             </div>
-            <div class="loadingText" id="loadingText">加载中... 0%</div>
+            <div class="loadingText" id="loadingText">正在加载海底地形</div>
         </div>
         
         <!-- 技能配置面板 -->
         <div id="skillPanel">
-            <div class="skillTitle">⚓ 舰船配置</div>
-            <div class="skillPoints">剩余技能点: <span id="remainingPoints">5</span> / 5</div>
+            <!-- 背景层 -->
+            <div class="skillBg"></div>
             
-            <div class="skillItem">
-                <div class="skillInfo">
-                    <div class="skillName">⚡ 移动速度</div>
-                    <div class="skillDesc">满级3点，提升舰船机动性</div>
+            <!-- 玩家船只展示 -->
+            <div class="playerShipDisplay">
+                <img src=".figma/image/screenshot_211_704.png" alt="战舰基础" class="shipBase" id="shipBase">
+                <img src=".figma/image/screenshot_218_1099.png" alt="涡轮增压" class="shipTurbo" id="shipTurbo">
+                <img src=".figma/image/screenshot_218_1105.png" alt="装甲" class="shipArmor" id="shipArmor">
+                <img src=".figma/image/screenshot_218_1100.png" alt="火药桶" class="shipAmmo" id="shipAmmo">
+            </div>
+            
+            <!-- 技能面板容器 - 使用截图作为背景 -->
+            <div class="skillPanelWrapper">
+                <!-- 剩余技能点数值 -->
+                <span class="skillPointsValue" id="remainingPoints">5/5</span>
+                
+                <!-- 技能按钮区域 -->
+                <div class="skillButtonsContainer">
+                    <!-- 移动速度按钮 -->
+                    <button class="skillBtnMinus1" id="speedMinus" onclick="adjustSkill('speed', -1)">
+                        <img src="assets/btn_minus_disabled.png" id="speedMinusImg" alt="-">
+                    </button>
+                    <button class="skillBtnPlus1" id="speedPlus" onclick="adjustSkill('speed', 1)">
+                        <img src="assets/btn_plus_enabled.png" id="speedPlusImg" alt="+">
+                    </button>
+                    
+                    <!-- 装甲厚度按钮 -->
+                    <button class="skillBtnMinus2" id="hpMinus" onclick="adjustSkill('hp', -1)">
+                        <img src="assets/btn_minus_disabled.png" id="hpMinusImg" alt="-">
+                    </button>
+                    <button class="skillBtnPlus2" id="hpPlus" onclick="adjustSkill('hp', 1)">
+                        <img src="assets/btn_plus_enabled.png" id="hpPlusImg" alt="+">
+                    </button>
+                    
+                    <!-- 弹药库按钮 -->
+                    <button class="skillBtnMinus3" id="ammoMinus" onclick="adjustSkill('ammo', -1)">
+                        <img src="assets/btn_minus_disabled.png" id="ammoMinusImg" alt="-">
+                    </button>
+                    <button class="skillBtnPlus3" id="ammoPlus" onclick="adjustSkill('ammo', 1)">
+                        <img src="assets/btn_plus_enabled.png" id="ammoPlusImg" alt="+">
+                    </button>
                 </div>
-                <div class="skillControls">
-                    <button class="skillBtn" id="speedMinus" onclick="adjustSkill('speed', -1)">-</button>
-                    <div class="skillLevel" id="speedLevel">
-                        <div class="skillDot"></div>
-                        <div class="skillDot"></div>
-                        <div class="skillDot"></div>
+                
+                <!-- 技能点指示器 -->
+                <div class="skillDotsContainer">
+                    <div class="skillDotsRow1" id="speedLevel">
+                        <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
+                        <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
+                        <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
                     </div>
-                    <button class="skillBtn" id="speedPlus" onclick="adjustSkill('speed', 1)">+</button>
+                    <div class="skillDotsRow2" id="hpLevel">
+                        <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
+                        <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
+                        <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
+                    </div>
+                    <div class="skillDotsRow3" id="ammoLevel">
+                        <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
+                        <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
+                    </div>
                 </div>
             </div>
             
-            <div class="skillItem">
-                <div class="skillInfo">
-                    <div class="skillName">🛡️ 装甲血量</div>
-                    <div class="skillDesc">满级3点，增加舰船耐久</div>
-                </div>
-                <div class="skillControls">
-                    <button class="skillBtn" id="hpMinus" onclick="adjustSkill('hp', -1)">-</button>
-                    <div class="skillLevel" id="hpLevel">
-                        <div class="skillDot"></div>
-                        <div class="skillDot"></div>
-                        <div class="skillDot"></div>
-                    </div>
-                    <button class="skillBtn" id="hpPlus" onclick="adjustSkill('hp', 1)">+</button>
-                </div>
+            <!-- 开始游戏按钮 -->
+            <div class="startGameBtnWrapper">
+                <button class="startGameBtn" id="startGameBtn" onclick="startGame()" disabled>
+                    <img src="assets/btn_start_disabled.png" id="startGameBtnImg" alt="启航 STAR GAME">
+                </button>
             </div>
-            
-            <div class="skillItem">
-                <div class="skillInfo">
-                    <div class="skillName">💣 弹药库</div>
-                    <div class="skillDesc">满级2点，增加水雷携带量</div>
-                </div>
-                <div class="skillControls">
-                    <button class="skillBtn" id="ammoMinus" onclick="adjustSkill('ammo', -1)">-</button>
-                    <div class="skillLevel" id="ammoLevel">
-                        <div class="skillDot"></div>
-                        <div class="skillDot"></div>
-                    </div>
-                    <button class="skillBtn" id="ammoPlus" onclick="adjustSkill('ammo', 1)">+</button>
-                </div>
-            </div>
-            
-            <button class="startGameBtn" id="startGameBtn" onclick="startGame()" disabled>开始游戏</button>
         </div>
         
         <!-- 游戏画布 -->
         <canvas id="gameCanvas" width="1920" height="1080"></canvas>
         
-        <!-- 座舱边框 -->
-        <div class="cockpitFrame" id="cockpitFrame" style="display: none;">
-            <div class="cockpitCorner topLeft"></div>
-            <div class="cockpitCorner topRight"></div>
-            <div class="cockpitCorner bottomLeft"></div>
-            <div class="cockpitCorner bottomRight"></div>
+        <!-- 受攻击闪红效果 -->
+        <div id="damageFlash"></div>
+        
+        <!-- 游戏结束画面 -->
+        <div id="gameOverScreen">
+            <div class="gameOverOverlay"></div>
+            <div class="gameOverContent">
+                <div class="scorePanel">
+                    <img src=".figma/image/screenshot_222_1203.png" alt="最终得分" class="scorePanelBg">
+                    <span class="finalScore" id="finalScore">0</span>
+                </div>
+                <img src=".figma/image/screenshot_222_1196.png" alt="GAME OVER" class="gameOverTitle">
+                <div class="gameOverButtons">
+                    <img src=".figma/image/screenshot_222_1157.png" alt="重新挑战" class="gameOverBtn" id="btnRetry" data-option="0">
+                    <img src=".figma/image/screenshot_222_1158.png" alt="配置战舰" class="gameOverBtn" id="btnConfig" data-option="1">
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        // ==================== 响应式缩放 ====================
+        function updateGameScale() {
+            const container = document.getElementById('gameContainer');
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const gameWidth = 1920;
+            const gameHeight = 1080;
+            
+            // 计算缩放比例，保持宽高比
+            const scaleX = windowWidth / gameWidth;
+            const scaleY = windowHeight / gameHeight;
+            const scale = Math.min(scaleX, scaleY);
+            
+            // 应用缩放并居中
+            container.style.transform = `scale(${scale})`;
+            container.style.position = 'absolute';
+            container.style.left = '50%';
+            container.style.top = '50%';
+            container.style.marginLeft = -(gameWidth / 2) + 'px';
+            container.style.marginTop = -(gameHeight / 2) + 'px';
+            
+            // 调整容器尺寸
+            container.style.width = gameWidth + 'px';
+            container.style.height = gameHeight + 'px';
+        }
+        
+        // 初始化缩放
+        updateGameScale();
+        
+        // 窗口大小改变时更新缩放
+        window.addEventListener('resize', updateGameScale);
+        
         // ==================== 游戏配置 ====================
         const GAME_CONFIG = {
             canvas: {
@@ -367,32 +756,64 @@
         // ==================== 素材系统 ====================
         const assets = {
             background: new Image(),
+            backgroundWide: new Image(),
             playerShip: new Image(),
             playerShipArmor: new Image(),
             playerShipTurbo: new Image(),
+            shipBase: new Image(),
+            shipTurbo: new Image(),
+            shipArmor: new Image(),
+            shipAmmo: new Image(),
             submarine: new Image(),
+            submarine2: new Image(),
             goldSubmarine: new Image(),
             missile: new Image(),
             mine: new Image(),
             explosion: new Image(),
             powerUpHp: new Image(),
             powerUpRange: new Image(),
-            cockpitFrame: new Image()
+            superWeaponBg: new Image(),
+            gameOverTitle: new Image(),
+            btnRetry: new Image(),
+            btnConfig: new Image(),
+            scorePanel: new Image()
         };
 
         const assetPaths = {
             background: 'assets/background.png',
+            backgroundWide: '.figma/image/screenshot_218_1106.png',
             playerShip: 'assets/player_ship.png',
             playerShipArmor: 'assets/player_ship_armor.png',
             playerShipTurbo: 'assets/player_ship_turbo.png',
-            submarine: 'assets/submarine.png',
-            goldSubmarine: 'assets/gold_submarine.png',
-            missile: 'assets/missile.png',
-            mine: 'assets/mine.png',
+            shipBase: '.figma/image/screenshot_211_704.png?v=2',
+            shipTurbo: '.figma/image/screenshot_218_1099.png?v=2',
+            shipArmor: '.figma/image/screenshot_218_1105.png?v=2',
+            shipAmmo: '.figma/image/screenshot_218_1100.png?v=2',
+            submarine: '.figma/image/screenshot_198_313.png',
+            submarine2: '.figma/image/screenshot_202_32.png',
+            goldSubmarine: '.figma/image/screenshot_198_304.png',
+            missile: '.figma/image/screenshot_199_12.png',
+            mine: '.figma/image/screenshot_202_60.png',
             explosion: 'assets/explosion.png',
-            powerUpHp: 'assets/powerup_hp.png',
-            powerUpRange: 'assets/powerup_range.png',
-            cockpitFrame: 'assets/cockpit_frame.png'
+            powerUpHp: '.figma/image/screenshot_226_1243.png',
+            powerUpRange: '.figma/image/screenshot_226_1260.png',
+            superWeaponBg: '.figma/image/screenshot_202_206.png',
+            gameOverTitle: '.figma/image/screenshot_222_1196.png',
+            btnRetry: '.figma/image/screenshot_222_1157.png',
+            btnConfig: '.figma/image/screenshot_222_1158.png',
+            scorePanel: '.figma/image/screenshot_222_1203.png'
+        };
+        
+        // 背景滚动状态
+        let backgroundScrollX = 0;
+        const backgroundScrollSpeed = 0.5; // 滚动速度，越小越慢
+        
+        // 超级武器特效状态
+        let superWeaponEffect = {
+            active: false,
+            startTime: 0,
+            duration: 2000, // 特效持续2秒
+            entryOffset: 1920 // 入场偏移量（从右侧进入）
         };
 
         // ==================== 加载系统 ====================
@@ -467,42 +888,146 @@
             const usedPoints = Object.values(gameState.skillPoints).reduce((a, b) => a + b, 0);
             const remainingPoints = GAME_CONFIG.skillSystem.totalPoints - usedPoints;
 
-            document.getElementById('remainingPoints').textContent = remainingPoints;
+            document.getElementById('remainingPoints').textContent = `${remainingPoints}/${GAME_CONFIG.skillSystem.totalPoints}`;
 
             // 更新各技能显示
             ['speed', 'hp', 'ammo'].forEach(skill => {
                 const level = gameState.skillPoints[skill];
                 const maxLevel = GAME_CONFIG.skillSystem.maxLevel[skill];
-                const dots = document.querySelectorAll(`#${skill}Level .skillDot`);
+                const dots = document.querySelectorAll(`#${skill}Level .skillDot img`);
                 
                 dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index < level);
+                    dot.src = index < level ? 'assets/skill_dot_active.png' : 'assets/skill_dot_empty.png';
                 });
 
-                // 更新按钮状态
-                document.getElementById(`${skill}Minus`).disabled = level === 0;
-                document.getElementById(`${skill}Plus`).disabled = level >= maxLevel || remainingPoints === 0;
+                // 更新按钮状态和图片
+                const minusBtn = document.getElementById(`${skill}Minus`);
+                const plusBtn = document.getElementById(`${skill}Plus`);
+                const minusImg = document.getElementById(`${skill}MinusImg`);
+                const plusImg = document.getElementById(`${skill}PlusImg`);
+                
+                // 减号按钮：等级为0时不可用
+                minusBtn.disabled = level === 0;
+                minusImg.src = level === 0 ? 'assets/btn_minus_disabled.png' : 'assets/btn_minus_enabled.png';
+                
+                // 加号按钮：达到最大等级或没有剩余点数时不可用
+                plusBtn.disabled = level >= maxLevel || remainingPoints === 0;
+                plusImg.src = (level >= maxLevel || remainingPoints === 0) ? 'assets/btn_plus_disabled.png' : 'assets/btn_plus_enabled.png';
             });
 
             // 更新开始游戏按钮
-            document.getElementById('startGameBtn').disabled = remainingPoints > 0;
+            const startBtn = document.getElementById('startGameBtn');
+            const startBtnImg = document.getElementById('startGameBtnImg');
+            startBtn.disabled = remainingPoints > 0;
+            startBtnImg.src = remainingPoints > 0 ? 'assets/btn_start_disabled.png' : 'assets/btn_start_enabled.png';
+            
+            // 更新船只展示图片
+            updateSkillPanelShip();
+        }
+        
+        // 保存上一次的技能等级，用于检测变化
+        let lastSkillLevels = { speed: 0, hp: 0, ammo: 0 };
+        
+        function updateSkillPanelShip() {
+            const speedLevel = gameState.skillPoints.speed;
+            const hpLevel = gameState.skillPoints.hp;
+            const ammoLevel = gameState.skillPoints.ammo;
+            
+            // 获取各层元素
+            const shipTurbo = document.getElementById('shipTurbo');
+            const shipArmor = document.getElementById('shipArmor');
+            const shipAmmo = document.getElementById('shipAmmo');
+            const shipDisplay = document.querySelector('.playerShipDisplay');
+            
+            // 检测是否有新增的技能点（总等级增加）
+            const currentTotal = speedLevel + hpLevel + ammoLevel;
+            const lastTotal = lastSkillLevels.speed + lastSkillLevels.hp + lastSkillLevels.ammo;
+            const hasNewSkill = currentTotal > lastTotal;
+            
+            // 根据技能等级显示/隐藏对应层
+            // 涡轮增压 >= 1级时显示
+            if (speedLevel >= 1) {
+                shipTurbo.classList.add('active');
+            } else {
+                shipTurbo.classList.remove('active');
+            }
+            
+            // 装甲厚度 >= 1级时显示
+            if (hpLevel >= 1) {
+                shipArmor.classList.add('active');
+            } else {
+                shipArmor.classList.remove('active');
+            }
+            
+            // 弹药库 >= 1级时显示
+            if (ammoLevel >= 1) {
+                shipAmmo.classList.add('active');
+            } else {
+                shipAmmo.classList.remove('active');
+            }
+            
+            // 如果有新增技能点，触发动画
+            if (hasNewSkill) {
+                shipDisplay.classList.add('ship-weight-animation');
+                setTimeout(() => {
+                    shipDisplay.classList.remove('ship-weight-animation');
+                }, 600);
+            }
+            
+            // 更新上一次的技能等级
+            lastSkillLevels = { speed: speedLevel, hp: hpLevel, ammo: ammoLevel };
         }
 
         // ==================== 游戏初始化 ====================
         let gameLoopId = null;
         
         function startGame() {
-            document.getElementById('skillPanel').style.display = 'none';
-            document.getElementById('gameCanvas').style.display = 'block';
-            document.getElementById('cockpitFrame').style.display = 'block';
-            gameState.currentScreen = 'game';
+            const skillPanel = document.getElementById('skillPanel');
+            const shipDisplay = document.querySelector('.playerShipDisplay');
             
-            initGame();
+            // 创建过渡遮罩层
+            const transitionOverlay = document.createElement('div');
+            transitionOverlay.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #000;
+                opacity: 0;
+                pointer-events: none;
+                z-index: 1000;
+                transition: opacity 0.8s ease-in;
+            `;
+            skillPanel.appendChild(transitionOverlay);
             
-            // 确保只有一个游戏循环在运行
-            if (gameLoopId === null) {
-                gameLoop();
-            }
+            // 船只容器向右移动的动画 - 所有分层素材一起移动
+            shipDisplay.style.transition = 'transform 1s ease-in';
+            shipDisplay.style.transform = 'translateX(120%)';
+            
+            // 延迟后开始变黑
+            setTimeout(() => {
+                transitionOverlay.style.opacity = '1';
+            }, 200);
+            
+            // 动画结束后切换到游戏
+            setTimeout(() => {
+                skillPanel.style.display = 'none';
+                document.getElementById('gameCanvas').style.display = 'block';
+                gameState.currentScreen = 'game';
+                
+                initGame();
+                
+                // 确保只有一个游戏循环在运行
+                if (gameLoopId === null) {
+                    gameLoop();
+                }
+                
+                // 清理过渡层
+                if (transitionOverlay.parentNode) {
+                    transitionOverlay.parentNode.removeChild(transitionOverlay);
+                }
+            }, 1000);
         }
 
         // ==================== 游戏主逻辑 ====================
@@ -514,6 +1039,7 @@
         let score, hp, maxHp, mp, gameOver;
         let mineAmmo, maxMineAmmo, mineRegenTime;
         let superWeaponReady;
+        let splitMineActive; // 分裂水雷是否激活
 
         function initGame() {
             // 根据技能点计算属性
@@ -523,14 +1049,25 @@
 
             // 初始化玩家 - 适应1920x1080分辨率
             player = {
-                x: canvas.width / 2 - 105,
-                y: 320,
-                width: 210,
-                height: 84,
-                speed: GAME_CONFIG.player.baseSpeed + speedLevel * 2,
+                x: canvas.width / 2 - 136,
+                y: 168,
+                width: 273,
+                height: 117,
+                maxSpeed: GAME_CONFIG.player.baseSpeed + speedLevel * 4,
+                velocityX: 0,  // 当前水平速度
                 maxHp: GAME_CONFIG.player.baseMaxHp + hpLevel * 50,
                 hp: GAME_CONFIG.player.baseMaxHp + hpLevel * 50,
-                visualType: speedLevel >= 3 ? 'turbo' : (hpLevel >= 2 ? 'armor' : 'normal')
+                skillLevels: {
+                    speed: speedLevel,
+                    hp: hpLevel,
+                    ammo: ammoLevel
+                },
+                shake: {
+                    active: false,
+                    startTime: 0,
+                    duration: 300, // 抖动持续300ms
+                    intensity: 5   // 抖动幅度
+                }
             };
 
             // 初始化游戏状态
@@ -540,11 +1077,15 @@
             mp = 0;
             gameOver = false;
             superWeaponReady = false;
+            
+            // 重置背景滚动位置
+            backgroundScrollX = 0;
 
             // 弹药系统
             maxMineAmmo = GAME_CONFIG.player.baseAmmo + ammoLevel * 2;
             mineAmmo = maxMineAmmo;
             mineRegenTime = 0;
+            splitMineActive = false; // 重置分裂水雷状态
 
             // 游戏对象数组
             submarines = [];
@@ -562,13 +1103,18 @@
             // 初始生成6艘潜艇，适应1920x1080分辨率
             const positions = [680, 760, 840, 920, 1000, 1080];
             positions.forEach((y, index) => {
+                const subType = Math.random() > 0.5 ? 1 : 0; // 随机选择普通潜艇类型
+                // 橘色潜艇 192*72，银色潜艇 192*80
+                const width = 192;
+                const height = subType === 1 ? 80 : 72;
                 submarines.push({
                     x: canvas.width + index * 250,
                     y: y,
-                    width: 240,
-                    height: 120,
+                    width: width,
+                    height: height,
                     id: index,
                     isGold: false,
+                    subType: subType,
                     lastMissileTime: 0
                 });
             });
@@ -580,9 +1126,9 @@
             return Math.min(1.0 + score * 0.0133, 2.8);
         }
         
-        // 获取潜艇速度
+        // 获取潜艇速度 - 所有潜艇初始速度快10%
         function getSubmarineSpeed() {
-            return 1.7 * getDifficultyMultiplier();
+            return 1.87 * getDifficultyMultiplier();
         }
         
         // 获取导弹发射间隔
@@ -665,12 +1211,46 @@
         }
 
         function updatePlayer() {
-            // 键盘控制
+            // 目标速度计算
+            let targetVelocityX = 0;
             if (keys.ArrowLeft && player.x > 0) {
-                player.x -= player.speed;
+                targetVelocityX = -player.maxSpeed;
             }
             if (keys.ArrowRight && player.x < canvas.width - player.width) {
-                player.x += player.speed;
+                targetVelocityX = player.maxSpeed;
+            }
+            
+            // 缓动动画：平滑过渡到目标速度
+            const acceleration = player.maxSpeed * 0.15; // 加速度
+            const deceleration = player.maxSpeed * 0.1;  // 减速度
+            
+            if (targetVelocityX !== 0) {
+                // 加速阶段
+                if (player.velocityX < targetVelocityX) {
+                    player.velocityX = Math.min(player.velocityX + acceleration, targetVelocityX);
+                } else if (player.velocityX > targetVelocityX) {
+                    player.velocityX = Math.max(player.velocityX - acceleration, targetVelocityX);
+                }
+            } else {
+                // 减速阶段（停止时的缓动）
+                if (player.velocityX > 0) {
+                    player.velocityX = Math.max(player.velocityX - deceleration, 0);
+                } else if (player.velocityX < 0) {
+                    player.velocityX = Math.min(player.velocityX + deceleration, 0);
+                }
+            }
+            
+            // 应用速度
+            player.x += player.velocityX;
+            
+            // 边界检查
+            if (player.x < 0) {
+                player.x = 0;
+                player.velocityX = 0;
+            }
+            if (player.x > canvas.width - player.width) {
+                player.x = canvas.width - player.width;
+                player.velocityX = 0;
             }
         }
 
@@ -678,6 +1258,41 @@
             for (let i = mines.length - 1; i >= 0; i--) {
                 const mine = mines[i];
                 mine.y += mine.speed;
+                
+                // 分裂水雷逻辑：下降200距离后分裂为两个
+                if (mine.isSplitMine && !mine.hasSplit && mine.y > player.y + player.height + 200) {
+                    mine.hasSplit = true;
+                    // 在原水雷位置创建两个新的水雷，向左右分开
+                    mines.push({
+                        x: mine.x - 30,
+                        y: mine.y,
+                        width: 60,
+                        height: 61,
+                        speed: mine.speed,
+                        isSplitMine: false,
+                        hasSplit: false,
+                        vx: -2 // 向左偏移
+                    });
+                    mines.push({
+                        x: mine.x + 30,
+                        y: mine.y,
+                        width: 60,
+                        height: 61,
+                        speed: mine.speed,
+                        isSplitMine: false,
+                        hasSplit: false,
+                        vx: 2 // 向右偏移
+                    });
+                    // 移除原水雷
+                    mines.splice(i, 1);
+                    continue;
+                }
+                
+                // 应用水平速度（用于分裂后的水雷）
+                if (mine.vx) {
+                    mine.x += mine.vx;
+                }
+                
                 if (mine.y > canvas.height) {
                     mines.splice(i, 1);
                 }
@@ -691,7 +1306,16 @@
             
             for (let i = submarines.length - 1; i >= 0; i--) {
                 const sub = submarines[i];
-                sub.x -= speed;
+                // 金色潜艇更慢(0.7倍)，普通潜艇更快
+                // 橘色潜艇(subType=0)比灰色潜艇(subType=1)快10%
+                let subSpeed;
+                if (sub.isGold) {
+                    subSpeed = speed * 0.7;
+                } else {
+                    const typeMultiplier = sub.subType === 0 ? 1.32 : 1.2; // 橘色潜艇快10%
+                    subSpeed = speed * typeMultiplier;
+                }
+                sub.x -= subSpeed;
 
                 if (sub.x < -240) {
                     if (sub.isGold) {
@@ -739,8 +1363,10 @@
         function spawnNewSubmarine() {
             let x = canvas.width + 150;
             let y = 680 + Math.random() * 320;
-            const width = 240;
-            const height = 120;
+            const subType = Math.random() > 0.5 ? 1 : 0; // 随机选择普通潜艇类型
+            // 橘色潜艇 192*72，银色潜艇 192*80
+            const width = 192;
+            const height = subType === 1 ? 80 : 72;
             
             // 尝试找到不重叠的位置（最多尝试10次）
             let attempts = 0;
@@ -758,6 +1384,7 @@
                     height: height,
                     id: 'sub_' + Date.now(),
                     isGold: false,
+                    subType: subType,
                     lastMissileTime: 0
                 });
             }
@@ -767,10 +1394,10 @@
             // 导弹先斜向发射，然后转为垂直
             const direction = Math.random() > 0.5 ? 1 : -1;
             missiles.push({
-                x: sub.x + 120,
+                x: sub.x + sub.width / 2,
                 y: sub.y,
-                width: 120,
-                height: 45,
+                width: 20, // 素材旋转90度后的宽度
+                height: 104, // 素材旋转90度后的高度
                 phase: 'diagonal', // diagonal, vertical
                 direction: direction,
                 startY: sub.y,
@@ -779,7 +1406,7 @@
         }
 
         function updateMissiles() {
-            const missileSpeed = 2.3 * getDifficultyMultiplier(); // 提升基础速度
+            const missileSpeed = 2.21 * getDifficultyMultiplier(); // 基础速度加快20%
             for (let i = missiles.length - 1; i >= 0; i--) {
                 const missile = missiles[i];
                 if (missile.phase === 'diagonal') {
@@ -808,9 +1435,11 @@
         }
 
         function updatePowerUps() {
+            // 道具上浮速度比敌方导弹快50%，再上调20%
+            const powerUpSpeed = 2.3 * 1.5 * 1.2;
             for (let i = powerUps.length - 1; i >= 0; i--) {
                 const pu = powerUps[i];
-                pu.y -= 3;
+                pu.y -= powerUpSpeed;
                 if (pu.y < -60) {
                     powerUps.splice(i, 1);
                 }
@@ -833,7 +1462,7 @@
         function updateMineRegen() {
             if (mineAmmo < maxMineAmmo) {
                 const now = Date.now();
-                if (now - mineRegenTime >= 2000) {
+                if (now - mineRegenTime >= 1000) {
                     mineAmmo++;
                     mineRegenTime = now;
                 }
@@ -843,8 +1472,9 @@
         function spawnGoldSubmarine() {
             let x = canvas.width + 150;
             let y = 700 + Math.random() * 250;
-            const width = 240;
-            const height = 120;
+            // 稀有潜艇素材尺寸 370*88
+            const width = 370;
+            const height = 88;
             
             // 尝试找到不重叠的位置（最多尝试10次）
             let attempts = 0;
@@ -877,70 +1507,118 @@
             drawPowerUps();
             drawFragments();
             drawUI();
-            
-            // 绘制游戏结束或胜利画面
-            if (gameOver) {
-                drawGameOver();
-            }
         }
         
         // 游戏结束菜单选项
         let gameOverOption = 0; // 0 = 重新挑战, 1 = 重新配置
         
-        function drawGameOver() {
-            // 半透明遮罩
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // 显示游戏结束画面
+        function showGameOverScreen() {
+            const gameOverScreen = document.getElementById('gameOverScreen');
+            const finalScoreEl = document.getElementById('finalScore');
+            const btnRetry = document.getElementById('btnRetry');
+            const btnConfig = document.getElementById('btnConfig');
             
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+            // 更新分数
+            finalScoreEl.textContent = score.toString();
             
-            // 失败画面
-            ctx.fillStyle = '#ff4444';
-            ctx.font = 'bold 72px Arial';
-            ctx.fillText('💥 任务失败', canvas.width / 2, canvas.height / 2 - 150);
+            // 更新按钮选中状态
+            updateGameOverButtons();
             
-            ctx.fillStyle = '#fff';
-            ctx.font = '36px Arial';
-            ctx.fillText(`最终得分: ${score}`, canvas.width / 2, canvas.height / 2 - 30);
+            // 显示游戏结束画面
+            gameOverScreen.classList.add('active');
+        }
+        
+        // 隐藏游戏结束画面
+        function hideGameOverScreen() {
+            const gameOverScreen = document.getElementById('gameOverScreen');
+            gameOverScreen.classList.remove('active');
+        }
+        
+        // 更新游戏结束按钮状态
+        function updateGameOverButtons() {
+            const btnRetry = document.getElementById('btnRetry');
+            const btnConfig = document.getElementById('btnConfig');
             
-            // 选项1: 重新挑战
-            if (gameOverOption === 0) {
-                ctx.fillStyle = '#4a9eff';
-                ctx.fillRect(canvas.width / 2 - 200, canvas.height / 2 + 50, 400, 60);
-                ctx.fillStyle = '#fff';
-                ctx.font = 'bold 28px Arial';
-            } else {
-                ctx.fillStyle = '#2a5a8c';
-                ctx.fillRect(canvas.width / 2 - 200, canvas.height / 2 + 50, 400, 60);
-                ctx.fillStyle = '#8ab4c7';
-                ctx.font = '28px Arial';
-            }
-            ctx.fillText('🔄 重新挑战', canvas.width / 2, canvas.height / 2 + 80);
-            
-            // 选项2: 重新配置战船
-            if (gameOverOption === 1) {
-                ctx.fillStyle = '#4a9eff';
-                ctx.fillRect(canvas.width / 2 - 200, canvas.height / 2 + 130, 400, 60);
-                ctx.fillStyle = '#fff';
-                ctx.font = 'bold 28px Arial';
-            } else {
-                ctx.fillStyle = '#2a5a8c';
-                ctx.fillRect(canvas.width / 2 - 200, canvas.height / 2 + 130, 400, 60);
-                ctx.fillStyle = '#8ab4c7';
-                ctx.font = '28px Arial';
-            }
-            ctx.fillText('⚙️ 重新配置战船', canvas.width / 2, canvas.height / 2 + 160);
-            
-            // 提示文字
-            ctx.fillStyle = '#8ab4c7';
-            ctx.font = '20px Arial';
-            ctx.fillText('↑↓ 选择选项    回车键确认', canvas.width / 2, canvas.height / 2 + 250);
+            btnRetry.classList.toggle('active', gameOverOption === 0);
+            btnConfig.classList.toggle('active', gameOverOption === 1);
         }
 
         function drawBackground() {
-            // 使用图片背景
-            if (assets.background.complete && assets.background.naturalWidth > 0) {
+            // 检查超级武器特效是否激活
+            if (superWeaponEffect.active) {
+                const elapsed = Date.now() - superWeaponEffect.startTime;
+                if (elapsed >= superWeaponEffect.duration) {
+                    superWeaponEffect.active = false;
+                }
+            }
+            
+            // 优先使用超宽背景图
+            if (assets.backgroundWide.complete && assets.backgroundWide.naturalWidth > 0) {
+                const img = assets.backgroundWide;
+                const imgWidth = img.naturalWidth;
+                const imgHeight = img.naturalHeight;
+                
+                // 计算缩放比例，使背景图高度填满画布
+                const scale = canvas.height / imgHeight;
+                const scaledWidth = imgWidth * scale;
+                
+                // 更新滚动位置（从右向左）
+                backgroundScrollX -= backgroundScrollSpeed;
+                
+                // 当滚动超过一张图宽度时重置，实现无缝循环
+                if (Math.abs(backgroundScrollX) >= scaledWidth) {
+                    backgroundScrollX = 0;
+                }
+                
+                // 绘制两张图实现无缝滚动
+                // 第一张图
+                ctx.drawImage(img, backgroundScrollX, 0, scaledWidth, canvas.height);
+                // 第二张图（接在第一张后面）
+                ctx.drawImage(img, backgroundScrollX + scaledWidth, 0, scaledWidth, canvas.height);
+                
+                // 超级武器特效：天空素材 + 海面蒙层（位于背景上，潜艇素材下）
+                if (superWeaponEffect.active) {
+                    const elapsed = Date.now() - superWeaponEffect.startTime;
+                    const progress = Math.min(elapsed / superWeaponEffect.duration, 1);
+                    
+                    // 入场动画：前20%时间快速从右侧滑入
+                    let entryProgress = 1;
+                    if (progress < 0.2) {
+                        entryProgress = progress / 0.2; // 0到1
+                        // 使用缓动函数让入场更自然
+                        entryProgress = 1 - Math.pow(1 - entryProgress, 3);
+                    }
+                    
+                    // 渐隐效果：最后50%时间开始渐隐
+                    let alpha = 1;
+                    if (progress > 0.5) {
+                        alpha = 1 - (progress - 0.5) * 2; // 从1渐变到0
+                    }
+                    
+                    ctx.save();
+                    ctx.globalAlpha = alpha;
+                    
+                    // 绘制超级武器天空素材（上方）
+                    // 素材尺寸 1920*259，从顶部开始显示
+                    if (assets.superWeaponBg.complete && assets.superWeaponBg.naturalWidth > 0) {
+                        const bgImg = assets.superWeaponBg;
+                        const bgWidth = 1920;
+                        const bgHeight = 259;
+                        // 计算入场偏移
+                        const offsetX = (1 - entryProgress) * 1920;
+                        ctx.drawImage(bgImg, -offsetX, 0, bgWidth, bgHeight);
+                    }
+                    
+                    // 海面添加80%黑色蒙层
+                    ctx.fillStyle = `rgba(0, 0, 0, 0.8)`;
+                    ctx.fillRect(0, 259, canvas.width, canvas.height - 259);
+                    
+                    ctx.restore();
+                }
+                
+            } else if (assets.background.complete && assets.background.naturalWidth > 0) {
+                // 备用：使用原来的背景图
                 ctx.drawImage(assets.background, 0, 0, canvas.width, canvas.height);
             } else {
                 // 备用渐变背景
@@ -954,31 +1632,100 @@
         }
 
         function drawPlayer() {
-            // 根据技能等级选择图片
-            let shipImage = assets.playerShip;
-            if (player.visualType === 'turbo') {
-                shipImage = assets.playerShipTurbo;
-            } else if (player.visualType === 'armor') {
-                shipImage = assets.playerShipArmor;
+            const skillLevels = player.skillLevels || { speed: 0, hp: 0, ammo: 0 };
+            
+            // 技能面板中 playerShipDisplay 的尺寸（参考容器）
+            const displayWidth = 522;
+            const displayHeight = 223;
+            
+            // 游戏内玩家船只尺寸
+            const shipWidth = player.width;
+            const shipHeight = player.height;
+            
+            // 计算缩放比例 - 游戏内船只相对于技能面板容器的比例
+            const scale = shipWidth / displayWidth;
+            
+            // 计算抖动偏移
+            let shakeX = 0;
+            let shakeY = 0;
+            if (player.shake && player.shake.active) {
+                const elapsed = Date.now() - player.shake.startTime;
+                if (elapsed >= player.shake.duration) {
+                    player.shake.active = false;
+                } else {
+                    // 随机方向抖动
+                    const angle = Math.random() * Math.PI * 2;
+                    const intensity = player.shake.intensity * (1 - elapsed / player.shake.duration);
+                    shakeX = Math.cos(angle) * intensity;
+                    shakeY = Math.sin(angle) * intensity;
+                }
             }
             
-            // 绘制舰船图片
-            if (shipImage.complete && shipImage.naturalWidth > 0) {
-                ctx.drawImage(shipImage, player.x, player.y, player.width, player.height);
+            // 基础船位置 - 使用 player.x, player.y 作为基准，加上抖动偏移
+            // 技能面板中 #shipBase 的 top: 0，所以基础船从 player.y 开始
+            const baseX = player.x + shakeX;
+            const baseY = player.y + shakeY;
+            
+            // 按层级顺序绘制：涡轮增压(底层) -> 弹药库 -> 基础船 -> 装甲(顶层)
+            
+            // 1. 涡轮增压层 (最下层)
+            // CSS: #shipTurbo { width: 115px; top: 27px; left: 13px; }
+            if (skillLevels.speed >= 1 && assets.shipTurbo.complete && assets.shipTurbo.naturalWidth > 0) {
+                const turboDisplayWidth = 115;
+                const turboWidth = turboDisplayWidth * scale;
+                const turboHeight = assets.shipTurbo.naturalHeight * (turboWidth / assets.shipTurbo.naturalWidth);
+                const turboX = baseX + 13 * scale;
+                const turboY = baseY + 27 * scale;
+                ctx.drawImage(assets.shipTurbo, turboX, turboY, turboWidth, turboHeight);
+            }
+            
+            // 2. 弹药库层
+            // CSS: #shipAmmo { width: 60px; left: 364px; top: 19px; }
+            if (skillLevels.ammo >= 1 && assets.shipAmmo.complete && assets.shipAmmo.naturalWidth > 0) {
+                const ammoDisplayWidth = 60;
+                const ammoWidth = ammoDisplayWidth * scale;
+                const ammoHeight = assets.shipAmmo.naturalHeight * (ammoWidth / assets.shipAmmo.naturalWidth);
+                const ammoX = baseX + 364 * scale;
+                const ammoY = baseY + 19 * scale;
+                ctx.drawImage(assets.shipAmmo, ammoX, ammoY, ammoWidth, ammoHeight);
+            }
+            
+            // 3. 基础船只层
+            // CSS: #shipBase { top: 0px; width: 100%(522px); }
+            if (assets.shipBase.complete && assets.shipBase.naturalWidth > 0) {
+                const baseImgWidth = assets.shipBase.naturalWidth;
+                const baseImgHeight = assets.shipBase.naturalHeight;
+                // 保持宽高比，按宽度缩放
+                const drawWidth = shipWidth;
+                const drawHeight = baseImgHeight * (drawWidth / baseImgWidth);
+                ctx.drawImage(assets.shipBase, baseX, baseY, drawWidth, drawHeight);
             } else {
                 // 备用绘制
-                let shipColor = '#4a9eff';
-                if (player.visualType === 'turbo') shipColor = '#ff6b4a';
-                else if (player.visualType === 'armor') shipColor = '#7a8a9a';
-                
-                ctx.fillStyle = shipColor;
+                ctx.fillStyle = '#4a9eff';
                 ctx.fillRect(player.x, player.y, player.width, player.height);
+            }
+            
+            // 4. 装甲层 (最上层)
+            // CSS: #shipArmor { width: 240px; left: 84px; top: 55px; }
+            if (skillLevels.hp >= 1 && assets.shipArmor.complete && assets.shipArmor.naturalWidth > 0) {
+                const armorDisplayWidth = 240;
+                const armorWidth = armorDisplayWidth * scale;
+                const armorHeight = assets.shipArmor.naturalHeight * (armorWidth / assets.shipArmor.naturalWidth);
+                const armorX = baseX + 84 * scale;
+                const armorY = baseY + 55 * scale;
+                ctx.drawImage(assets.shipArmor, armorX, armorY, armorWidth, armorHeight);
             }
         }
 
         function drawSubmarines() {
             submarines.forEach(sub => {
-                const subImage = sub.isGold ? assets.goldSubmarine : assets.submarine;
+                let subImage;
+                if (sub.isGold) {
+                    subImage = assets.goldSubmarine;
+                } else {
+                    // 普通潜艇随机使用两种素材之一
+                    subImage = sub.subType === 1 ? assets.submarine2 : assets.submarine;
+                }
                 
                 // 绘制潜艇图片
                 if (subImage && subImage.complete && subImage.naturalWidth > 0) {
@@ -999,11 +1746,12 @@
                     ctx.translate(missile.x + missile.width/2, missile.y + missile.height/2);
                     
                     if (missile.phase === 'diagonal') {
-                        // 斜向阶段：根据方向旋转，-90度表示朝上偏左/右
-                        ctx.rotate(missile.direction * Math.PI / 4 - Math.PI / 2);
+                        // 斜向阶段：根据方向旋转45度偏左/右
+                        // 素材是垂直的，需要旋转到斜向
+                        ctx.rotate(missile.direction * Math.PI / 4);
                     } else {
-                        // 垂直阶段：朝上（-90度）
-                        ctx.rotate(-Math.PI / 2);
+                        // 垂直阶段：素材本身就是垂直的，不需要旋转
+                        // 或者旋转0度保持垂直向上
                     }
                     
                     ctx.drawImage(assets.missile, -missile.width/2, -missile.height/2, missile.width, missile.height);
@@ -1090,49 +1838,106 @@
         }
 
         function drawUI() {
-            // 左上角 - HP和MP
+            // ========== 左上角 - HP和MP条（像素风格） ==========
+            const barX = 20;
+            const barWidth = 180;
+            const barHeight = 18;
+            
+            // HP标签
             ctx.fillStyle = '#fff';
-            ctx.font = '24px Arial';
+            ctx.font = 'bold 16px "Microsoft YaHei", Arial, sans-serif';
             ctx.textAlign = 'left';
+            ctx.fillText('HP', barX, 32);
             
-            // HP条
-            ctx.fillText('HP', 45, 60);
-            ctx.fillStyle = '#333';
-            ctx.fillRect(90, 38, 225, 30);
-            ctx.fillStyle = hp > maxHp * 0.3 ? '#44ff44' : '#ff4444';
-            ctx.fillRect(90, 38, 225 * (hp / maxHp), 30);
-            ctx.strokeStyle = '#fff';
+            // HP背景条（深色）
+            ctx.fillStyle = '#2a2a2a';
+            ctx.fillRect(barX + 30, 18, barWidth, barHeight);
+            
+            // HP前景条（橙色）
+            const hpPercent = hp / maxHp;
+            ctx.fillStyle = '#ff6b35';
+            ctx.fillRect(barX + 30, 18, barWidth * hpPercent, barHeight);
+            
+            // HP条边框
+            ctx.strokeStyle = '#1a1a1a';
             ctx.lineWidth = 2;
-            ctx.strokeRect(90, 38, 225, 30);
+            ctx.strokeRect(barX + 30, 18, barWidth, barHeight);
             
-            // MP条
+            // MP标签
             ctx.fillStyle = '#fff';
-            ctx.fillText('MP', 45, 105);
-            ctx.fillStyle = '#333';
-            ctx.fillRect(90, 83, 225, 30);
-            ctx.fillStyle = '#4444ff';
-            ctx.fillRect(90, 83, 225 * (mp / 100), 30);
-            ctx.strokeStyle = '#fff';
-            ctx.strokeRect(90, 83, 225, 30);
+            ctx.fillText('MP', barX, 55);
             
-            // 超级武器提示
-            if (mp >= 100) {
-                ctx.fillStyle = '#ffd700';
-                ctx.font = 'bold 21px Arial';
-                ctx.fillText('按 Z 使用超级武器!', 90, 143);
+            // MP背景条（深色）
+            ctx.fillStyle = '#2a2a2a';
+            ctx.fillRect(barX + 30, 41, barWidth, barHeight);
+            
+            // MP前景条（蓝色）
+            const mpPercent = mp / 100;
+            ctx.fillStyle = '#4a9eff';
+            ctx.fillRect(barX + 30, 41, barWidth * mpPercent, barHeight);
+            
+            // MP条边框
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.strokeRect(barX + 30, 41, barWidth, barHeight);
+            
+            // ========== 右上角 - 记分板 ==========
+            const scoreX = canvas.width - 20;
+            const scoreY = 45;
+            
+            // 分数背景（深色圆角矩形效果）
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(scoreX - 140, 15, 130, 45);
+            
+            // 分数数字（黄色像素风格）
+            ctx.fillStyle = '#edea74';
+            ctx.font = 'bold 42px "HYQiHeiY3", "PingFang SC", "Microsoft YaHei", Arial, sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(score.toString(), scoreX - 25, scoreY);
+            
+            // ========== 顶部中间 - 弹药库存提示 ==========
+            const ammoCenterX = canvas.width / 2;
+            const ammoY = 20;
+            const ammoBoxSize = 20;
+            const ammoGap = 8;
+            const totalAmmoBoxes = maxMineAmmo;
+            const filledAmmoBoxes = mineAmmo;
+            
+            // 计算总宽度以居中
+            const totalAmmoWidth = totalAmmoBoxes * ammoBoxSize + (totalAmmoBoxes - 1) * ammoGap;
+            const startX = ammoCenterX - totalAmmoWidth / 2;
+            
+            // 绘制弹药方块
+            for (let i = 0; i < totalAmmoBoxes; i++) {
+                const boxX = startX + i * (ammoBoxSize + ammoGap);
+                
+                if (i < filledAmmoBoxes) {
+                    // 有弹药的方块（白色/亮色）
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(boxX, ammoY, ammoBoxSize, ammoBoxSize);
+                    // 内部小方块效果
+                    ctx.fillStyle = '#cccccc';
+                    ctx.fillRect(boxX + 4, ammoY + 4, ammoBoxSize - 8, ammoBoxSize - 8);
+                } else {
+                    // 空弹药方块（深色/空心）
+                    ctx.fillStyle = '#444444';
+                    ctx.fillRect(boxX, ammoY, ammoBoxSize, ammoBoxSize);
+                    ctx.fillStyle = '#2a2a2a';
+                    ctx.fillRect(boxX + 2, ammoY + 2, ammoBoxSize - 4, ammoBoxSize - 4);
+                }
+                
+                // 方块边框
+                ctx.strokeStyle = '#1a1a1a';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(boxX, ammoY, ammoBoxSize, ammoBoxSize);
             }
             
-            // 右上角 - 弹药和分数
-            ctx.textAlign = 'right';
-            ctx.fillStyle = '#fff';
-            ctx.font = '24px Arial';
-            
-            // 水雷数量
-            ctx.fillText(`💣 ${mineAmmo}/${maxMineAmmo}`, canvas.width - 45, 60);
-            
-            // 分数
-            ctx.font = '36px Arial';
-            ctx.fillText(`得分: ${score}`, canvas.width - 45, 105);
+            // 超级武器提示（当MP满时显示在MP条下方）
+            if (mp >= 100) {
+                ctx.fillStyle = '#ffd700';
+                ctx.font = 'bold 16px "Microsoft YaHei", Arial, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText('按 Z 释放超级武器!', barX, 85);
+            }
         }
 
         // ==================== 碰撞检测 ====================
@@ -1161,8 +1966,16 @@
                     missiles.splice(mIndex, 1);
                     hp -= 20;
                     
+                    // 触发玩家船抖动效果
+                    player.shake.active = true;
+                    player.shake.startTime = Date.now();
+                    
+                    // 触发全屏闪红效果
+                    triggerDamageFlash();
+                    
                     if (hp <= 0) {
                         gameOver = true;
+                        showGameOverScreen();
                     }
                 }
             }
@@ -1174,7 +1987,8 @@
                     if (pu.type === 'hp') {
                         hp = Math.min(hp + maxHp * 0.3, maxHp);
                     } else {
-                        // 爆炸范围提升
+                        // 激活分裂水雷
+                        splitMineActive = true;
                     }
                     powerUps.splice(pIndex, 1);
                 }
@@ -1237,7 +2051,8 @@
                         submarines.splice(subIndex, 1);
                     }
                     
-                    score++;
+                    // 计分：普通潜艇10分，金色潜艇100分
+                    score += sub.isGold ? 100 : 10;
                     mp = Math.min(mp + 10, 100);
                 }, idx * 100); // 每个延迟100ms
             });
@@ -1256,7 +2071,8 @@
                     submarines.splice(index, 1);
                 }
                 
-                score++;
+                // 计分：普通潜艇10分，金色潜艇100分
+                score += initialSub.isGold ? 100 : 10;
                 mp = Math.min(mp + 10, 100);
             }
         }
@@ -1276,11 +2092,15 @@
 
         function dropPowerUp(x, y) {
             const type = Math.random() > 0.5 ? 'hp' : 'range';
+            // 根据道具类型设置不同尺寸
+            const dimensions = type === 'hp' 
+                ? { width: 62, height: 47 }
+                : { width: 74, height: 59 };
             powerUps.push({
                 x: x,
                 y: y,
-                width: 60,
-                height: 60,
+                width: dimensions.width,
+                height: dimensions.height,
                 type: type
             });
         }
@@ -1301,21 +2121,7 @@
                     }
                     
                     if (e.key === 'Enter') {
-                        if (gameOverOption === 0) {
-                            // 重新挑战 - 重置选项并重新开始
-                            gameOverOption = 0;
-                            initGame();
-                        } else {
-                            // 重新配置战船 - 返回技能面板
-                            gameOverOption = 0;
-                            gameState.currentScreen = 'skill';
-                            document.getElementById('gameCanvas').style.display = 'none';
-                            document.getElementById('cockpitFrame').style.display = 'none';
-                            document.getElementById('skillPanel').style.display = 'flex';
-                            // 重置技能点
-                            gameState.skillPoints = { speed: 0, hp: 0, ammo: 0 };
-                            updateSkillUI();
-                        }
+                        handleGameOverAction();
                         return;
                     }
                 }
@@ -1325,8 +2131,10 @@
                         x: player.x + player.width / 2 - 30,
                         y: player.y + player.height,
                         width: 60,
-                        height: 90,
-                        speed: 5
+                        height: 61,
+                        speed: 5,
+                        isSplitMine: splitMineActive, // 是否为分裂水雷
+                        hasSplit: false // 是否已经分裂过
                     });
                     mineAmmo--;
                     mineRegenTime = Date.now();
@@ -1344,8 +2152,83 @@
             keys[e.key] = false;
         });
 
+        // 游戏结束画面按钮事件
+        const btnRetryEl = document.getElementById('btnRetry');
+        const btnConfigEl = document.getElementById('btnConfig');
+        
+        btnRetryEl.addEventListener('click', () => {
+            if (!gameOver) return;
+            gameOverOption = 0;
+            handleGameOverAction();
+        });
+        
+        btnRetryEl.addEventListener('mouseenter', () => {
+            if (!gameOver) return;
+            gameOverOption = 0;
+            updateGameOverButtons();
+        });
+        
+        btnRetryEl.addEventListener('mouseleave', () => {
+            if (!gameOver) return;
+            btnRetryEl.classList.remove('active');
+        });
+        
+        btnConfigEl.addEventListener('click', () => {
+            if (!gameOver) return;
+            gameOverOption = 1;
+            handleGameOverAction();
+        });
+        
+        btnConfigEl.addEventListener('mouseenter', () => {
+            if (!gameOver) return;
+            gameOverOption = 1;
+            updateGameOverButtons();
+        });
+        
+        btnConfigEl.addEventListener('mouseleave', () => {
+            if (!gameOver) return;
+            btnConfigEl.classList.remove('active');
+        });
+        
+        // 处理游戏结束选项
+        function handleGameOverAction() {
+            hideGameOverScreen();
+            
+            if (gameOverOption === 0) {
+                // 重新挑战 - 重置选项并重新开始
+                gameOverOption = 0;
+                initGame();
+            } else {
+                // 重新配置战船 - 返回技能面板
+                gameOverOption = 0;
+                gameState.currentScreen = 'skill';
+                document.getElementById('gameCanvas').style.display = 'none';
+                document.getElementById('skillPanel').style.display = 'flex';
+                // 重置技能点
+                gameState.skillPoints = { speed: 0, hp: 0, ammo: 0 };
+                // 重置船只位置
+                document.querySelector('.playerShipDisplay').style.transform = '';
+                document.querySelector('.playerShipDisplay').style.transition = '';
+                updateSkillUI();
+            }
+        }
+
+        // 触发受攻击闪红效果
+        function triggerDamageFlash() {
+            const damageFlash = document.getElementById('damageFlash');
+            damageFlash.classList.add('active');
+            setTimeout(() => {
+                damageFlash.classList.remove('active');
+            }, 150);
+        }
+
         function useSuperWeapon() {
             mp = 0;
+            
+            // 激活超级武器特效
+            superWeaponEffect.active = true;
+            superWeaponEffect.startTime = Date.now();
+            superWeaponEffect.entryOffset = 1920; // 重置入场偏移
             
             // 清空所有敌方导弹
             missiles.forEach(missile => {
@@ -1361,7 +2244,8 @@
                 if (sub.isGold) {
                     dropPowerUp(sub.x, sub.y);
                 }
-                score++;
+                // 计分：普通潜艇10分，金色潜艇100分
+                score += sub.isGold ? 100 : 10;
             });
             
             submarines = [];

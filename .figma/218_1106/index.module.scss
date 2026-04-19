@@ -1,0 +1,29 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame2 {
+  display: flex;
+  align-items: flex-start;
+  width: 2754px;
+  height: 1080px;
+  overflow: hidden;
+
+  .frame {
+    display: flex;
+    flex-grow: 1;
+    align-items: flex-start;
+    padding-top: 276px;
+    padding-bottom: 101px;
+    background-image: url(../image/mo5tugn7-0q362zn.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    .rectangle23 {
+      width: 2754px;
+      height: 804px;
+      background-image: linear-gradient(0deg, #006dc099 60.86%, #00aeff33 100%);
+    }
+  }
+}

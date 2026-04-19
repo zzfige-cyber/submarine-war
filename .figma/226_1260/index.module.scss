@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+}
+
+.image12 {
+  display: flex;
+  align-items: flex-start;
+  padding: 30px 12px 15px 29px;
+  width: 74px;
+  height: 59px;
+  background-image: url(../image/mo5zbh2a-u1tub3b.png);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  .uP {
+    line-height: 14px;
+    letter-spacing: -1.11px;
+    color: #000000;
+    font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 22px;
+  }
+}

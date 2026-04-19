@@ -224,6 +224,66 @@ def create_cockpit_frame():
     img.save(f"{ASSETS_DIR}/cockpit_frame.png")
     print("✓ cockpit_frame.png")
 
+def create_skill_buttons():
+    """创建技能点按钮 - 加减号按钮（使用2倍尺寸抗锯齿）"""
+    scale = 2  # 2倍超采样
+    final_size = 34
+    size = final_size * scale
+    
+    # 减号按钮 - 可点击状态（黑底 + 黄绿色图标 #d9fa05）
+    img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    # 圆形背景 - 黑色
+    draw.ellipse([0, 0, size-1, size-1], fill=(34, 34, 34, 255))
+    # 减号 - 黄绿色
+    bar_width = 16 * scale
+    bar_height = 4 * scale
+    x1 = (size - bar_width) // 2
+    y1 = (size - bar_height) // 2
+    draw.rectangle([x1, y1, x1 + bar_width, y1 + bar_height], fill=(217, 250, 5, 255))
+    # 缩放到目标尺寸
+    img = img.resize((final_size, final_size), Image.Resampling.LANCZOS)
+    img.save(f"{ASSETS_DIR}/btn_minus_enabled.png")
+    print("✓ btn_minus_enabled.png")
+    
+    # 减号按钮 - 不可点击状态（灰底 + 灰色图标）
+    img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    # 圆形背景 - 灰色
+    draw.ellipse([0, 0, size-1, size-1], fill=(217, 217, 217, 255))
+    # 减号 - 浅灰色
+    draw.rectangle([x1, y1, x1 + bar_width, y1 + bar_height], fill=(180, 180, 180, 255))
+    # 缩放到目标尺寸
+    img = img.resize((final_size, final_size), Image.Resampling.LANCZOS)
+    img.save(f"{ASSETS_DIR}/btn_minus_disabled.png")
+    print("✓ btn_minus_disabled.png")
+    
+    # 加号按钮 - 可点击状态（黑底 + 黄绿色图标 #d9fa05）
+    img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    # 圆形背景 - 黑色
+    draw.ellipse([0, 0, size-1, size-1], fill=(34, 34, 34, 255))
+    # 加号 - 黄绿色
+    draw.rectangle([x1, y1, x1 + bar_width, y1 + bar_height], fill=(217, 250, 5, 255))
+    draw.rectangle([y1, x1, y1 + bar_height, x1 + bar_width], fill=(217, 250, 5, 255))
+    # 缩放到目标尺寸
+    img = img.resize((final_size, final_size), Image.Resampling.LANCZOS)
+    img.save(f"{ASSETS_DIR}/btn_plus_enabled.png")
+    print("✓ btn_plus_enabled.png")
+    
+    # 加号按钮 - 不可点击状态（灰底 + 灰色图标）
+    img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    # 圆形背景 - 灰色
+    draw.ellipse([0, 0, size-1, size-1], fill=(217, 217, 217, 255))
+    # 加号 - 浅灰色
+    draw.rectangle([x1, y1, x1 + bar_width, y1 + bar_height], fill=(180, 180, 180, 255))
+    draw.rectangle([y1, x1, y1 + bar_height, x1 + bar_width], fill=(180, 180, 180, 255))
+    # 缩放到目标尺寸
+    img = img.resize((final_size, final_size), Image.Resampling.LANCZOS)
+    img.save(f"{ASSETS_DIR}/btn_plus_disabled.png")
+    print("✓ btn_plus_disabled.png")
+
 if __name__ == "__main__":
     print("生成像素风格游戏素材...")
     print("-" * 40)
@@ -240,6 +300,7 @@ if __name__ == "__main__":
     create_powerup_range()
     create_background()
     create_cockpit_frame()
+    create_skill_buttons()
     
     print("-" * 40)
     print("✓ 所有素材生成完成！")
