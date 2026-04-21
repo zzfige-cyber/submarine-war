@@ -1,0 +1,97 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame {
+  position: relative;
+  width: 2027px;
+  height: 416px;
+
+  .rectangle35 {
+    position: absolute;
+    top: 59px;
+    left: 16px;
+    width: 1995px;
+    height: 300px;
+  }
+
+  .rectangle37 {
+    position: absolute;
+    top: 192px;
+    left: 16px;
+    background: #ffb769;
+    width: 1995px;
+    height: 34px;
+  }
+
+  .union {
+    position: absolute;
+    top: 191px;
+    left: 0;
+    width: 2027px;
+    height: 35px;
+  }
+
+  .union2 {
+    position: absolute;
+    top: 88px;
+    left: 967px;
+    outline-width: 8px;
+    outline-style: solid;
+    outline-color: #000000;
+    width: 94px;
+    height: 94px;
+    rotate: 1deg;
+  }
+
+  .group27 {
+    position: absolute;
+    top: 199px;
+    left: 933px;
+    width: 156px;
+    height: 150px;
+
+    .rectangle38 {
+      position: absolute;
+      top: 41px;
+      left: 64px;
+      background: #000000;
+      width: 27px;
+      height: 77px;
+    }
+
+    .rectangle {
+      position: absolute;
+      top: -131px;
+      left: -38px;
+      width: 156px;
+      height: 150px;
+    }
+  }
+
+  .text {
+    position: absolute;
+    top: 222px;
+    left: 767px;
+    width: 490px;
+    height: 80px;
+    line-height: 80px;
+    letter-spacing: -6.35px;
+    color: #fffc9b;
+    font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 127px;
+  }
+
+  .strongEnemiesAreAtta {
+    position: absolute;
+    top: 250px;
+    left: 767px;
+    width: 489px;
+    height: 24px;
+    line-height: 23px;
+    letter-spacing: -3.68px;
+    color: #afafaf;
+    font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 37px;
+  }
+}

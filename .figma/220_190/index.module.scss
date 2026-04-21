@@ -1,0 +1,39 @@
+* {
+  box-sizing: border-box;
+}
+
+.gameover {
+  position: relative;
+  width: 905px;
+  height: 223px;
+
+  .rectangle77 {
+    position: absolute;
+    top: 72px;
+    left: 31px;
+    background: #000000;
+    width: 135px;
+    height: 122px;
+  }
+
+  .pAuse {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 907px;
+    height: 160px;
+    line-height: 159px;
+    letter-spacing: -12.66px;
+    color: #ed6a2b;
+    font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 253px;
+  }
+
+  .maskGroup {
+    position: absolute;
+    top: 40px;
+    left: 387px;
+    width: 141px;
+    height: 144px;
+  }
+}

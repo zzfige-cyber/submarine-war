@@ -1,0 +1,40 @@
+* {
+  box-sizing: border-box;
+}
+
+.group40 {
+  position: relative;
+  width: 163px;
+  height: 144px;
+
+  .rectangle84 {
+    position: absolute;
+    top: 40px;
+    left: 47px;
+    border: 10px solid #222222;
+    background: #b6fc0a;
+    width: 116px;
+    height: 104px;
+  }
+
+  .group39 {
+    position: absolute;
+    top: 19px;
+    left: 24px;
+    width: 104px;
+    height: 105px;
+    rotate: 45deg;
+  }
+
+  .text {
+    position: absolute;
+    top: 88px;
+    left: 100px;
+    width: 57px;
+    height: 48px;
+    letter-spacing: 0;
+    color: #ffffff;
+    font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 29px;
+  }
+}

@@ -1,0 +1,229 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame3 {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+
+  .rectangle71 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.6;
+    background: #000000;
+    width: 1962px;
+    height: 1080px;
+  }
+
+  .frame {
+    position: absolute;
+    top: 681px;
+    left: 498px;
+    width: 489px;
+    height: 172px;
+
+    .vector19 {
+      display: flex;
+      position: absolute;
+      top: 0;
+      left: 0;
+      align-items: flex-start;
+      padding: 56px 321px 69px 121px;
+      width: 489px;
+      height: 172px;
+      background-image: url(../image/mo78zzp1-63wv52v.svg);
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+
+      .maskGroup {
+        width: 47px;
+        height: 47px;
+      }
+    }
+
+    .text {
+      position: absolute;
+      top: 46px;
+      left: 178px;
+      width: 193px;
+      height: 33px;
+      line-height: 32px;
+      letter-spacing: -2.5px;
+      color: #000000;
+      font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 50px;
+      rotate: -5deg;
+    }
+  }
+
+  .frame2 {
+    position: absolute;
+    top: 672px;
+    left: 870px;
+    width: 493px;
+    height: 208px;
+
+    .vector20 {
+      position: absolute;
+      top: 12px;
+      left: 4px;
+      width: 484px;
+      height: 183px;
+      rotate: 3deg;
+    }
+
+    .text2 {
+      position: absolute;
+      top: 105px;
+      left: 118px;
+      width: 193px;
+      height: 33px;
+      line-height: 32px;
+      letter-spacing: -2.5px;
+      color: #000000;
+      font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 50px;
+      rotate: -8deg;
+    }
+
+    .group33 {
+      position: absolute;
+      top: 80px;
+      left: 321px;
+      width: 47px;
+      height: 47px;
+    }
+  }
+
+  .gameover {
+    position: absolute;
+    top: 363px;
+    left: 455px;
+    width: 905px;
+    height: 223px;
+
+    .rectangle77 {
+      position: absolute;
+      top: 72px;
+      left: 31px;
+      background: #000000;
+      width: 135px;
+      height: 122px;
+    }
+
+    .pAuse {
+      position: absolute;
+      top: -1px;
+      left: 0;
+      width: 907px;
+      height: 160px;
+      line-height: 159px;
+      letter-spacing: -12.66px;
+      color: #ed6a2b;
+      font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 253px;
+    }
+
+    .maskGroup2 {
+      position: absolute;
+      top: 40px;
+      left: 387px;
+      width: 141px;
+      height: 144px;
+    }
+  }
+
+  .group36 {
+    display: flex;
+    position: absolute;
+    top: 557px;
+    left: 652px;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 39px 86px 45px 83px;
+    width: 566px;
+    height: 149px;
+
+    .autoWrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 566px;
+      height: 149px;
+
+      .vector22 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 566px;
+        height: 149px;
+      }
+
+      .text3 {
+        position: absolute;
+        top: 48px;
+        left: 142px;
+        width: 279px;
+        height: 47px;
+        line-height: 47px;
+        letter-spacing: -3.62px;
+        color: #000000;
+        font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+        font-size: 72px;
+        rotate: -3deg;
+      }
+    }
+
+    .autoWrapper4 {
+      display: flex;
+      position: relative;
+      align-items: flex-start;
+      align-self: stretch;
+
+      .polygon4 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 53px;
+        height: 42px;
+        rotate: 91deg;
+      }
+
+      .autoWrapper2 {
+        position: relative;
+        margin-top: 22px;
+        width: 53px;
+        height: 42px;
+
+        .polygon5 {
+          position: absolute;
+          top: 9px;
+          left: -11px;
+          width: 32px;
+          height: 25px;
+          rotate: 91deg;
+        }
+      }
+
+      .autoWrapper3 {
+        position: relative;
+        margin-left: 291px;
+        width: 53px;
+        height: 42px;
+
+        .polygon6 {
+          position: absolute;
+          top: 9px;
+          right: -13px;
+          width: 32px;
+          height: 25px;
+          rotate: 91deg;
+        }
+      }
+    }
+  }
+}
