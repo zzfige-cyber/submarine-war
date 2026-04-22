@@ -1078,6 +1078,7 @@
             powerUpRange: new Image(),
             superWeaponBg: new Image(),
             superWeaponBubble: new Image(),
+            splitMineBubble: new Image(),
             gameOverTitle: new Image(),
             btnRetry: new Image(),
             btnConfig: new Image(),
@@ -1117,6 +1118,7 @@
             powerUpRange: 'assets/figma_image/screenshot_226_1260.png',
             superWeaponBg: '.figma/image/screenshot_331_247.png',
             superWeaponBubble: 'assets/figma_image/screenshot_325_90.png',
+            splitMineBubble: '.figma/image/screenshot_350_13.png',
             gameOverTitle: 'assets/figma_image/screenshot_222_1196.png',
             btnRetry: 'assets/figma_image/screenshot_222_1157.png',
             btnConfig: 'assets/figma_image/screenshot_222_1158.png',
@@ -1196,6 +1198,13 @@
                 duration: 500, // 动画持续500ms
                 fromHp: BOSS_DEFENSE.maxHp,     // 动画开始时的显示血量
                 toHp: BOSS_DEFENSE.maxHp        // 动画结束时的显示血量（实际血量）
+            },
+            // 血条入场动画状态
+            hpBarEntry: {
+                active: false,
+                startTime: 0,
+                duration: 4200, // 血条入场动画持续约4.2秒（与Boss入场时间同步，加快30%）
+                hpFillProgress: 0 // 血量填充进度 0-1
             },
             entryComplete: false, // 入场是否完成
             attackPattern: 0, // 当前攻击模式：0=未开始, 1=圆点子弹, 2=追踪导弹, 3=激光
@@ -1472,6 +1481,9 @@
             const skillPanel = document.getElementById('skillPanel');
             const shipDisplay = document.querySelector('.playerShipDisplay');
             
+            // 先移除可能正在进行的动画类
+            shipDisplay.classList.remove('ship-weight-animation');
+            
             // 先重置船只位置和过渡，确保从正确位置开始动画
             shipDisplay.style.transition = 'none';
             shipDisplay.style.transform = 'translateX(0)';
@@ -1556,6 +1568,30 @@
             toHp: 0,       // 动画结束时的HP值（实际HP）
             displayHp: 0   // 用于动画显示的HP值
         };
+        
+        // 玩家入场动画状态
+        let playerEntry = {
+            active: false,
+            startTime: 0,
+            duration: 800, // 入场动画持续800ms
+            startX: -300,  // 从左侧屏幕外开始
+            endX: 0        // 目标位置（相对于最终位置）
+        };
+        
+        // 游戏开始黑色渐现效果
+        let gameStartFade = {
+            active: false,
+            startTime: 0,
+            duration: 600, // 渐现持续600ms
+            alpha: 1       // 当前透明度
+        };
+        
+        // 分裂水雷提示气泡状态
+        let splitMineBubble = {
+            active: false,
+            startTime: 0,
+            duration: 3000 // 显示3秒钟
+        };
 
         function initGame() {
             // 根据技能点计算属性
@@ -1602,6 +1638,15 @@
             hpAnimation.displayHp = player.maxHp;
             hpAnimation.active = false;
             
+            // 启动玩家入场动画
+            playerEntry.active = true;
+            playerEntry.startTime = Date.now();
+            
+            // 启动游戏开始黑色渐现效果
+            gameStartFade.active = true;
+            gameStartFade.startTime = Date.now();
+            gameStartFade.alpha = 1;
+            
             // 重置背景滚动位置
             backgroundScrollX = 0;
 
@@ -1617,6 +1662,7 @@
             boss.hpAnimation.fromHp = BOSS_DEFENSE.maxHp;
             boss.hpAnimation.toHp = BOSS_DEFENSE.maxHp;
             boss.hpAnimation.active = false;
+            boss.hpBarEntry.active = false;
             boss.entryComplete = false;
             boss.currentAttackIndex = 0;
             boss.laserActive = false;
@@ -1628,6 +1674,7 @@
             mineAmmo = maxMineAmmo;
             mineRegenTime = 0;
             splitMineActive = false; // 重置分裂水雷状态
+            splitMineBubble.active = false; // 重置分裂水雷气泡状态
 
             // 游戏对象数组
             submarines = [];
@@ -1655,6 +1702,7 @@
             boss.hpAnimation.fromHp = BOSS_DEFENSE.maxHp;
             boss.hpAnimation.toHp = BOSS_DEFENSE.maxHp;
             boss.hpAnimation.active = false;
+            boss.hpBarEntry.active = false;
             boss.entryComplete = false;
             boss.currentAttackIndex = 0;
             boss.laserActive = false;
@@ -1852,6 +1900,10 @@
             boss.hpAnimation.fromHp = BOSS_DEFENSE.maxHp;
             boss.hpAnimation.toHp = BOSS_DEFENSE.maxHp;
             boss.hpAnimation.active = false;
+            // 启动血条入场动画
+            boss.hpBarEntry.active = true;
+            boss.hpBarEntry.startTime = Date.now();
+            boss.hpBarEntry.hpFillProgress = 0;
             boss.entryComplete = false;
             boss.currentAttackIndex = 0;
             boss.lastAttackTime = Date.now();
@@ -1871,7 +1923,7 @@
             // 入场动画
             if (!boss.entryComplete) {
                 const targetX = (canvas.width - boss.width) / 2; // 停在屏幕中间
-                const entrySpeed = 3;
+                const entrySpeed = 4; // 加快30%（从3增加到4）
                 
                 if (boss.x > targetX) {
                     boss.x -= entrySpeed;
@@ -2234,7 +2286,7 @@
         
         // 绘制Boss血条（位于画面底部居中）
         function drawBossHpBar() {
-            if (!boss.active || !boss.entryComplete) return;
+            if (!boss.active) return;
 
             const barWidth = 636;
             const barHeight = 132;
@@ -2247,7 +2299,38 @@
             const hpAreaWidth = 528;    // 保持宽度
             const hpAreaHeight = 90;
 
-            // 更新血量动画
+            // 更新血条入场动画
+            let entryOffsetY = 0;
+            let entryHpPercent = 1;
+            if (boss.hpBarEntry.active) {
+                const elapsed = Date.now() - boss.hpBarEntry.startTime;
+                const progress = Math.min(elapsed / boss.hpBarEntry.duration, 1);
+
+                // 入场动画：从底部外进入，使用缓动函数
+                if (progress < 1) {
+                    // 位置动画：从底部外进入（barHeight + 100）到最终位置
+                    // 血条位置动画在入场的前30%完成
+                    if (progress < 0.3) {
+                        const entryProgress = 1 - Math.pow(1 - (progress / 0.3), 3); // easeOutCubic
+                        entryOffsetY = (1 - entryProgress) * (barHeight + 100);
+                    } else {
+                        entryOffsetY = 0;
+                    }
+
+                    // 血量填充动画：在整个入场过程中缓慢从0%上涨到100%
+                    // 使用线性增长，与Boss入场同步完成
+                    entryHpPercent = progress;
+                    // 使用轻微的缓动让填充更自然
+                    entryHpPercent = 1 - Math.pow(1 - entryHpPercent, 2);
+                } else {
+                    // 动画结束
+                    boss.hpBarEntry.active = false;
+                    entryOffsetY = 0;
+                    entryHpPercent = 1;
+                }
+            }
+
+            // 更新血量动画（受到伤害时的动画）
             if (boss.hpAnimation.active) {
                 const elapsed = Date.now() - boss.hpAnimation.startTime;
                 const progress = Math.min(elapsed / boss.hpAnimation.duration, 1);
@@ -2267,9 +2350,18 @@
             // 计算百分比
             const actualHpPercent = boss.hp / boss.maxHp;
             const displayHpPercent = boss.displayHp / boss.maxHp;
+            
+            // 应用入场动画的血量百分比（入场时空血，快速上涨到100%）
+            const finalActualHpPercent = boss.hpBarEntry.active ? 
+                actualHpPercent * entryHpPercent : actualHpPercent;
+            const finalDisplayHpPercent = boss.hpBarEntry.active ? 
+                displayHpPercent * entryHpPercent : displayHpPercent;
 
             // 保存当前状态
             ctx.save();
+            
+            // 应用入场动画的位移
+            ctx.translate(0, entryOffsetY);
 
             // 创建箭头形状的裁剪区域 - 匹配素材的黑色边框内部
             ctx.beginPath();
@@ -2295,15 +2387,15 @@
             ctx.fillRect(hpAreaX, hpAreaY, hpAreaWidth, hpAreaHeight);
 
             // 绘制实际当前血量（桔红色）
-            if (actualHpPercent > 0) {
+            if (finalActualHpPercent > 0) {
                 ctx.fillStyle = '#ff6600';
-                ctx.fillRect(hpAreaX, hpAreaY, hpAreaWidth * actualHpPercent, hpAreaHeight);
+                ctx.fillRect(hpAreaX, hpAreaY, hpAreaWidth * finalActualHpPercent, hpAreaHeight);
             }
 
             // 绘制损失的血量（白色，在显示血量和实际血量之间）
-            if (boss.hpAnimation.active && displayHpPercent > actualHpPercent) {
-                const lostHpWidth = hpAreaWidth * (displayHpPercent - actualHpPercent);
-                const lostHpX = hpAreaX + hpAreaWidth * actualHpPercent;
+            if (!boss.hpBarEntry.active && boss.hpAnimation.active && finalDisplayHpPercent > finalActualHpPercent) {
+                const lostHpWidth = hpAreaWidth * (finalDisplayHpPercent - finalActualHpPercent);
+                const lostHpX = hpAreaX + hpAreaWidth * finalActualHpPercent;
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(lostHpX, hpAreaY, lostHpWidth, hpAreaHeight);
             }
@@ -2311,10 +2403,13 @@
             // 恢复状态
             ctx.restore();
 
-            // 绘制血条素材（覆盖在血量上）
+            // 绘制血条素材（覆盖在血量上）- 也应用入场动画位移
+            ctx.save();
+            ctx.translate(0, entryOffsetY);
             if (assets.bossHpBar.complete && assets.bossHpBar.naturalWidth > 0) {
                 ctx.drawImage(assets.bossHpBar, barX, barY, barWidth, barHeight);
             }
+            ctx.restore();
         }
 
         // 绘制Boss子弹
@@ -2702,6 +2797,19 @@
 
         // ==================== 绘制函数 ====================
         function draw() {
+            // 更新游戏开始黑色渐现效果
+            if (gameStartFade.active) {
+                const elapsed = Date.now() - gameStartFade.startTime;
+                const progress = Math.min(elapsed / gameStartFade.duration, 1);
+                // 从完全不透明渐变到完全透明
+                gameStartFade.alpha = 1 - progress;
+                
+                if (progress >= 1) {
+                    gameStartFade.active = false;
+                    gameStartFade.alpha = 0;
+                }
+            }
+            
             drawPlayer();
             drawSubmarines();
             drawMissiles();
@@ -2716,6 +2824,14 @@
             drawBossWarning();
             drawBossHpBar();
             drawUI();
+            
+            // 绘制游戏开始黑色渐现效果（在最上层）
+            if (gameStartFade.active && gameStartFade.alpha > 0) {
+                ctx.save();
+                ctx.fillStyle = `rgba(0, 0, 0, ${gameStartFade.alpha})`;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.restore();
+            }
         }
         
         // 绘制强敌来袭横幅
@@ -2891,10 +3007,21 @@
                             const scaledWidth = imgWidth * scaleX;
                             const scaledHeight = imgHeight * scaleX;
                             
-                            const drawY = (canvas.height - scaledHeight) / 2;
-                            const offsetX = (1 - entryProgress) * canvas.width;
+                            // 计算基础位置（居中）
+                            const centerX = (canvas.width - scaledWidth) / 2;
+                            const centerY = (canvas.height - scaledHeight) / 2;
                             
-                            ctx.drawImage(bgImg, -offsetX, drawY, scaledWidth, scaledHeight);
+                            // 从左下向右上斜向滑入的偏移量
+                            // entryProgress: 0 = 完全在左侧外（左下）, 1 = 到达中心位置
+                            // 水平方向：从左侧进入，向右侧飞出
+                            const offsetX = (1 - entryProgress) * (-canvas.width * 0.8);
+                            // 垂直方向：从左下向右上移动
+                            const offsetY = (1 - entryProgress) * (canvas.height * 0.3);
+                            
+                            const drawX = centerX + offsetX;
+                            const drawY = centerY + offsetY;
+                            
+                            ctx.drawImage(bgImg, drawX, drawY, scaledWidth, scaledHeight);
                         }
                         
                         ctx.restore();
@@ -2945,10 +3072,26 @@
                 }
             }
             
-            // 基础船位置 - 使用 player.x, player.y 作为基准，加上抖动偏移
+            // 计算入场动画偏移
+            let entryOffsetX = 0;
+            if (playerEntry.active) {
+                const elapsed = Date.now() - playerEntry.startTime;
+                const progress = Math.min(elapsed / playerEntry.duration, 1);
+                
+                // 使用缓动函数 easeOutCubic
+                const easeProgress = 1 - Math.pow(1 - progress, 3);
+                entryOffsetX = playerEntry.startX * (1 - easeProgress);
+                
+                if (progress >= 1) {
+                    playerEntry.active = false;
+                    entryOffsetX = 0;
+                }
+            }
+            
+            // 基础船位置 - 使用 player.x, player.y 作为基准，加上抖动偏移和入场偏移
             // 技能面板中 #shipBase 的 top: 0，所以基础船从 player.y 开始
             // 整体向下偏移50px，使船只位置与技能面板展示更一致
-            const baseX = player.x + shakeX;
+            const baseX = player.x + shakeX + entryOffsetX;
             const baseY = player.y + shakeY + 50;
             
             // 按层级顺序绘制：涡轮增压(底层) -> 弹药库 -> 基础船 -> 装甲(顶层)
@@ -3012,6 +3155,25 @@
                     const bubbleX = baseX + shipWidth - 80;
                     const bubbleY = baseY - 20;
                     ctx.drawImage(assets.superWeaponBubble, bubbleX, bubbleY, bubbleWidth, bubbleHeight);
+                }
+            }
+            
+            // 绘制分裂水雷提示气泡
+            if (splitMineBubble.active) {
+                const elapsed = Date.now() - splitMineBubble.startTime;
+                if (elapsed >= splitMineBubble.duration) {
+                    splitMineBubble.active = false;
+                } else {
+                    // 使用和超级武器气泡相同的位置
+                    const bubbleWidth = 248;
+                    const bubbleHeight = 66;
+                    const bubbleX = baseX + shipWidth - 80;
+                    const bubbleY = baseY - 20;
+                    
+                    // 直接使用分裂水雷气泡素材图片
+                    if (assets.splitMineBubble.complete && assets.splitMineBubble.naturalWidth > 0) {
+                        ctx.drawImage(assets.splitMineBubble, bubbleX, bubbleY, bubbleWidth, bubbleHeight);
+                    }
                 }
             }
         }
@@ -3448,6 +3610,9 @@
                     } else {
                         // 激活分裂水雷
                         splitMineActive = true;
+                        // 显示分裂水雷提示气泡
+                        splitMineBubble.active = true;
+                        splitMineBubble.startTime = Date.now();
                     }
                     powerUps.splice(pIndex, 1);
                 }
