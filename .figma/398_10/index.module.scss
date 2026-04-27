@@ -1,0 +1,16 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame {
+  display: flex;
+  align-items: center;
+  width: 192px;
+  height: 80px;
+
+  .rectangle {
+    opacity: 0.3;
+    width: 192px;
+    height: 80px;
+  }
+}

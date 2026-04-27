@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame2 {
+  display: flex;
+  align-items: flex-start;
+  width: 2754px;
+  height: 1080px;
+  overflow: hidden;
+
+  .frame {
+    display: flex;
+    flex-grow: 1;
+    align-items: flex-start;
+    padding-bottom: 101px;
+
+    .rectangle96 {
+      background: #544b79;
+      width: 2754px;
+      height: 1080px;
+    }
+  }
+}

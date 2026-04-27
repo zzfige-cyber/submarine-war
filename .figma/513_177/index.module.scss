@@ -1,0 +1,141 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame3 {
+  position: relative;
+  width: 2539px;
+  height: 1187px;
+
+  .frame {
+    position: absolute;
+    top: 750px;
+    left: 0;
+    width: 2539px;
+    height: 390px;
+  }
+
+  .frame2 {
+    display: flex;
+    position: absolute;
+    top: 48px;
+    left: 390px;
+    align-items: flex-start;
+    padding: 178px 602px 583px 830px;
+    width: 1960px;
+    height: 1106px;
+    background-image: url(../image/mofu3zgs-b24ot46.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    .group15 {
+      position: relative;
+      width: 528px;
+      height: 345px;
+
+      .rectangle19 {
+        position: absolute;
+        top: 235px;
+        left: 91px;
+        background: #000202;
+        width: 365px;
+        height: 62px;
+      }
+
+      .jimeng2026041886621 {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 20px;
+        align-items: flex-start;
+        padding: 155px 36px 114px 413px;
+        width: 477px;
+        height: 297px;
+        background-image: url(../image/mofu3zgt-6avtk3d.png);
+        background-position: -88px -174px;
+        background-size: 137.16% 220%;
+        background-repeat: no-repeat;
+
+        .ellipse7 {
+          border-radius: 50%;
+          background: #fcfdfd;
+          width: 28px;
+          height: 28px;
+        }
+      }
+
+      .submarinewarfare {
+        position: absolute;
+        top: 276px;
+        left: 102px;
+        width: 427px;
+        height: 69px;
+        line-height: 28px;
+        letter-spacing: -2.26px;
+        color: #afafaf;
+        font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+        font-size: 45px;
+      }
+
+      .rectangle22 {
+        position: absolute;
+        top: 260px;
+        left: 313px;
+        width: 83px;
+        height: 18px;
+      }
+
+      .vector9 {
+        display: flex;
+        position: absolute;
+        top: 5px;
+        left: 0;
+        align-items: flex-start;
+        padding: 224px 123px 60px 331px;
+        width: 477px;
+        height: 330px;
+        background-image: url(../image/mofu3zgs-5fnzblm.svg);
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+
+        .rectangle21 {
+          background: #fdfdfd;
+          width: 23px;
+          height: 46px;
+        }
+      }
+    }
+  }
+
+  .maskGroup {
+    position: absolute;
+    top: 705px;
+    left: 1955px;
+    width: 432px;
+    height: 482px;
+  }
+
+  .submarineWar10MadeBy {
+    position: absolute;
+    top: 1001px;
+    left: 1286px;
+    width: 403px;
+    height: 14px;
+    line-height: 13px;
+    letter-spacing: -1.05px;
+    color: #afafaf;
+    font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 21px;
+    rotate: -9deg;
+  }
+
+  .vector51 {
+    position: absolute;
+    top: 0;
+    left: 642px;
+    width: 1638px;
+    height: 1081px;
+  }
+}

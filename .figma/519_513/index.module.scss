@@ -1,0 +1,60 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame2 {
+  position: relative;
+  width: 482px;
+  height: 132px;
+
+  .frame {
+    display: flex;
+    position: absolute;
+    top: 34px;
+    left: 0;
+    align-items: center;
+    padding-right: 1px;
+    width: 482px;
+    height: 98px;
+
+    .vector24 {
+      position: relative;
+      margin-left: -1px;
+      width: 482px;
+      height: 98px;
+      background-image: url(../image/mofxkewp-ktmbt1c.svg);
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+
+      .text {
+        position: absolute;
+        top: 9px;
+        left: 151px;
+        width: 289px;
+        height: 57px;
+        letter-spacing: 0;
+        color: #000000;
+        font-family: "Lantinghei SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .group43 {
+        position: absolute;
+        top: 1px;
+        left: 0;
+        width: 482px;
+        height: 78px;
+      }
+    }
+  }
+
+  .maskGroup {
+    position: absolute;
+    top: 0;
+    left: 11px;
+    width: 119px;
+    height: 100px;
+  }
+}
