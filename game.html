@@ -1366,6 +1366,7 @@
             missile: new Image(),
             missileNight: new Image(),
             missileTop: new Image(),
+            missileTailFrames: [], // 导弹尾焰动画帧数组
             mine: new Image(),
             explosion: new Image(),
             explosionFrames: [],
@@ -1649,6 +1650,12 @@
             'assets/导弹发射-序列帧/导弹发射气泡-4.png'
         ];
 
+        // 导弹尾焰动画帧路径（65帧）
+        const missileTailFramePaths = Array.from({ length: 65 }, (_, i) => {
+            const frameNum = i.toString().padStart(5, '0');
+            return `assets/导弹尾焰动画/4月28日(1)_${frameNum}.png`;
+        });
+
         // 海面浪花特效帧路径
         const waterSplashFramePaths = [
             'assets/海面浪花特效/01.png',
@@ -1755,9 +1762,9 @@
         ];
         
         function initLoading() {
-            // 计算总资源数（普通素材 + 爆炸序列帧 + 超级武器动态帧 + 导弹发射气泡帧 + 海面浪花帧 + 夜晚海面浪花帧 + Boss激光帧 + HTML图片）
-            const normalAssetCount = Object.keys(assets).length - 6; // 减去 explosionFrames, superWeaponBgFrames, missileLaunchBubbleFrames, waterSplashFrames, waterSplashFramesNight 和 bossLaserFrames 数组
-            const totalAssets = normalAssetCount + explosionFramePaths.length + superWeaponFramePaths.length + missileLaunchBubbleFramePaths.length + waterSplashFramePaths.length + waterSplashFramePathsNight.length + bossLaserFramePaths.length + htmlImagePaths.length;
+            // 计算总资源数（普通素材 + 爆炸序列帧 + 超级武器动态帧 + 导弹发射气泡帧 + 海面浪花帧 + 夜晚海面浪花帧 + Boss激光帧 + 导弹尾焰帧 + HTML图片）
+            const normalAssetCount = Object.keys(assets).length - 7; // 减去 explosionFrames, superWeaponBgFrames, missileLaunchBubbleFrames, waterSplashFrames, waterSplashFramesNight, bossLaserFrames 和 missileTailFrames 数组
+            const totalAssets = normalAssetCount + explosionFramePaths.length + superWeaponFramePaths.length + missileLaunchBubbleFramePaths.length + waterSplashFramePaths.length + waterSplashFramePathsNight.length + bossLaserFramePaths.length + missileTailFramePaths.length + htmlImagePaths.length;
             let loadedCount = 0;
 
             function updateProgress() {
@@ -1782,7 +1789,7 @@
             
             // 加载普通素材
             for (const key in assets) {
-                if (key === 'explosionFrames' || key === 'superWeaponBgFrames' || key === 'missileLaunchBubbleFrames' || key === 'waterSplashFrames' || key === 'waterSplashFramesNight' || key === 'bossLaserFrames') continue; // 跳过数组，单独处理
+                if (key === 'explosionFrames' || key === 'superWeaponBgFrames' || key === 'missileLaunchBubbleFrames' || key === 'waterSplashFrames' || key === 'waterSplashFramesNight' || key === 'bossLaserFrames' || key === 'missileTailFrames') continue; // 跳过数组，单独处理
                 
                 assets[key].src = assetPaths[key];
                 
@@ -1923,6 +1930,27 @@
                     };
                     frame.onerror = () => {
                         console.warn(`Boss激光帧 ${index + 1} 加载失败`);
+                        updateProgress();
+                    };
+                }
+            });
+
+            // 加载导弹尾焰动画帧
+            missileTailFramePaths.forEach((path, index) => {
+                const frame = new Image();
+                frame.src = path;
+                assets.missileTailFrames.push(frame);
+
+                if (frame.complete) {
+                    console.log(`导弹尾焰帧 ${index + 1} 已缓存`);
+                    updateProgress();
+                } else {
+                    frame.onload = () => {
+                        console.log(`导弹尾焰帧 ${index + 1} 加载成功`);
+                        updateProgress();
+                    };
+                    frame.onerror = () => {
+                        console.warn(`导弹尾焰帧 ${index + 1} 加载失败`);
                         updateProgress();
                     };
                 }
@@ -3546,6 +3574,8 @@
                     ctx.translate(missile.x + missile.width / 2, missile.y + missile.height / 2);
                     // 贴图素材是水平的，需要额外旋转-90度使其垂直朝上，再旋转180度上下颠倒
                     ctx.rotate(missile.angle - Math.PI / 2 + Math.PI);
+                    // 先绘制尾焰动画（Boss场景透明度50%），再绘制导弹，尾焰在导弹下方
+                    drawBossMissileTail(missile);
                     ctx.drawImage(assets.bossMissile, -missile.height / 2, -missile.width / 2, missile.height, missile.width);
                     ctx.restore();
                 } else {
@@ -3557,6 +3587,32 @@
                     ctx.fillRect(-missile.width / 2, -missile.height / 2, missile.width, missile.height);
                     ctx.restore();
                 }
+            }
+        }
+
+        // 绘制Boss导弹尾焰动画
+        function drawBossMissileTail(missile) {
+            if (assets.missileTailFrames.length === 0) return;
+
+            const tailFrames = assets.missileTailFrames;
+            // 根据时间计算当前帧（循环播放）
+            const tailElapsed = Date.now() - missile.riseStartTime;
+            const tailFrameIndex = Math.floor((tailElapsed / 50) % tailFrames.length);
+            const tailFrame = tailFrames[tailFrameIndex];
+
+            if (tailFrame && tailFrame.complete && tailFrame.naturalWidth > 0) {
+                ctx.save();
+                // Boss场景透明度50%
+                ctx.globalAlpha = 0.5;
+                const tailScale = 0.5; // 缩放比例
+                const tailWidth = tailFrame.naturalWidth * tailScale;
+                const tailHeight = tailFrame.naturalHeight * tailScale;
+                // 尾焰相对导弹位置垂直向下移动350px（稍微离导弹近一点）
+                const tailOffsetY = 350;
+                // 计算尾焰Y位置（导弹尾部在 -missile.height/2）
+                const tailY = -missile.height/2 - tailHeight + tailOffsetY;
+                ctx.drawImage(tailFrame, -tailWidth/2, tailY, tailWidth, tailHeight);
+                ctx.restore();
             }
         }
 
@@ -3858,7 +3914,8 @@
                 phase: 'diagonal', // diagonal, vertical
                 direction: direction,
                 startY: sub.y,
-                targetHeight: sub.y - 150
+                targetHeight: sub.y - 150,
+                startTime: Date.now() // 导弹发射时间，用于尾焰动画
             });
             
             // 创建导弹发射气泡特效
@@ -3941,7 +3998,8 @@
                     missile.splashCreated = true; // 标记已创建浪花，避免重复创建
                 }
 
-                if (missile.y < -50) {
+                // 延迟移除导弹，让尾焰有足够时间显示（从-50改为-200）
+                if (missile.y < -200) {
                     missiles.splice(i, 1);
                 }
             }
@@ -4891,7 +4949,7 @@
                         // 导弹穿过水平面，需要分段绘制
                         // 计算相对于导弹中心的水平面位置
                         const waterLevelRelativeToCenter = waterLevelY - (missile.y + missile.height/2);
-                        
+
                         // 绘制水面下部分（原素材的下半部分）
                         const bottomHeight = missile.height/2 - waterLevelRelativeToCenter;
                         if (bottomHeight > 0) {
@@ -4903,7 +4961,7 @@
                                 -missile.width/2, waterLevelRelativeToCenter, missile.width, bottomHeight
                             );
                         }
-                        
+
                         // 绘制水面上部分（新素材的上半部分）
                         const topHeight = missile.height/2 + waterLevelRelativeToCenter;
                         if (topHeight > 0) {
@@ -4914,14 +4972,22 @@
                                 -missile.width/2, -missile.height/2, missile.width, topHeight
                             );
                         }
+                        // 穿过水平面时，尾焰透明度80%
+                        drawMissileTail(missile, 0.8);
                     } else if (isAboveWater && hasTopImg) {
                         // 完全在水面上方，使用新素材
                         ctx.drawImage(missileTopImg, -missile.width/2, -missile.height/2, missile.width, missile.height);
+                        // 绘制尾焰动画（水面上方时透明度60%）
+                        drawMissileTail(missile, 0.6);
+                    } else if (isBelowWater) {
+                        // 完全在水面下方，使用原素材并绘制尾焰（100%透明度）
+                        ctx.drawImage(missileImg, -missile.width/2, -missile.height/2, missile.width, missile.height);
+                        drawMissileTail(missile, 1.0);
                     } else {
-                        // 完全在水面下方或新素材未加载，使用原素材
+                        // 素材未加载，使用原素材
                         ctx.drawImage(missileImg, -missile.width/2, -missile.height/2, missile.width, missile.height);
                     }
-                    
+
                     ctx.restore();
                 } else {
                     // 备用绘制
@@ -4939,6 +5005,35 @@
                     ctx.restore();
                 }
             });
+        }
+
+        // 绘制导弹尾焰动画
+        function drawMissileTail(missile, waterAlpha) {
+            if (assets.missileTailFrames.length === 0) return;
+
+            const tailFrames = assets.missileTailFrames;
+            // 根据时间计算当前帧（循环播放）
+            const tailElapsed = Date.now() - missile.startTime;
+            const tailFrameIndex = Math.floor((tailElapsed / 50) % tailFrames.length);
+            const tailFrame = tailFrames[tailFrameIndex];
+
+            if (tailFrame && tailFrame.complete && tailFrame.naturalWidth > 0) {
+                ctx.save();
+                // 根据场景调整基础透明度：白天100%，夜晚和Boss场景50%
+                const isNightOrBoss = isNightScene || boss.active || bossDefeatState.showBubble;
+                const sceneAlpha = isNightOrBoss ? 0.5 : 1.0;
+                ctx.globalAlpha = waterAlpha * sceneAlpha; // 结合水面透明度和场景透明度
+                const tailScale = 0.5; // 缩放比例
+                const tailWidth = tailFrame.naturalWidth * tailScale;
+                const tailHeight = tailFrame.naturalHeight * tailScale;
+                // 尾焰相对导弹位置垂直向下移动400px
+                const tailOffsetY = 400;
+                // 计算尾焰在画布中的实际Y位置（考虑导弹旋转后的坐标）
+                const tailY = -missile.height/2 - tailHeight + tailOffsetY;
+                // 即使尾焰超出画布上方也继续绘制，不限制
+                ctx.drawImage(tailFrame, -tailWidth/2, tailY, tailWidth, tailHeight);
+                ctx.restore();
+            }
         }
 
         function drawMines() {
