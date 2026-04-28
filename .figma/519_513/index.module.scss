@@ -4,14 +4,14 @@
 
 .frame2 {
   position: relative;
-  width: 482px;
-  height: 132px;
+  width: 488px;
+  height: 171px;
 
   .frame {
     display: flex;
     position: absolute;
-    top: 34px;
-    left: 0;
+    top: 73px;
+    left: 6px;
     align-items: center;
     padding-right: 1px;
     width: 482px;
@@ -22,7 +22,7 @@
       margin-left: -1px;
       width: 482px;
       height: 98px;
-      background-image: url(../image/mofxkewp-ktmbt1c.svg);
+      background-image: url(../image/mohwmsde-nlzwmtj.svg);
       background-position: center;
       background-size: cover;
       background-repeat: no-repeat;
@@ -30,7 +30,7 @@
       .text {
         position: absolute;
         top: 9px;
-        left: 151px;
+        left: 173px;
         width: 289px;
         height: 57px;
         letter-spacing: 0;
@@ -53,8 +53,8 @@
   .maskGroup {
     position: absolute;
     top: 0;
-    left: 11px;
-    width: 119px;
-    height: 100px;
+    left: 0;
+    width: 166px;
+    height: 140px;
   }
 }

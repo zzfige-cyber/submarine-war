@@ -12,10 +12,10 @@ const Component = () => {
             <br />
             还没研发完成，别太得意了！
           </p>
-          <img src="../image/mofxkewp-ossres2.svg" className={styles.group43} />
+          <img src="../image/mohwmsde-w1kbg10.svg" className={styles.group43} />
         </div>
       </div>
-      <img src="../image/mofxkewp-08nlwjs.png" className={styles.maskGroup} />
+      <img src="../image/mohwmsde-wf7rsum.png" className={styles.maskGroup} />
     </div>
   );
 }

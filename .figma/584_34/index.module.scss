@@ -1,0 +1,77 @@
+* {
+  box-sizing: border-box;
+}
+
+.group87 {
+  position: relative;
+  width: 249px;
+  height: 39px;
+
+  .rectangle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 37px;
+    height: 36px;
+  }
+
+  .rectangle117 {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    background: #000000;
+    width: 11px;
+    height: 20px;
+  }
+
+  .rectangle118 {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    align-items: center;
+    padding: 2px 87px 1px 7px;
+    width: 130px;
+    height: 39px;
+    background-image: url(../image/moi71ki1-5f60iyr.svg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    .group85 {
+      position: relative;
+      width: 37px;
+      height: 36px;
+    }
+  }
+
+  .rectangle119 {
+    position: absolute;
+    top: 0;
+    left: 119px;
+    width: 130px;
+    height: 39px;
+    rotate: -180deg;
+  }
+
+  .text {
+    position: absolute;
+    top: 9px;
+    left: 55px;
+    width: 153px;
+    height: 20px;
+    line-height: 20px;
+    letter-spacing: 0;
+    color: #ff4f4e;
+    font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 22px;
+  }
+
+  .group86 {
+    position: absolute;
+    top: 2px;
+    left: 205px;
+    width: 37px;
+    height: 36px;
+  }
+}

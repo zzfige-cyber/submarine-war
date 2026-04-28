@@ -76,6 +76,24 @@
             letter-spacing: -1.2px;
         }
         
+        /* 转场到技能面板的遮罩动画 */
+        .skillTransitionOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            opacity: 0;
+            z-index: 2000;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        
+        .skillTransitionOverlay.active {
+            opacity: 1;
+        }
+        
         /* 技能配置面板 - 使用截图作为背景 */
         #skillPanel {
             position: absolute;
@@ -595,11 +613,19 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0);
-            transition: background 0.5s ease;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
         
         #gameOverScreen.active .gameOverOverlay {
             background: rgba(0, 0, 0, 0.65);
+            opacity: 1;
+            animation: gameOverOverlayFadeIn 0.5s ease forwards;
+        }
+        
+        @keyframes gameOverOverlayFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         .gameOverContent {
@@ -617,13 +643,26 @@
             margin-top: -60px;
             z-index: 2;
             opacity: 0;
-            transform: translateY(-30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transform: translateY(-100px) scale(0.8);
         }
         
         #gameOverScreen.active .gameOverTitle {
-            opacity: 1;
-            transform: translateY(0);
+            animation: gameOverTitleBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.2s forwards;
+        }
+        
+        @keyframes gameOverTitleBounce {
+            0% {
+                opacity: 0;
+                transform: translateY(-100px) scale(0.8);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(10px) scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
         
         .scorePanel {
@@ -634,6 +673,23 @@
             height: auto;
             margin-bottom: 20px;
             z-index: 3;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        
+        #gameOverScreen.active .scorePanel {
+            animation: gameOverScoreSlide 0.6s ease-out 0.5s forwards;
+        }
+        
+        @keyframes gameOverScoreSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .scorePanelBg {
@@ -650,6 +706,20 @@
             font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
             font-size: 50px;
             font-weight: bold;
+            opacity: 0;
+        }
+        
+        #gameOverScreen.active .finalScore {
+            animation: gameOverScoreFadeIn 0.4s ease-out 0.9s forwards;
+        }
+        
+        @keyframes gameOverScoreFadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
         }
         
         .gameOverButtons {
@@ -657,6 +727,23 @@
             width: 972px;
             height: 179px;
             margin-top: 20px;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        
+        #gameOverScreen.active .gameOverButtons {
+            animation: gameOverButtonsPop 0.5s ease-out 0.8s forwards;
+        }
+        
+        @keyframes gameOverButtonsPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
         
         .gameOverBtn {
@@ -717,7 +804,19 @@
             left: 0;
             width: 100%;
             height: 100%;
+            background: rgba(0, 0, 0, 0);
+            opacity: 0;
+        }
+        
+        #pauseScreen.active .pauseOverlay {
             background: rgba(0, 0, 0, 0.6);
+            opacity: 1;
+            animation: pauseOverlayFadeIn 0.4s ease forwards;
+        }
+        
+        @keyframes pauseOverlayFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         .pauseContent {
@@ -736,13 +835,26 @@
             left: -453px;
             top: -213px;
             opacity: 0;
-            transform: translateY(-30px) scale(0.9);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(-80px) scale(0.8);
         }
         
         #pauseScreen.active .pauseTitle {
-            opacity: 1;
-            transform: translateY(0) scale(1);
+            animation: pauseTitleBounce 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.1s forwards;
+        }
+        
+        @keyframes pauseTitleBounce {
+            0% {
+                opacity: 0;
+                transform: translateY(-80px) scale(0.8);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(10px) scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
         
         .pauseButtons {
@@ -751,6 +863,23 @@
             align-items: center;
             gap: 20px;
             position: absolute;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        
+        #pauseScreen.active .pauseButtons {
+            animation: pauseButtonsSlide 0.5s ease-out 0.4s forwards;
+        }
+        
+        @keyframes pauseButtonsSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
         
         .pauseBtn {
@@ -811,8 +940,20 @@
             left: 0;
             width: 100%;
             height: 100%;
+            background: rgba(0, 0, 0, 0);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        #victoryScreen.active .victoryOverlay {
             background: rgba(0, 0, 0, 0.3);
-            transition: background 0.5s ease;
+            opacity: 1;
+            animation: victoryOverlayFadeIn 0.5s ease forwards;
+        }
+        
+        @keyframes victoryOverlayFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         .victoryContent {
@@ -832,15 +973,53 @@
             width: 722px;
             height: 840px;
             z-index: 10;
+            opacity: 0;
+            transform: translateX(-100px) scale(0.9);
+        }
+        
+        #victoryScreen.active .victoryCharacter {
+            animation: victoryCharacterSlide 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.2s forwards;
+        }
+        
+        @keyframes victoryCharacterSlide {
+            0% {
+                opacity: 0;
+                transform: translateX(-100px) scale(0.9);
+            }
+            60% {
+                opacity: 1;
+                transform: translateX(10px) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
         }
 
         .victoryScorePanel {
             position: absolute;
-            top: -15px;
+            top: 36px;
             left: -23px;
             width: 1516px;
             height: 1013px;
             z-index: 3;
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+        }
+        
+        #victoryScreen.active .victoryScorePanel {
+            animation: victoryScorePanelSlide 0.6s ease-out 0.5s forwards;
+        }
+        
+        @keyframes victoryScorePanelSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .victoryScorePanel img {
@@ -850,15 +1029,34 @@
 
         .victoryScore {
             position: absolute;
-            top: 395px;
-            left: 745px;
-            width: 300px;
+            top: 431px;
+            left: 706px;
+            width: 400px;
             color: #ffff00;
             font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
             font-size: 120px;
             font-weight: 800;
-            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
             letter-spacing: 5px;
+            opacity: 0;
+        }
+        
+        .victoryScore .timeUnit {
+            font-size: 84px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+        
+        #victoryScreen.active .victoryScore {
+            animation: victoryScoreFadeIn 0.4s ease-out 0.9s forwards;
+        }
+        
+        @keyframes victoryScoreFadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
         }
 
         .victoryButtons {
@@ -869,6 +1067,23 @@
             flex-direction: column;
             gap: 20px;
             z-index: 4;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        
+        #victoryScreen.active .victoryButtons {
+            animation: victoryButtonsPop 0.5s ease-out 1s forwards;
+        }
+        
+        @keyframes victoryButtonsPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .victoryBtn {
@@ -1049,10 +1264,10 @@
             <div class="victoryOverlay"></div>
             <div class="victoryContent">
                 <!-- 人物立绘 -->
-                <img src="assets/figma_image/screenshot_261_1545.png" alt="人物立绘" class="victoryCharacter">
+                <img src="assets/figma_image/screenshot_512_165.png" alt="人物立绘" class="victoryCharacter">
                 <!-- 计分牌 -->
                 <div class="victoryScorePanel">
-                    <img src="assets/figma_image/screenshot_259_1523.png" alt="计分牌">
+                    <img src="assets/figma_image/screenshot_571_3.png" alt="计分牌">
                     <span class="victoryScore" id="victoryScore">0</span>
                 </div>
                 <!-- 按钮区域 -->
@@ -1156,6 +1371,7 @@
             explosionFrames: [],
             missileLaunchBubbleFrames: [], // 导弹发射气泡特效帧数组
             waterSplashFrames: [], // 海面浪花特效帧数组
+            waterSplashFramesNight: [], // 夜晚海面浪花特效帧数组
             powerUpHp: new Image(),
             powerUpRange: new Image(),
             superWeaponBg: new Image(),
@@ -1183,7 +1399,12 @@
             btnVictoryConfig: new Image(),
             bossBullet: new Image(),
             bossMissile: new Image(),
-            bossDefeatBubble: new Image()
+            bossDefeatBubble: new Image(),
+            controlHintBubble: new Image(), // 操作提示气泡
+            scoreProgressBar: new Image(), // 分数进度条
+            scoreProgressIndicator: new Image(), // 分数进度指示器（玩家船图标）
+            bossLaserWarning: new Image(), // Boss激光预警贴图
+            bossLaserFrames: [] // Boss激光动画帧数组
         };
         
         // 场景状态
@@ -1196,6 +1417,15 @@
             duration: 3000, // 3秒内完成加速过渡
             fromSpeed: 1.5,
             toSpeed: 9.0
+        };
+        
+        // Boss出场时场景速度过渡状态（从夜晚速度过渡回白天速度）
+        let bossSceneSpeedTransition = {
+            active: false,
+            startTime: 0,
+            duration: 2000, // 2秒内完成减速过渡
+            fromSpeed: 9.0,
+            toSpeed: 1.5
         };
         
         // 场景背景渐变过渡状态
@@ -1248,13 +1478,17 @@
             btnRetryPause: 'assets/figma_image/screenshot_220_176.png',
             btnConfigPause: 'assets/figma_image/screenshot_220_182.png',
             uiTopBar: 'assets/figma_image/screenshot_257_282.png',
-            victoryCharacter: 'assets/figma_image/screenshot_261_1545.png',
-            victoryScorePanel: 'assets/figma_image/screenshot_259_1523.png',
+            victoryCharacter: 'assets/figma_image/screenshot_512_165.png',
+            victoryScorePanel: 'assets/figma_image/screenshot_571_3.png',
             btnVictoryRetry: 'assets/figma_image/screenshot_259_1508.png',
             btnVictoryConfig: 'assets/figma_image/screenshot_259_1514.png',
             bossBullet: 'assets/figma_image/screenshot_517_506.png',
             bossMissile: 'assets/figma_image/screenshot_517_484.png',
-            bossDefeatBubble: 'assets/figma_image/screenshot_519_513.png'
+            bossDefeatBubble: 'assets/figma_image/screenshot_519_513.png',
+            controlHintBubble: 'assets/figma_image/screenshot_513_199.png', // 操作提示气泡
+            scoreProgressBar: 'assets/figma_image/screenshot_577_652.png', // 分数进度条
+            scoreProgressIndicator: 'assets/figma_image/screenshot_572_364.png', // 分数进度指示器（玩家船图标）
+            bossLaserWarning: 'assets/figma_image/screenshot_584_34.png' // Boss激光预警贴图
         };
         
         // 游戏暂停状态
@@ -1283,6 +1517,13 @@
         // 第一个稀有潜艇标记
         let firstGoldSubmarineSpawned = false;
 
+        // 操作提示气泡状态
+        let controlHintBubble = {
+            active: true, // 游戏开始时默认显示
+            hasPlayerMoved: false, // 玩家是否已移动
+            hasPlayerFired: false // 玩家是否已发射水雷（按空格）
+        };
+
         // 强敌来袭横幅状态
         let bossWarningEffect = {
             active: false,
@@ -1305,9 +1546,9 @@
         let boss = {
             active: false,
             x: 2100, // 从右侧屏幕外开始
-            y: 584,  // 往上移动40%后的位置（750 - 414*0.4 ≈ 584）
-            width: 772,
-            height: 414,
+            y: 584,  // 往上移动40%后的位置
+            width: 540,  // 772 * 0.7 ≈ 540，缩小30%
+            height: 290, // 414 * 0.7 ≈ 290，缩小30%
             hp: BOSS_DEFENSE.maxHp,   // Boss当前血量
             maxHp: BOSS_DEFENSE.maxHp,
             displayHp: BOSS_DEFENSE.maxHp, // 用于动画显示的血量
@@ -1327,16 +1568,16 @@
             },
             entryComplete: false, // 入场是否完成
             attackPattern: 0, // 当前攻击模式：0=未开始, 1=圆点子弹, 2=追踪导弹, 3=激光
-            attackSequence: [1, 2, 1, 2, 3], // 攻击循环顺序
+            attackSequence: [1, 2, 3], // 攻击循环顺序：1=子弹、2=导弹、3=激光
             currentAttackIndex: 0, // 当前攻击在序列中的索引
             lastAttackTime: 0,
-            attackCooldown: 3500, // 攻击间隔3.5秒（提升30%频率）
+            attackCooldown: 2500, // 攻击间隔2.5秒
             laserActive: false,
             laserStartTime: 0,
             laserDuration: 2000, // 激光持续2秒
             laserWarning: false, // 激光预警状态
             laserWarningStartTime: 0,
-            laserWarningDuration: 1000, // 预警1秒
+            laserWarningDuration: 210, // 预警210ms（减少30%）
             // 移动相关
             moveTargetX: 0,
             moveTargetY: 0,
@@ -1350,6 +1591,16 @@
             showBubble: false,
             bubbleStartTime: 0,
             bubbleDuration: 4000, // 对话气泡显示4秒
+            explosionsStarted: false,
+            explosionsStartTime: 0,
+            explosionsDuration: 2000, // 爆炸持续2秒
+            explosions: [], // 随机爆炸位置数组
+            gameOverTriggered: false
+        };
+
+        // 玩家死亡爆炸状态
+        let playerDefeatState = {
+            active: false,
             explosionsStarted: false,
             explosionsStartTime: 0,
             explosionsDuration: 2000, // 爆炸持续2秒
@@ -1415,6 +1666,68 @@
             'assets/海面浪花特效/13.png'
         ];
 
+        // 夜晚海面浪花特效帧路径（适用于夜晚和Boss场景）
+        const waterSplashFramePathsNight = [
+            'assets/海面浪花特效-夜晚/1001.png',
+            'assets/海面浪花特效-夜晚/1002.png',
+            'assets/海面浪花特效-夜晚/1003.png',
+            'assets/海面浪花特效-夜晚/1004.png',
+            'assets/海面浪花特效-夜晚/1005.png',
+            'assets/海面浪花特效-夜晚/1006.png',
+            'assets/海面浪花特效-夜晚/1007.png',
+            'assets/海面浪花特效-夜晚/1008.png',
+            'assets/海面浪花特效-夜晚/1009.png',
+            'assets/海面浪花特效-夜晚/1010.png',
+            'assets/海面浪花特效-夜晚/1011.png',
+            'assets/海面浪花特效-夜晚/1012.png',
+            'assets/海面浪花特效-夜晚/1013.png'
+        ];
+
+        // Boss激光动画帧路径
+        const bossLaserFramePaths = [
+            'assets/boss-激光/4月28日_1_00000.png',
+            'assets/boss-激光/4月28日_1_00001.png',
+            'assets/boss-激光/4月28日_1_00002.png',
+            'assets/boss-激光/4月28日_1_00003.png',
+            'assets/boss-激光/4月28日_1_00004.png',
+            'assets/boss-激光/4月28日_1_00005.png',
+            'assets/boss-激光/4月28日_1_00006.png',
+            'assets/boss-激光/4月28日_1_00007.png',
+            'assets/boss-激光/4月28日_1_00008.png',
+            'assets/boss-激光/4月28日_1_00009.png',
+            'assets/boss-激光/4月28日_1_00010.png',
+            'assets/boss-激光/4月28日_1_00011.png',
+            'assets/boss-激光/4月28日_1_00012.png',
+            'assets/boss-激光/4月28日_1_00013.png',
+            'assets/boss-激光/4月28日_1_00014.png',
+            'assets/boss-激光/4月28日_1_00015.png',
+            'assets/boss-激光/4月28日_1_00016.png',
+            'assets/boss-激光/4月28日_1_00017.png',
+            'assets/boss-激光/4月28日_1_00018.png',
+            'assets/boss-激光/4月28日_1_00019.png',
+            'assets/boss-激光/4月28日_1_00020.png',
+            'assets/boss-激光/4月28日_1_00021.png',
+            'assets/boss-激光/4月28日_1_00022.png',
+            'assets/boss-激光/4月28日_1_00023.png',
+            'assets/boss-激光/4月28日_1_00024.png',
+            'assets/boss-激光/4月28日_1_00025.png',
+            'assets/boss-激光/4月28日_1_00026.png',
+            'assets/boss-激光/4月28日_1_00027.png',
+            'assets/boss-激光/4月28日_1_00028.png',
+            'assets/boss-激光/4月28日_1_00029.png',
+            'assets/boss-激光/4月28日_1_00030.png',
+            'assets/boss-激光/4月28日_1_00031.png',
+            'assets/boss-激光/4月28日_1_00032.png',
+            'assets/boss-激光/4月28日_1_00033.png',
+            'assets/boss-激光/4月28日_1_00034.png',
+            'assets/boss-激光/4月28日_1_00035.png',
+            'assets/boss-激光/4月28日_1_00036.png',
+            'assets/boss-激光/4月28日_1_00037.png',
+            'assets/boss-激光/4月28日_1_00038.png',
+            'assets/boss-激光/4月28日_1_00039.png',
+            'assets/boss-激光/4月28日_1_00040.png'
+        ];
+
         // ==================== 加载系统 ====================
         // 需要预加载的HTML图片资源路径
         const htmlImagePaths = [
@@ -1437,13 +1750,14 @@
             'assets/figma_image/screenshot_259_1514.png',
             'assets/skill_bg.png',
             'assets/skill_dot_active.png',
-            'assets/skill_dot_empty.png'
+            'assets/skill_dot_empty.png',
+            'assets/figma_image/screenshot_513_199.png' // 操作提示气泡
         ];
         
         function initLoading() {
-            // 计算总资源数（普通素材 + 爆炸序列帧 + 超级武器动态帧 + 导弹发射气泡帧 + 海面浪花帧 + HTML图片）
-            const normalAssetCount = Object.keys(assets).length - 4; // 减去 explosionFrames, superWeaponBgFrames, missileLaunchBubbleFrames 和 waterSplashFrames 数组
-            const totalAssets = normalAssetCount + explosionFramePaths.length + superWeaponFramePaths.length + missileLaunchBubbleFramePaths.length + waterSplashFramePaths.length + htmlImagePaths.length;
+            // 计算总资源数（普通素材 + 爆炸序列帧 + 超级武器动态帧 + 导弹发射气泡帧 + 海面浪花帧 + 夜晚海面浪花帧 + Boss激光帧 + HTML图片）
+            const normalAssetCount = Object.keys(assets).length - 6; // 减去 explosionFrames, superWeaponBgFrames, missileLaunchBubbleFrames, waterSplashFrames, waterSplashFramesNight 和 bossLaserFrames 数组
+            const totalAssets = normalAssetCount + explosionFramePaths.length + superWeaponFramePaths.length + missileLaunchBubbleFramePaths.length + waterSplashFramePaths.length + waterSplashFramePathsNight.length + bossLaserFramePaths.length + htmlImagePaths.length;
             let loadedCount = 0;
 
             function updateProgress() {
@@ -1468,7 +1782,7 @@
             
             // 加载普通素材
             for (const key in assets) {
-                if (key === 'explosionFrames' || key === 'superWeaponBgFrames' || key === 'missileLaunchBubbleFrames' || key === 'waterSplashFrames') continue; // 跳过数组，单独处理
+                if (key === 'explosionFrames' || key === 'superWeaponBgFrames' || key === 'missileLaunchBubbleFrames' || key === 'waterSplashFrames' || key === 'waterSplashFramesNight' || key === 'bossLaserFrames') continue; // 跳过数组，单独处理
                 
                 assets[key].src = assetPaths[key];
                 
@@ -1571,7 +1885,49 @@
                     };
                 }
             });
-            
+
+            // 加载夜晚海面浪花特效帧
+            waterSplashFramePathsNight.forEach((path, index) => {
+                const frame = new Image();
+                frame.src = path;
+                assets.waterSplashFramesNight.push(frame);
+
+                if (frame.complete) {
+                    console.log(`夜晚海面浪花帧 ${index + 1} 已缓存`);
+                    updateProgress();
+                } else {
+                    frame.onload = () => {
+                        console.log(`夜晚海面浪花帧 ${index + 1} 加载成功`);
+                        updateProgress();
+                    };
+                    frame.onerror = () => {
+                        console.warn(`夜晚海面浪花帧 ${index + 1} 加载失败`);
+                        updateProgress();
+                    };
+                }
+            });
+
+            // 加载Boss激光动画帧
+            bossLaserFramePaths.forEach((path, index) => {
+                const frame = new Image();
+                frame.src = path;
+                assets.bossLaserFrames.push(frame);
+
+                if (frame.complete) {
+                    console.log(`Boss激光帧 ${index + 1} 已缓存`);
+                    updateProgress();
+                } else {
+                    frame.onload = () => {
+                        console.log(`Boss激光帧 ${index + 1} 加载成功`);
+                        updateProgress();
+                    };
+                    frame.onerror = () => {
+                        console.warn(`Boss激光帧 ${index + 1} 加载失败`);
+                        updateProgress();
+                    };
+                }
+            });
+
             // 加载HTML中使用的图片资源
             htmlImagePaths.forEach((path, index) => {
                 const img = new Image();
@@ -1605,6 +1961,59 @@
             shipDisplay.style.transform = '';
             
             updateSkillUI();
+        }
+        
+        // 转场到技能配置面板的动画
+        function transitionToSkillPanel(fromScreen) {
+            // 创建转场遮罩
+            const transitionOverlay = document.createElement('div');
+            transitionOverlay.className = 'skillTransitionOverlay';
+            document.body.appendChild(transitionOverlay);
+            
+            // 触发重绘以确保动画生效
+            transitionOverlay.offsetHeight;
+            
+            // 开始淡出动画
+            transitionOverlay.classList.add('active');
+            
+            // 在遮罩淡入过程中就开始准备技能面板
+            setTimeout(() => {
+                // 根据来源界面隐藏对应界面
+                if (fromScreen === 'pause') {
+                    hidePauseScreen();
+                } else if (fromScreen === 'gameover') {
+                    hideGameOverScreen();
+                } else if (fromScreen === 'victory') {
+                    hideVictoryScreen();
+                }
+                
+                // 隐藏游戏画布
+                document.getElementById('gameCanvas').style.display = 'none';
+                
+                // 重置技能点
+                gameState.skillPoints = { speed: 0, hp: 0, ammo: 0 };
+                
+                // 重置船只位置
+                const shipDisplay = document.querySelector('.playerShipDisplay');
+                shipDisplay.style.transform = '';
+                shipDisplay.style.transition = '';
+                
+                updateSkillUI();
+                
+                // 显示技能面板（在遮罩最黑的时候显示）
+                document.getElementById('skillPanel').style.display = 'flex';
+                gameState.currentScreen = 'skill';
+                
+                // 开始淡出遮罩，露出技能面板
+                transitionOverlay.classList.remove('active');
+                
+                // 移除转场遮罩
+                setTimeout(() => {
+                    if (transitionOverlay.parentNode) {
+                        transitionOverlay.parentNode.removeChild(transitionOverlay);
+                    }
+                }, 300);
+            }, 200);
         }
 
         function adjustSkill(skill, delta) {
@@ -1826,6 +2235,9 @@
         let mineAmmo, maxMineAmmo, mineRegenTime;
         let superWeaponReady;
         let splitMineActive; // 分裂水雷是否激活
+        let splitMineCount; // 分裂水雷剩余次数（30颗）
+        let gameStartTime; // 游戏开始时间（用于计时）
+        let finalGameTime; // 游戏结束时的最终时间（秒）
         
         // MP动画状态
         let mpAnimation = {
@@ -1926,7 +2338,10 @@
             maxHp = player.maxHp;
             mp = 0;
             gameOver = false;
+            gamePaused = false; // 确保游戏不是暂停状态
             superWeaponReady = false;
+            gameStartTime = Date.now(); // 记录游戏开始时间
+            finalGameTime = 0; // 重置最终游戏时间
             
             // 初始化MP动画状态
             mpAnimation.displayMp = 0;
@@ -1962,6 +2377,12 @@
             bossWarningEffect.shown = false;
             bossWarningEffect.active = false;
 
+            // 重置玩家死亡状态
+            playerDefeatState.active = false;
+            playerDefeatState.explosionsStarted = false;
+            playerDefeatState.explosions = [];
+            playerDefeatState.gameOverTriggered = false;
+
             // 重置Boss状态
             boss.active = false;
             boss.x = 2100;
@@ -1974,20 +2395,29 @@
             boss.entryComplete = false;
             boss.currentAttackIndex = 0;
             boss.laserActive = false;
+            boss.laserWarning = false;
+            boss.laserPreparing = false; // 激光准备移动状态
             bossBullets = [];
             bossMissiles = [];
-            
+
             // 重置Boss死亡状态
             bossDefeatState.showBubble = false;
             bossDefeatState.explosionsStarted = false;
             bossDefeatState.explosions = [];
             bossDefeatState.gameOverTriggered = false;
 
+            // 重置玩家死亡状态
+            playerDefeatState.active = false;
+            playerDefeatState.explosionsStarted = false;
+            playerDefeatState.explosions = [];
+            playerDefeatState.gameOverTriggered = false;
+
             // 弹药系统
             maxMineAmmo = GAME_CONFIG.player.baseAmmo + ammoLevel * 2;
             mineAmmo = maxMineAmmo;
             mineRegenTime = 0;
             splitMineActive = false; // 重置分裂水雷状态
+            splitMineCount = 0; // 重置分裂水雷计数
             splitMineBubble.active = false; // 重置分裂水雷气泡状态
             
             // 重置气泡动画状态
@@ -2014,6 +2444,7 @@
         function resetGame() {
             // 重置游戏状态
             gameOver = false;
+            gamePaused = false; // 确保游戏不是暂停状态
             score = 0;
             
             // 重置Boss状态
@@ -2028,9 +2459,11 @@
             boss.entryComplete = false;
             boss.currentAttackIndex = 0;
             boss.laserActive = false;
+            boss.laserWarning = false;
+            boss.laserPreparing = false;
             bossBullets = [];
             bossMissiles = [];
-            
+
             // 重置强敌来袭横幅状态
             bossWarningEffect.shown = false;
             bossWarningEffect.active = false;
@@ -2050,6 +2483,11 @@
             
             // 重置第一个稀有潜艇标记
             firstGoldSubmarineSpawned = false;
+            
+            // 重置操作提示气泡
+            controlHintBubble.active = true;
+            controlHintBubble.hasPlayerMoved = false;
+            controlHintBubble.hasPlayerFired = false;
             
             // 重新初始化游戏
             initGame();
@@ -2179,6 +2617,9 @@
             // 弹药恢复
             updateMineRegen();
 
+            // 更新玩家死亡爆炸效果
+            updatePlayerDefeatEffects();
+
             // 碰撞检测
             checkCollisions();
             
@@ -2279,11 +2720,29 @@
             boss.entryComplete = false;
             boss.currentAttackIndex = 0;
             boss.lastAttackTime = Date.now();
+            boss.laserPreparing = false;
             bossBullets = [];
             bossMissiles = [];
+
+            // Boss出场时启动场景速度过渡（从夜晚速度过渡回白天速度）
+            bossSceneSpeedTransition.active = true;
+            bossSceneSpeedTransition.startTime = Date.now();
+            // 根据当前实际速度设置起始速度
+            if (isNightScene && sceneSpeedTransition.active) {
+                // 如果正在夜晚加速过渡中，使用当前过渡速度
+                const elapsed = Date.now() - sceneSpeedTransition.startTime;
+                const progress = Math.min(elapsed / sceneSpeedTransition.duration, 1);
+                bossSceneSpeedTransition.fromSpeed = sceneSpeedTransition.fromSpeed + 
+                    (sceneSpeedTransition.toSpeed - sceneSpeedTransition.fromSpeed) * progress;
+            } else if (isNightScene) {
+                // 夜晚场景已完成加速，使用最大速度
+                bossSceneSpeedTransition.fromSpeed = sceneSpeedTransition.toSpeed;
+            } else {
+                // 白天场景，使用白天速度
+                bossSceneSpeedTransition.fromSpeed = backgroundScrollSpeed;
+            }
             
-            // 清除所有现存的潜艇
-            submarines = [];
+            // Boss出场时不清除现有潜艇，让它们继续移动直到离开画面
             
             console.log('Boss激活，开始入场');
         }
@@ -2302,7 +2761,8 @@
                 } else {
                     boss.x = targetX;
                     boss.entryComplete = true;
-                    boss.lastAttackTime = Date.now();
+                    // 首次攻击间隔大幅缩短（500ms）
+                    boss.lastAttackTime = Date.now() - (boss.attackCooldown - 500);
                     boss.moveTargetX = targetX;
                     boss.moveTargetY = boss.y;
                     boss.lastMoveTime = Date.now();
@@ -2348,6 +2808,19 @@
             
             // 激光攻击期间不执行其他攻击
             if (boss.laserActive) {
+                // 激光打在水面位置，持续播放浪花特效
+                const waterLevelY = 274; // 水平面Y坐标
+                const laserX = boss.x + boss.width / 2;
+                // 每200毫秒创建一个新的浪花特效，形成持续效果
+                const laserElapsed = now - boss.laserStartTime;
+                const splashInterval = 200; // 每200ms创建一个浪花
+                const lastSplashIndex = Math.floor((laserElapsed - 16) / splashInterval); // 上一帧的索引
+                const currentSplashIndex = Math.floor(laserElapsed / splashInterval);
+                if (currentSplashIndex > lastSplashIndex) {
+                    // 激光产生的浪花持续时间减少30%（490ms vs 700ms）
+                    createLaserWaterSplash(laserX, waterLevelY);
+                }
+                
                 if (now - boss.laserStartTime > boss.laserDuration) {
                     boss.laserActive = false;
                     boss.lastAttackTime = now;
@@ -2356,11 +2829,59 @@
                 return;
             }
 
+            // 更新Boss后坐力动画
+            if (boss.recoilEffect && boss.recoilEffect.active) {
+                const recoilElapsed = now - boss.recoilEffect.startTime;
+                if (recoilElapsed >= boss.recoilEffect.duration) {
+                    boss.recoilEffect.active = false;
+                    boss.recoilEffect.offsetY = 0;
+                } else {
+                    // 后坐力动画：先向下快速移动，然后缓慢回位
+                    const progress = recoilElapsed / boss.recoilEffect.duration;
+                    if (progress < 0.3) {
+                        // 前30%时间向下移动（后坐）
+                        const p = progress / 0.3;
+                        boss.recoilEffect.offsetY = 20 * Math.sin(p * Math.PI / 2);
+                    } else {
+                        // 后70%时间回位
+                        const p = (progress - 0.3) / 0.7;
+                        boss.recoilEffect.offsetY = 20 * (1 - Math.sin(p * Math.PI / 2));
+                    }
+                }
+            }
+
             // 检查攻击冷却
             if (now - boss.lastAttackTime < boss.attackCooldown) return;
 
             // 执行当前攻击
             const currentAttack = boss.attackSequence[boss.currentAttackIndex];
+            
+            // 激光攻击前，先快速移动到玩家X轴位置
+            if (currentAttack === 3 && !boss.laserPreparing) {
+                boss.laserPreparing = true;
+                boss.laserTargetX = player.x + player.width / 2 - boss.width / 2;
+                boss.laserMoveStartTime = now;
+                boss.laserMoveDuration = 800; // 0.8秒快速移动到玩家位置
+                boss.laserOriginalX = boss.x;
+                console.log('Boss准备激光攻击，快速移动到玩家位置');
+                return;
+            }
+            
+            // 激光准备移动期间
+            if (boss.laserPreparing) {
+                const moveElapsed = now - boss.laserMoveStartTime;
+                if (moveElapsed < boss.laserMoveDuration) {
+                    // 使用缓动函数平滑移动
+                    const progress = moveElapsed / boss.laserMoveDuration;
+                    const easeProgress = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+                    boss.x = boss.laserOriginalX + (boss.laserTargetX - boss.laserOriginalX) * easeProgress;
+                    return;
+                } else {
+                    // 移动完成，开始激光攻击
+                    boss.x = boss.laserTargetX;
+                    boss.laserPreparing = false;
+                }
+            }
             
             switch (currentAttack) {
                 case 1:
@@ -2414,7 +2935,7 @@
                     y: boss.y + boss.height / 2,
                     vx: Math.cos(angle) * speed,
                     vy: Math.sin(angle) * speed,
-                    radius: 8,
+                    radius: 10.4, // 子弹大小增加30%（8 * 1.3 = 10.4）
                     delay: 2000, // 2秒延迟后开始上浮
                     startTime: Date.now(),
                     active: true,
@@ -2426,25 +2947,42 @@
         // 攻击方式2：追踪导弹
         function spawnBossMissiles() {
             console.log('Boss攻击2：追踪导弹');
-            const missileCount = 4;
             
-            for (let i = 0; i < missileCount; i++) {
-                bossMissiles.push({
-                    x: boss.x + boss.width / 2 + (i - 1.5) * 60, // 水平分散发射
-                    y: boss.y + boss.height / 2,
-                    width: 30,
-                    height: 15,
-                    speed: 5, // 导弹速度
-                    angle: -Math.PI / 2, // 初始朝上（垂直发射）
-                    phase: 'rising', // 阶段：rising=上升, tracking=追踪
-                    riseStartTime: Date.now(),
-                    riseDuration: 800, // 上升0.8秒后锁定玩家位置
-                    targetX: null, // 锁定目标位置
-                    targetY: null,
-                    active: true,
-                    damage: 10 // -10% HP
-                });
-            }
+            // 启动Boss后坐力动画
+            boss.recoilEffect = {
+                active: true,
+                startTime: Date.now(),
+                duration: 300,
+                offsetY: 0
+            };
+            
+            // 四枚导弹按从左到右依次发射，每枚延迟0.2s
+            const missilePositions = [
+                boss.x + boss.width / 2 - 180, // 最左侧
+                boss.x + boss.width / 2 - 80,  // 左侧
+                boss.x + boss.width / 2 + 80,  // 右侧
+                boss.x + boss.width / 2 + 180  // 最右侧
+            ];
+            
+            missilePositions.forEach((posX, index) => {
+                setTimeout(() => {
+                    bossMissiles.push({
+                        x: posX,
+                        y: boss.y + boss.height / 2,
+                        width: 107, // Boss导弹宽度
+                        height: 33, // Boss导弹高度
+                        speed: 2.5, // 初段上升速度减少50%（5 * 0.5 = 2.5）
+                        angle: -Math.PI / 2, // 初始朝上（垂直发射）
+                        phase: 'rising', // 阶段：rising=上升, tracking=追踪
+                        riseStartTime: Date.now(),
+                        riseDuration: 640, // 锁定时间提前20%（800 * 0.8 = 640）
+                        targetX: null, // 锁定目标位置
+                        targetY: null,
+                        active: true,
+                        damage: 15 // -15% HP（提升50%）
+                    });
+                }, index * 200); // 每枚延迟0.2s
+            });
         }
 
         // 攻击方式3：激光
@@ -2472,11 +3010,31 @@
                     if (bullet.y < 0 || bullet.y > canvas.height) bullet.vy *= -1;
                 } else {
                     // 延迟结束后垂直上浮
+                    const prevY = bullet.y;
                     bullet.y -= 4;
                     
+                    // 检测子弹是否飞出海平面（从水下到水上）
+                    const waterLevelY = 274; // 水平面Y坐标
+                    const wasBelowWater = prevY > waterLevelY;
+                    const isAboveWater = bullet.y < waterLevelY;
+                    
+                    if (wasBelowWater && isAboveWater && !bullet.splashCreated) {
+                        // 子弹飞出海平面，创建浪花特效（大小减少80%）
+                        createBossBulletWaterSplash(bullet.x, waterLevelY);
+                        bullet.splashCreated = true;
+                    }
+                    
                     // 检查与玩家碰撞
+                    // 强敌来袭横幅显示期间，玩家无敌，跳过碰撞检测
+                    if (bossWarningEffect.active) {
+                        continue;
+                    }
+                    
                     if (checkBulletPlayerCollision(bullet)) {
                         hp -= bullet.damage;
+                        
+                        // 创建爆炸效果
+                        createExplosion(bullet.x, bullet.y);
                         
                         // 启动HP动画
                         hpAnimation.active = true;
@@ -2487,13 +3045,12 @@
                         triggerDamageFlash();
                         bossBullets.splice(i, 1);
                         
-                        if (hp <= 0) {
-                            gameOver = true;
-                            showGameOverScreen();
+                        if (hp <= 0 && !playerDefeatState.active) {
+                            playerDefeated();
                         }
                         continue;
                     }
-                    
+
                     // 移除超出屏幕的子弹
                     if (bullet.y < -20) {
                         bossBullets.splice(i, 1);
@@ -2505,9 +3062,11 @@
         // 更新Boss导弹
         function updateBossMissiles() {
             const now = Date.now();
+            const waterLevelY = 274; // 水平面Y坐标
             
             for (let i = bossMissiles.length - 1; i >= 0; i--) {
                 const missile = bossMissiles[i];
+                const prevY = missile.y; // 记录上一帧的Y坐标
                 
                 // 上升阶段
                 if (missile.phase === 'rising') {
@@ -2526,7 +3085,9 @@
                         const dx = missile.targetX - missile.x;
                         const dy = missile.targetY - missile.y;
                         missile.angle = Math.atan2(dy, dx);
-                        console.log('导弹转向，锁定目标位置：', missile.targetX, missile.targetY);
+                        // 追踪阶段速度增加20%
+                        missile.speed *= 1.2;
+                        console.log('导弹转向，锁定目标位置，速度提升20%：', missile.targetX, missile.targetY);
                     }
                 } else {
                     // 追踪阶段 - 直接朝锁定位置直线前进
@@ -2534,9 +3095,27 @@
                     missile.y += Math.sin(missile.angle) * missile.speed;
                 }
                 
+                // 检查是否穿过水平面（从水下到水上），创建海浪特效
+                const wasBelowWater = prevY + missile.height > waterLevelY;
+                const isAboveWater = missile.y < waterLevelY;
+                
+                if (wasBelowWater && isAboveWater && !missile.splashCreated) {
+                    // 导弹飞出海平面，创建浪花特效（使用夜晚版本，因为Boss场景使用夜晚特效）
+                    createWaterSplash(missile.x + missile.width / 2, waterLevelY);
+                    missile.splashCreated = true; // 标记已创建浪花，避免重复创建
+                }
+                
                 // 检查与玩家碰撞
+                // 强敌来袭横幅显示期间，玩家无敌，跳过碰撞检测
+                if (bossWarningEffect.active) {
+                    continue;
+                }
+                
                 if (checkMissilePlayerCollision(missile)) {
                     hp -= missile.damage;
+                    
+                    // 创建爆炸效果
+                    createExplosion(missile.x + missile.width / 2, missile.y + missile.height / 2);
                     
                     // 启动HP动画
                     hpAnimation.active = true;
@@ -2546,16 +3125,15 @@
                     
                     triggerDamageFlash();
                     bossMissiles.splice(i, 1);
-                    
-                    if (hp <= 0) {
-                        gameOver = true;
-                        showGameOverScreen();
+
+                    if (hp <= 0 && !playerDefeatState.active) {
+                        playerDefeated();
                     }
                     continue;
                 }
-                
+
                 // 移除超出屏幕的导弹
-                if (missile.x < -50 || missile.x > canvas.width + 50 || 
+                if (missile.x < -50 || missile.x > canvas.width + 50 ||
                     missile.y < -50 || missile.y > canvas.height + 50) {
                     bossMissiles.splice(i, 1);
                 }
@@ -2572,21 +3150,32 @@
 
         // 检查导弹与玩家碰撞
         function checkMissilePlayerCollision(missile) {
-            return (missile.x < player.x + player.width &&
-                    missile.x + missile.width > player.x &&
-                    missile.y < player.y + player.height &&
-                    missile.y + missile.height > player.y);
+            // 使用导弹中心点和缩小后的碰撞区域
+            const missileCenterX = missile.x + missile.width / 2;
+            const missileCenterY = missile.y + missile.height / 2;
+            const playerCenterX = player.x + player.width / 2;
+            const playerCenterY = player.y + player.height / 2;
+            
+            // 使用较小的碰撞半径（导弹实际大小的60%）
+            const collisionRadiusX = missile.width * 0.3;
+            const collisionRadiusY = missile.height * 0.3;
+            
+            const dx = Math.abs(missileCenterX - playerCenterX);
+            const dy = Math.abs(missileCenterY - playerCenterY);
+            
+            return dx < collisionRadiusX + player.width / 3 &&
+                   dy < collisionRadiusY + player.height / 3;
         }
 
         // Boss被击败
         function bossDefeated() {
             console.log('Boss被击败！显示对话气泡...');
             boss.active = false;
-            
+
             // 显示对话气泡
             bossDefeatState.showBubble = true;
             bossDefeatState.bubbleStartTime = Date.now();
-            
+
             // 生成随机爆炸位置（Boss周围）
             bossDefeatState.explosions = [];
             for (let i = 0; i < 8; i++) {
@@ -2599,17 +3188,66 @@
             }
         }
 
+        // 玩家死亡爆炸动画（参考Boss失败的爆炸动画）
+        function playerDefeated() {
+            console.log('玩家被击败！开始爆炸动画...');
+            playerDefeatState.active = true;
+            playerDefeatState.explosionsStarted = true;
+            playerDefeatState.explosionsStartTime = Date.now();
+
+            // 生成随机爆炸位置（玩家船周围）
+            playerDefeatState.explosions = [];
+            for (let i = 0; i < 8; i++) {
+                playerDefeatState.explosions.push({
+                    x: player.x + Math.random() * player.width,
+                    y: player.y + Math.random() * player.height,
+                    delay: i * 250, // 每个爆炸间隔250ms
+                    triggered: false
+                });
+            }
+        }
+
+        // 更新玩家死亡爆炸效果
+        function updatePlayerDefeatEffects() {
+            if (!playerDefeatState.active || !playerDefeatState.explosionsStarted) return;
+
+            const now = Date.now();
+            const explosionElapsed = now - playerDefeatState.explosionsStartTime;
+
+            // 触发爆炸
+            playerDefeatState.explosions.forEach(exp => {
+                if (!exp.triggered && explosionElapsed >= exp.delay) {
+                    exp.triggered = true;
+                    createExplosion(exp.x, exp.y, true);
+                }
+            });
+
+            // 爆炸结束后显示游戏结束画面
+            if (explosionElapsed >= playerDefeatState.explosionsDuration + 500) {
+                if (!playerDefeatState.gameOverTriggered) {
+                    playerDefeatState.gameOverTriggered = true;
+                    gameOver = true;
+                    showGameOverScreen();
+                }
+            }
+        }
+
         // 显示通关画面
         function showVictoryScreen() {
             const victoryScreen = document.getElementById('victoryScreen');
             const victoryScoreEl = document.getElementById('victoryScore');
             
-            // 更新分数
-            victoryScoreEl.textContent = score.toString();
+            // 记录最终游戏时间（毫秒）
+            finalGameTime = Date.now() - gameStartTime;
+            gameOver = true;
+            
+            // 更新通关时间（秒:毫秒格式）
+            const victorySeconds = Math.floor(finalGameTime / 1000).toString().padStart(2, '0');
+            const victoryMs = (finalGameTime % 1000).toString().padStart(3, '0').slice(0, 2);
+            victoryScoreEl.innerHTML = `${victorySeconds}:${victoryMs}<span class="timeUnit">s</span>`;
             
             // 显示通关画面
             victoryScreen.classList.add('active');
-            gameOver = true;
         }
         
         // 隐藏通关画面
@@ -2625,16 +3263,7 @@
         });
         
         document.getElementById('btnVictoryConfig').addEventListener('click', () => {
-            hideVictoryScreen();
-            gameState.currentScreen = 'skill';
-            document.getElementById('gameCanvas').style.display = 'none';
-            document.getElementById('skillPanel').style.display = 'flex';
-            // 重置技能点
-            gameState.skillPoints = { speed: 0, hp: 0, ammo: 0 };
-            // 重置船只位置
-            document.querySelector('.playerShipDisplay').style.transform = '';
-            document.querySelector('.playerShipDisplay').style.transition = '';
-            updateSkillUI();
+            transitionToSkillPanel('victory');
         });
 
         // 检查水雷与Boss碰撞
@@ -2653,7 +3282,9 @@
             if (!boss.active && !bossDefeatState.showBubble) return;
             
             if (assets.boss.complete && assets.boss.naturalWidth > 0) {
-                ctx.drawImage(assets.boss, boss.x, boss.y, boss.width, boss.height);
+                // 应用后坐力偏移
+                const offsetY = boss.recoilEffect ? boss.recoilEffect.offsetY : 0;
+                ctx.drawImage(assets.boss, boss.x, boss.y + offsetY, boss.width, boss.height);
             }
         }
         
@@ -2667,25 +3298,35 @@
             // 绘制对话气泡（显示4秒）
             if (bubbleElapsed < bossDefeatState.bubbleDuration) {
                 if (assets.bossDefeatBubble.complete && assets.bossDefeatBubble.naturalWidth > 0) {
-                    const bubbleWidth = 400;
-                    const bubbleHeight = 120;
-                    const bubbleX = boss.x + boss.width / 2 - bubbleWidth / 2;
-                    const bubbleY = boss.y - bubbleHeight - 20;
+                    // 气泡目标显示尺寸 488*171
+                    const targetWidth = 488;
+                    const targetHeight = 171;
+                    // 获取素材原始尺寸
+                    const imgWidth = assets.bossDefeatBubble.naturalWidth;
+                    const imgHeight = assets.bossDefeatBubble.naturalHeight;
+                    // 计算缩放比例，保持宽高比
+                    const scale = Math.min(targetWidth / imgWidth, targetHeight / imgHeight);
+                    const displayWidth = imgWidth * scale;
+                    const displayHeight = imgHeight * scale;
+                    // 往右往下移动一些距离（右移80px，下移30px）
+                    const bubbleX = boss.x + boss.width / 2 - displayWidth / 2 + 80;
+                    const bubbleY = boss.y - displayHeight - 20 + 30;
                     
                     // 入场动画（前300ms）
                     let alpha = 1;
-                    let scale = 1;
+                    let animScale = 1;
                     if (bubbleElapsed < 300) {
                         const progress = bubbleElapsed / 300;
                         alpha = progress;
-                        scale = 0.8 + 0.2 * progress;
+                        animScale = 0.8 + 0.2 * progress;
                     }
                     
                     ctx.save();
                     ctx.globalAlpha = alpha;
-                    ctx.translate(bubbleX + bubbleWidth / 2, bubbleY + bubbleHeight / 2);
-                    ctx.scale(scale, scale);
-                    ctx.drawImage(assets.bossDefeatBubble, -bubbleWidth / 2, -bubbleHeight / 2, bubbleWidth, bubbleHeight);
+                    ctx.translate(bubbleX + displayWidth / 2, bubbleY + displayHeight / 2);
+                    ctx.scale(animScale, animScale);
+                    // 按保持比例的尺寸绘制气泡
+                    ctx.drawImage(assets.bossDefeatBubble, -displayWidth / 2, -displayHeight / 2, displayWidth, displayHeight);
                     ctx.restore();
                 }
             }
@@ -2750,7 +3391,8 @@
         
         // 绘制Boss血条（位于画面底部居中）
         function drawBossHpBar() {
-            if (!boss.active) return;
+            // Boss活跃时显示，或被击败后气泡显示期间也显示，直到爆炸开始
+            if (!boss.active && (!bossDefeatState.showBubble || bossDefeatState.explosionsStarted)) return;
 
             const barWidth = 636;
             const barHeight = 132;
@@ -2902,8 +3544,9 @@
                 if (assets.bossMissile.complete && assets.bossMissile.naturalWidth > 0) {
                     ctx.save();
                     ctx.translate(missile.x + missile.width / 2, missile.y + missile.height / 2);
-                    ctx.rotate(missile.angle);
-                    ctx.drawImage(assets.bossMissile, -missile.width / 2, -missile.height / 2, missile.width, missile.height);
+                    // 贴图素材是水平的，需要额外旋转-90度使其垂直朝上，再旋转180度上下颠倒
+                    ctx.rotate(missile.angle - Math.PI / 2 + Math.PI);
+                    ctx.drawImage(assets.bossMissile, -missile.height / 2, -missile.width / 2, missile.height, missile.width);
                     ctx.restore();
                 } else {
                     // 备用绘制
@@ -2919,63 +3562,118 @@
 
         // 绘制Boss激光
         function drawBossLaser() {
-            // 绘制激光预警（黑色遮罩）
+            // 绘制激光预警（红外线瞄准，一闪而过）
             if (boss.laserWarning) {
-                const laserX = boss.x + boss.width / 2;
-                const laserWidth = 60;
-                
-                // 预警线（半透明红色）
-                ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
-                ctx.fillRect(laserX - laserWidth / 2, 0, laserWidth, canvas.height);
-                
-                // 绘制警告文字
-                ctx.fillStyle = 'rgba(255, 0, 0, 0.8)';
-                ctx.font = 'bold 60px "Microsoft YaHei", Arial, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText('⚠️ 激光预警 ⚠️', canvas.width / 2, canvas.height / 2);
+                const warningElapsed = Date.now() - boss.laserWarningStartTime;
+                // 前140ms显示红色瞄准线，一闪而过（与预警时间210ms成比例）
+                if (warningElapsed < 140) {
+                    const laserX = boss.x + boss.width / 2;
+                    const bossCenterY = boss.y + boss.height / 2;
+
+                    // 绘制渐变红线（从中心向两侧渐变消失）
+                    ctx.save();
+                    const lineWidth = 16; // 加粗线条
+                    const halfWidth = lineWidth / 2;
+
+                    // 创建水平渐变（从中心向两侧渐变）
+                    const gradient = ctx.createLinearGradient(laserX - halfWidth, 0, laserX + halfWidth, 0);
+                    gradient.addColorStop(0, 'rgba(255, 0, 0, 0)');     // 左侧透明
+                    gradient.addColorStop(0.3, 'rgba(255, 0, 0, 0.8)');  // 左侧过渡
+                    gradient.addColorStop(0.5, 'rgba(255, 0, 0, 1)');    // 中心最亮
+                    gradient.addColorStop(0.7, 'rgba(255, 0, 0, 0.8)');  // 右侧过渡
+                    gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');     // 右侧透明
+
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(laserX - halfWidth, 0, lineWidth, bossCenterY);
+                    ctx.restore();
+                }
                 return;
             }
             
             if (!boss.laserActive) return;
             
             const laserX = boss.x + boss.width / 2;
-            const laserWidth = 60;
+            const laserWidth = 608; // 激光碰撞宽度与贴图显示宽度一致
             
-            // 渐变激光效果
-            const gradient = ctx.createLinearGradient(laserX - laserWidth / 2, 0, laserX + laserWidth / 2, 0);
-            gradient.addColorStop(0, 'rgba(255, 192, 203, 0)');
-            gradient.addColorStop(0.3, 'rgba(255, 192, 203, 0.8)');
-            gradient.addColorStop(0.5, 'rgba(255, 255, 255, 1)');
-            gradient.addColorStop(0.7, 'rgba(255, 192, 203, 0.8)');
-            gradient.addColorStop(1, 'rgba(255, 192, 203, 0)');
+            // 使用序列帧动画绘制激光
+            const frames = assets.bossLaserFrames;
+            if (frames.length > 0) {
+                // 根据激光持续时间计算当前帧
+                const laserElapsed = Date.now() - boss.laserStartTime;
+                const frameIndex = Math.min(
+                    Math.floor((laserElapsed / boss.laserDuration) * frames.length),
+                    frames.length - 1
+                );
+                const currentFrame = frames[frameIndex];
+                
+                if (currentFrame && currentFrame.complete && currentFrame.naturalWidth > 0) {
+                    // 激光贴图尺寸：608*1080
+                    const laserImgWidth = currentFrame.naturalWidth;
+                    const laserImgHeight = currentFrame.naturalHeight;
+                    const targetWidth = 608; // 目标显示宽度
+                    const targetHeight = 1080; // 目标显示高度
+                    
+                    // 激光从Boss中心点向上发射
+                    // Boss中心点位置
+                    const bossCenterX = boss.x + boss.width / 2;
+                    const bossCenterY = boss.y + boss.height / 2;
+                    
+                    // 绘制激光（垂直向上）
+                    ctx.save();
+                    // 移动到Boss中心点位置
+                    ctx.translate(bossCenterX, bossCenterY);
+                    // 旋转180度使激光向上
+                    ctx.rotate(Math.PI);
+                    ctx.drawImage(
+                        currentFrame,
+                        -targetWidth / 2,
+                        0,
+                        targetWidth,
+                        targetHeight
+                    );
+                    ctx.restore();
+                }
+            }
             
-            ctx.fillStyle = gradient;
-            ctx.fillRect(laserX - laserWidth / 2, 0, laserWidth, canvas.height);
-            
-            // 检查激光与玩家碰撞
-            if (player.x + player.width / 2 > laserX - laserWidth / 2 &&
+            // 检查激光与玩家碰撞（延迟280ms后开始判定，等激光完全射出来）
+            const laserElapsed = Date.now() - boss.laserStartTime;
+            const collisionDelay = 280; // 延迟280ms开始判定
+            if (laserElapsed >= collisionDelay &&
+                player.x + player.width / 2 > laserX - laserWidth / 2 &&
                 player.x + player.width / 2 < laserX + laserWidth / 2) {
-                // 激光持续伤害，每帧减少
-                if (Math.random() < 0.1) { // 10%概率每帧造成伤害
-                    hp -= 1;
-                    
-                    // 启动HP动画
-                    hpAnimation.active = true;
-                    hpAnimation.startTime = Date.now();
-                    hpAnimation.fromHp = hpAnimation.displayHp;
-                    hpAnimation.toHp = hp;
-                    
-                    triggerDamageFlash();
-                    
-                    if (hp <= 0) {
-                        gameOver = true;
-                        showGameOverScreen();
-                    }
+                // 激光直接秒杀玩家
+                // 直接清空HP
+                hp = 0;
+
+                // 启动HP动画
+                hpAnimation.active = true;
+                hpAnimation.startTime = Date.now();
+                hpAnimation.fromHp = hpAnimation.displayHp;
+                hpAnimation.toHp = hp;
+
+                triggerDamageFlash();
+
+                // 使用玩家死亡爆炸动画（参考Boss失败的爆炸动画）
+                if (!playerDefeatState.active) {
+                    playerDefeated();
                 }
             }
         }
 
         function updatePlayer() {
+            // 生命值归0时，不能移动
+            if (hp <= 0) {
+                // 减速到停止
+                const deceleration = player.maxSpeed * 0.2;
+                if (player.velocityX > 0) {
+                    player.velocityX = Math.max(player.velocityX - deceleration, 0);
+                } else if (player.velocityX < 0) {
+                    player.velocityX = Math.min(player.velocityX + deceleration, 0);
+                }
+                player.x += player.velocityX;
+                return;
+            }
+
             // 目标速度计算
             let targetVelocityX = 0;
             if (keys.ArrowLeft && player.x > 0) {
@@ -3065,9 +3763,6 @@
         }
 
         function updateSubmarines() {
-            // Boss激活时停止刷新和更新潜艇
-            if (boss.active) return;
-            
             const speed = getSubmarineSpeed();
             const missileCooldown = getMissileCooldown();
             const missileChance = getMissileChance();
@@ -3086,24 +3781,13 @@
                 sub.x -= subSpeed;
 
                 if (sub.x < -240) {
-                    if (sub.isGold) {
-                        submarines.splice(i, 1);
-                    } else {
-                        // 重置位置时检查重叠
-                        let newX = canvas.width + Math.random() * 300;
-                        let newY = 680 + Math.random() * 320;
-                        let attempts = 0;
-                        while (isOverlapping(newX, newY, sub.width, sub.height, sub) && attempts < 10) {
-                            newY = 680 + Math.random() * 320;
-                            attempts++;
-                        }
-                        sub.x = newX;
-                        sub.y = newY;
-                    }
+                    // Boss出场或被击败后，潜艇移出画面即删除，不再刷新
+                    submarines.splice(i, 1);
                 }
 
                 // 发射导弹 - 使用动态难度，限制屏幕上最多8枚导弹
-                if (!sub.isGold && missiles.length < 8 && Date.now() - sub.lastMissileTime > missileCooldown) {
+                // Boss出场后潜艇不再发射导弹
+                if (!boss.active && !sub.isGold && missiles.length < 8 && Date.now() - sub.lastMissileTime > missileCooldown) {
                     if (Math.random() < missileChance) {
                         fireMissile(sub);
                         sub.lastMissileTime = Date.now();
@@ -3111,19 +3795,22 @@
                 }
             }
 
-            // 动态补充潜艇 - 根据分数增加密度，但限制最大数量
-            const targetSubCount = Math.min(6 + Math.floor(score / 6), 14); // 最多14艘，增长更快
-            const normalSubCount = submarines.filter(s => !s.isGold).length;
-            if (normalSubCount < targetSubCount) {
-                if (Math.random() < 0.02) { // 2%概率每帧补充
-                    spawnNewSubmarine();
+            // Boss出场后或被击败后，不再生成敌方小潜艇
+            if (!boss.active && !bossDefeatState.showBubble) {
+                // 动态补充潜艇 - 根据分数增加密度，但限制最大数量
+                const targetSubCount = Math.min(6 + Math.floor(score / 6), 14); // 最多14艘，增长更快
+                const normalSubCount = submarines.filter(s => !s.isGold).length;
+                if (normalSubCount < targetSubCount) {
+                    if (Math.random() < 0.02) { // 2%概率每帧补充
+                        spawnNewSubmarine();
+                    }
                 }
-            }
 
-            // 生成金色潜艇
-            if (score >= 5 && !submarines.some(s => s.isGold)) {
-                if (Date.now() % 10000 < 50) { // 每10秒检查一次
-                    spawnGoldSubmarine();
+                // 生成金色潜艇
+                if (score >= 5 && !submarines.some(s => s.isGold)) {
+                    if (Date.now() % 10000 < 50) { // 每10秒检查一次
+                        spawnGoldSubmarine();
+                    }
                 }
             }
         }
@@ -3262,12 +3949,45 @@
         
         // 创建海面浪花特效
         function createWaterSplash(x, y) {
+            // 根据当前场景决定使用哪种浪花特效
+            const isNightOrBoss = isNightScene || boss.active || bossDefeatState.showBubble;
             waterSplashes.push({
                 x: x,
                 y: y,
                 startTime: Date.now(),
                 duration: 700, // 0.7秒播放完（加快30%）
-                frameIndex: 0
+                frameIndex: 0,
+                isNight: isNightOrBoss // 记录创建时的场景类型
+            });
+        }
+
+        // 激光产生的浪花特效（持续时间减少30%，大小增加20%）
+        function createLaserWaterSplash(x, y) {
+            // 根据当前场景决定使用哪种浪花特效
+            const isNightOrBoss = isNightScene || boss.active || bossDefeatState.showBubble;
+            waterSplashes.push({
+                x: x,
+                y: y,
+                startTime: Date.now(),
+                duration: 490, // 0.49秒播放完（比正常减少30%）
+                frameIndex: 0,
+                isNight: isNightOrBoss, // 记录创建时的场景类型
+                scale: 1.2 // 大小增加20%
+            });
+        }
+
+        // Boss子弹产生的浪花特效（大小为原大小的23%）
+        function createBossBulletWaterSplash(x, y) {
+            // 根据当前场景决定使用哪种浪花特效
+            const isNightOrBoss = isNightScene || boss.active || bossDefeatState.showBubble;
+            waterSplashes.push({
+                x: x,
+                y: y,
+                startTime: Date.now(),
+                duration: 700, // 0.7秒播放完
+                frameIndex: 0,
+                isNight: isNightOrBoss, // 记录创建时的场景类型
+                scale: 0.23 // 大小增加15%（从20%增加到23%）
             });
         }
         
@@ -3286,19 +4006,22 @@
         
         // 绘制海面浪花特效
         function drawWaterSplashes() {
-            const frameCount = assets.waterSplashFrames.length;
-            if (frameCount === 0) return;
-            
             waterSplashes.forEach(splash => {
+                // 使用水花创建时记录的场景类型来选择对应的帧数组
+                const frames = splash.isNight ? assets.waterSplashFramesNight : assets.waterSplashFrames;
+                const frameCount = frames.length;
+                if (frameCount === 0) return;
+
                 const elapsed = Date.now() - splash.startTime;
                 const progress = elapsed / splash.duration;
                 const frameIndex = Math.min(Math.floor(progress * frameCount), frameCount - 1);
-                
-                const frame = assets.waterSplashFrames[frameIndex];
+
+                const frame = frames[frameIndex];
                 if (frame && frame.complete && frame.naturalWidth > 0) {
-                    // 素材保持原始尺寸或适当缩放
-                    const width = frame.naturalWidth;
-                    const height = frame.naturalHeight;
+                    // 应用缩放（默认为1，Boss子弹为0.2）
+                    const scale = splash.scale || 1;
+                    const width = frame.naturalWidth * scale;
+                    const height = frame.naturalHeight * scale;
                     ctx.drawImage(frame, splash.x - width / 2, splash.y - height / 2, width, height);
                 }
             });
@@ -3307,9 +4030,8 @@
         function updateExplosions() {
             for (let i = explosions.length - 1; i >= 0; i--) {
                 const exp = explosions[i];
-                // 根据序列帧数量计算动画总时长
-                const frameCount = assets.explosionFrames.length;
-                const animationDuration = 500; // 动画总时长500ms
+                // 使用每个爆炸自己的动画时长（稀有潜艇750ms，普通500ms）
+                const animationDuration = exp.animationDuration || 500;
                 
                 if (Date.now() - exp.startTime > animationDuration) {
                     explosions.splice(i, 1);
@@ -3410,17 +4132,18 @@
             drawMines();
             drawPowerUps();
             drawFragments();
+            drawBossLaser(); // Boss激光在Boss贴图下方
             drawBoss();
             drawBossDefeatEffects(); // Boss死亡对话气泡（在Boss上方）
-            drawExplosions(); // 爆炸效果在Boss上方
             drawVisibilityMask();
             drawSuperWeaponEffect();
+            drawExplosions(); // 爆炸效果在黑色遮罩上方
+            drawBossMissiles(); // Boss导弹在海浪下方
             drawWaterSplashes(); // 海面浪花特效在玩家船下方
             drawPlayer();
+            drawControlHintBubble(); // 绘制操作提示气泡
             drawPlayerHitExplosions();
             drawBossBullets();
-            drawBossMissiles();
-            drawBossLaser();
             drawBossWarning();
             drawBossHpBar();
             drawBossDefeatHpBar(); // Boss死亡时血条随爆炸消失
@@ -3482,8 +4205,14 @@
             const btnRetry = document.getElementById('btnRetry');
             const btnConfig = document.getElementById('btnConfig');
             
-            // 更新分数
-            finalScoreEl.textContent = score.toString();
+            // 记录最终游戏时间（毫秒）
+            finalGameTime = Date.now() - gameStartTime;
+            gameOver = true;
+            
+            // 更新时间（秒:毫秒格式）
+            const gameOverSeconds = Math.floor(finalGameTime / 1000).toString().padStart(2, '0');
+            const gameOverMs = (finalGameTime % 1000).toString().padStart(3, '0').slice(0, 2);
+            finalScoreEl.textContent = `${gameOverSeconds}:${gameOverMs}`;
             
             // 更新按钮选中状态
             updateGameOverButtons();
@@ -3538,8 +4267,20 @@
                 
                 // 更新滚动位置（从右向左）
                 // 夜晚场景滚动速度增加500%，使用线性过渡
+                // Boss出场或被击败后都使用白天速率
                 let currentScrollSpeed = backgroundScrollSpeed;
-                if (isNightScene) {
+                if ((boss.active || bossDefeatState.showBubble) && bossSceneSpeedTransition.active) {
+                    // Boss出场时从夜晚速度过渡回白天速度
+                    const elapsed = Date.now() - bossSceneSpeedTransition.startTime;
+                    const progress = Math.min(elapsed / bossSceneSpeedTransition.duration, 1);
+                    currentScrollSpeed = bossSceneSpeedTransition.fromSpeed + 
+                        (bossSceneSpeedTransition.toSpeed - bossSceneSpeedTransition.fromSpeed) * progress;
+                    // 过渡完成后标记为 inactive
+                    if (progress >= 1) {
+                        bossSceneSpeedTransition.active = false;
+                    }
+                } else if (isNightScene && !boss.active && !bossDefeatState.showBubble) {
+                    // 夜晚场景且Boss未出场/未被击败时使用夜晚速度
                     if (sceneSpeedTransition.active) {
                         // 线性插值计算当前速度
                         const elapsed = Date.now() - sceneSpeedTransition.startTime;
@@ -3587,39 +4328,6 @@
                     ctx.drawImage(bgImgDay, backgroundScrollX + scaledWidth - overlap, 0, scaledWidth, canvas.height);
                 }
                 
-                // 超级武器特效：黑屏遮罩（皮肤绘制移到 drawSuperWeaponEffect 中）
-                if (superWeaponEffect.active) {
-                    const elapsed = Date.now() - superWeaponEffect.startTime;
-                    const totalDuration = superWeaponEffect.duration;
-                    
-                    // 计算黑屏透明度
-                    let blackAlpha = 0;
-                    
-                    // 阶段1: 0-100ms 黑屏渐现（0 -> 0.85）
-                    if (elapsed < 100) {
-                        blackAlpha = 0.85 * (elapsed / 100);
-                    }
-                    // 阶段2: 100ms - 总时长 黑屏保持0.85（持续到皮肤放完、潜艇爆炸完）
-                    else if (elapsed < totalDuration) {
-                        blackAlpha = 0.85;
-                    }
-                    // 阶段3: 总时长后 黑屏逐渐消退
-                    else {
-                        const fadeElapsed = elapsed - totalDuration;
-                        const fadeDuration = 200; // 200ms快速消退
-                        if (fadeElapsed < fadeDuration) {
-                            blackAlpha = 0.85 * (1 - fadeElapsed / fadeDuration);
-                        }
-                    }
-                    
-                    // 绘制黑屏遮罩
-                    if (blackAlpha > 0) {
-                        ctx.save();
-                        ctx.fillStyle = `rgba(0, 0, 0, ${blackAlpha})`;
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
-                        ctx.restore();
-                    }
-                }
                 
             } else if (assets.background.complete && assets.background.naturalWidth > 0) {
                 // 备用：使用原来的背景图
@@ -3641,6 +4349,34 @@
             
             const elapsed = Date.now() - superWeaponEffect.startTime;
             const totalDuration = superWeaponEffect.duration;
+            
+            // 计算黑屏透明度
+            let blackAlpha = 0;
+            
+            // 阶段1: 0-100ms 黑屏渐现（0 -> 0.85）
+            if (elapsed < 100) {
+                blackAlpha = 0.85 * (elapsed / 100);
+            }
+            // 阶段2: 100ms - 总时长 黑屏保持0.85（持续到皮肤放完、潜艇爆炸完）
+            else if (elapsed < totalDuration) {
+                blackAlpha = 0.85;
+            }
+            // 阶段3: 总时长后 黑屏逐渐消退
+            else {
+                const fadeElapsed = elapsed - totalDuration;
+                const fadeDuration = 200; // 200ms快速消退
+                if (fadeElapsed < fadeDuration) {
+                    blackAlpha = 0.85 * (1 - fadeElapsed / fadeDuration);
+                }
+            }
+            
+            // 绘制黑屏遮罩（在可视遮罩上方）
+            if (blackAlpha > 0) {
+                ctx.save();
+                ctx.fillStyle = `rgba(0, 0, 0, ${blackAlpha})`;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.restore();
+            }
             
             // 绘制超级武器背景皮肤（100ms后开始显示，从黑屏上方滑入）
             if (elapsed >= 100 && elapsed < totalDuration + 200) {
@@ -3953,6 +4689,21 @@
             }
         }
 
+        // 绘制操作提示气泡（跟随玩家船）
+        function drawControlHintBubble() {
+            if (!controlHintBubble.active) return;
+            
+            if (assets.controlHintBubble.complete && assets.controlHintBubble.naturalWidth > 0) {
+                const bubbleWidth = 326; // 素材实际尺寸
+                const bubbleHeight = 66;
+                // 对齐超级武器提示气泡位置
+                const bubbleX = player.x + player.width - 80;
+                const bubbleY = player.y + 50 - 20; // baseY = player.y + 50, 然后 -20
+                
+                ctx.drawImage(assets.controlHintBubble, bubbleX, bubbleY, bubbleWidth, bubbleHeight);
+            }
+        }
+
         function drawVisibilityMask() {
             // 绘制可见度遮罩 - 位于玩家船下方，其他场景素材上方
             // 遮罩跟随玩家船同步移动，保持相对静止
@@ -4213,7 +4964,8 @@
                 
                 const elapsed = Date.now() - exp.startTime;
                 const frameCount = assets.explosionFrames.length;
-                const animationDuration = 500; // 动画总时长500ms
+                // 使用每个爆炸自己的动画时长（稀有潜艇750ms，普通500ms）
+                const animationDuration = exp.animationDuration || 500;
                 
                 // 计算当前帧索引
                 const progress = elapsed / animationDuration;
@@ -4261,6 +5013,29 @@
                     ctx.arc(exp.x, exp.y, size, 0, Math.PI * 2);
                     ctx.fill();
                 }
+                
+                // 绘制分数（白色字体，黑色外描边；稀有潜艇金色字体，更大）
+                if (exp.scoreValue !== null) {
+                    ctx.save();
+                    
+                    // 稀有潜艇（100分）使用更大的金色字体
+                    const isGoldSub = exp.scoreValue === 100;
+                    const fontSize = isGoldSub ? 48 : 32;
+                    ctx.font = `bold ${fontSize}px "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    // 黑色外描边 - 稀有潜艇更粗
+                    ctx.strokeStyle = '#000000';
+                    ctx.lineWidth = isGoldSub ? 7 : 5;
+                    ctx.strokeText('+' + exp.scoreValue, exp.x, exp.y);
+                    
+                    // 字体颜色：稀有潜艇金色，普通白色
+                    ctx.fillStyle = isGoldSub ? '#FFD700' : '#ffffff';
+                    ctx.fillText('+' + exp.scoreValue, exp.x, exp.y);
+                    
+                    ctx.restore();
+                }
             });
         }
         
@@ -4272,7 +5047,8 @@
                 
                 const elapsed = Date.now() - exp.startTime;
                 const frameCount = assets.explosionFrames.length;
-                const animationDuration = 500; // 动画总时长500ms
+                // 使用每个爆炸自己的动画时长（稀有潜艇750ms，普通500ms）
+                const animationDuration = exp.animationDuration || 500;
                 
                 // 计算当前帧索引
                 const progress = elapsed / animationDuration;
@@ -4486,11 +5262,26 @@
             // 当MP增加时，displayMp < actualMp，白色区域显示在两者之间
             const actualMpPercent = Math.max(0, mp / 100);
             const displayMpPercent = Math.max(0, mpAnimation.displayMp / 100);
-            drawSlantedBar(barX + 60, 45, barWidth, barHeight, actualMpPercent, displayMpPercent, '#4a9eff', '#ffffff');
+            
+            // MP满值时的闪烁效果
+            let mpFillColor = '#4a9eff';
+            if (mp >= 100) {
+                // 浅蓝色闪烁动画：使用正弦波在浅蓝色和原蓝色之间切换
+                const flashSpeed = 600; // 闪烁周期600ms（更快更明显）
+                const flashProgress = (Date.now() % flashSpeed) / flashSpeed;
+                const flashIntensity = (Math.sin(flashProgress * Math.PI * 2) + 1) / 2; // 0-1之间变化
+                // 更亮的浅蓝色 #B0E0FF（亮天蓝色）到原蓝色 #4a9eff 的插值
+                const r = Math.floor(74 + (176 - 74) * flashIntensity);
+                const g = Math.floor(158 + (224 - 158) * flashIntensity);
+                const b = Math.floor(255 + (255 - 255) * flashIntensity);
+                mpFillColor = `rgb(${r}, ${g}, ${b})`;
+            }
+            
+            drawSlantedBar(barX + 60, 45, barWidth, barHeight, actualMpPercent, displayMpPercent, mpFillColor, '#ffffff');
             
             // ========== 顶部中间 - 弹药库存（菱形） ==========
             const ammoCenterX = canvas.width / 2;
-            const ammoY = 35;
+            const ammoY = 25;
             const ammoSize = 14; // 菱形半边长
             const ammoGap = 20;
             const totalAmmoBoxes = 5;
@@ -4524,15 +5315,66 @@
                 drawDiamond(boxX, ammoY, ammoSize, i < filledAmmoBoxes);
             }
             
-            // ========== 右上角 - 记分板 ==========
+            // ========== 右上角 - 计时器 ==========
             const scoreX = canvas.width - 40;
-            const scoreY = 50;
+            const scoreY = 60;
             
-            // 分数数字（黄色 #edea74）
+            // 计算游戏时间（秒:毫秒格式）
+            // 如果游戏结束，使用记录的最终时间；否则使用当前时间
+            const elapsedMs = gameOver ? finalGameTime : (Date.now() - gameStartTime);
+            const seconds = Math.floor(elapsedMs / 1000).toString().padStart(2, '0');
+            const milliseconds = (elapsedMs % 1000).toString().padStart(3, '0').slice(0, 2);
+            const timeString = `${seconds}:${milliseconds}`;
+            
+            // 时间数字（黄色 #edea74）
             ctx.fillStyle = '#edea74';
             ctx.font = '60px "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif';
             ctx.textAlign = 'right';
-            ctx.fillText(score.toString(), scoreX, scoreY);
+            ctx.fillText(timeString, scoreX, scoreY);
+            
+            // ========== 左侧 - 分数进度条 ==========
+            if (assets.scoreProgressBar.complete && assets.scoreProgressBar.naturalWidth > 0) {
+                const progressBarWidth = assets.scoreProgressBar.naturalWidth;
+                const progressBarHeight = assets.scoreProgressBar.naturalHeight;
+                const progressBarX = 0; // 紧贴画面左侧
+                const progressBarY = (canvas.height - progressBarHeight) / 2; // 垂直居中
+                
+                // 绘制进度条背景
+                ctx.drawImage(assets.scoreProgressBar, progressBarX, progressBarY, progressBarWidth, progressBarHeight);
+                
+                // 计算指示器位置
+                // 500分进入黑夜，1000分进入Boss战（停止运动）
+                let progressPercent = 0;
+                if (score >= 1000) {
+                    progressPercent = 1; // 到达Boss战，停止在底部
+                } else {
+                    progressPercent = score / 1000; // 0-1000分映射到0-1
+                }
+                
+                // 进度条轨道范围（根据新素材调整）
+                const trackTopY = progressBarY + 85; // 进度条轨道顶端（MAP下方圆点中心）
+                const trackBottomY = progressBarY + progressBarHeight - 75; // 进度条轨道底端（1000分位置）
+                const trackHeight = trackBottomY - trackTopY;
+                
+                // 指示器位置：从顶端向下移动
+                const indicatorY = trackTopY + trackHeight * progressPercent;
+                const indicatorX = progressBarX + progressBarWidth / 2; // 进度条中心
+                
+                // 绘制指示器（玩家船图标）
+                if (assets.scoreProgressIndicator.complete && assets.scoreProgressIndicator.naturalWidth > 0) {
+                    const indicatorWidth = assets.scoreProgressIndicator.naturalWidth;
+                    const indicatorHeight = assets.scoreProgressIndicator.naturalHeight;
+                    
+                    // 居中绘制指示器
+                    ctx.drawImage(
+                        assets.scoreProgressIndicator,
+                        indicatorX - indicatorWidth / 2,
+                        indicatorY - indicatorHeight / 2,
+                        indicatorWidth,
+                        indicatorHeight
+                    );
+                }
+            }
             
         }
 
@@ -4557,6 +5399,11 @@
             // 导弹 vs 玩家
             for (let mIndex = missiles.length - 1; mIndex >= 0; mIndex--) {
                 const missile = missiles[mIndex];
+                // 强敌来袭横幅显示期间，玩家无敌，跳过碰撞检测
+                if (bossWarningEffect.active) {
+                    continue;
+                }
+                
                 if (checkCollision(missile, player)) {
                     createExplosion(player.x + player.width/2, player.y + player.height/2, true);
                     missiles.splice(mIndex, 1);
@@ -4574,10 +5421,9 @@
                     
                     // 触发全屏闪红效果
                     triggerDamageFlash();
-                    
-                    if (hp <= 0) {
-                        gameOver = true;
-                        showGameOverScreen();
+
+                    if (hp <= 0 && !playerDefeatState.active) {
+                        playerDefeated();
                     }
                 }
             }
@@ -4596,8 +5442,9 @@
                         hpAnimation.toHp = newHp;
                         hp = newHp;
                     } else {
-                        // 激活分裂水雷
+                        // 激活分裂水雷，设置30颗计数
                         splitMineActive = true;
+                        splitMineCount = 30; // 持续30颗水雷
                         // 显示分裂水雷提示气泡
                         splitMineBubble.active = true;
                         splitMineBubble.startTime = Date.now();
@@ -4650,12 +5497,16 @@
                    rect1.y + rect1.height > rect2.y;
         }
 
-        function createExplosion(x, y, isPlayerHit = false) {
+        function createExplosion(x, y, isPlayerHit = false, scoreValue = null) {
+            const isGoldSub = scoreValue === 100;
             explosions.push({
                 x: x,
                 y: y,
                 startTime: Date.now(),
-                isPlayerHit: isPlayerHit // 标记是否为击中玩家的爆炸
+                isPlayerHit: isPlayerHit, // 标记是否为击中玩家的爆炸
+                scoreValue: scoreValue, // 本次攻击得到的分数（可选）
+                isGoldSub: isGoldSub, // 是否是稀有潜艇（用于延长显示时间）
+                animationDuration: isGoldSub ? 750 : 500 // 稀有潜艇动画时长+50%（750ms vs 500ms）
             });
         }
 
@@ -4701,7 +5552,10 @@
                 
                 // 0.5秒后执行爆炸
                 setTimeout(() => {
-                    createExplosion(sub.x + sub.width/2, sub.y + sub.height/2);
+                    // 计算分数
+                    const scoreValue = sub.isGold ? 100 : 10;
+                    
+                    createExplosion(sub.x + sub.width/2, sub.y + sub.height/2, false, scoreValue);
                     createFragments(sub.x + sub.width/2, sub.y + sub.height/2);
                     
                     if (sub.isGold) {
@@ -4716,8 +5570,8 @@
                         submarines.splice(subIndex, 1);
                     }
                     
-                    // 计分：普通潜艇10分，金色潜艇100分
-                    score += sub.isGold ? 100 : 10;
+                    // 计分
+                    score += scoreValue;
                     
                     // 启动MP动画
                     const newMp = Math.min(mp + 10, 100);
@@ -4735,7 +5589,8 @@
             // 如果只有初始潜艇被炸（没有连锁），0.5秒后爆炸
             if (explodedSubs.length === 0) {
                 setTimeout(() => {
-                    createExplosion(initialSub.x + initialSub.width/2, initialSub.y + initialSub.height/2);
+                    const scoreValue = initialSub.isGold ? 100 : 10;
+                    createExplosion(initialSub.x + initialSub.width/2, initialSub.y + initialSub.height/2, false, scoreValue);
                     createFragments(initialSub.x + initialSub.width/2, initialSub.y + initialSub.height/2);
                     
                     if (initialSub.isGold) {
@@ -4835,6 +5690,23 @@
         document.addEventListener('keydown', (e) => {
             keys[e.key] = true;
 
+            // 检测玩家操作，记录移动和发射状态
+            if (controlHintBubble.active) {
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    controlHintBubble.hasPlayerMoved = true;
+                    console.log('玩家移动 detected');
+                }
+                if (e.key === ' ') {
+                    controlHintBubble.hasPlayerFired = true;
+                    console.log('玩家发射 detected');
+                }
+                // 只有同时完成移动和发射后，气泡才消失
+                if (controlHintBubble.hasPlayerMoved && controlHintBubble.hasPlayerFired) {
+                    controlHintBubble.active = false;
+                    console.log('玩家完成所有操作，隐藏操作提示气泡');
+                }
+            }
+
             if (gameState.currentScreen === 'game') {
                 // 暂停功能 - 回车键暂停/继续
                 if (e.key === 'Enter' && !gameOver) {
@@ -4874,7 +5746,7 @@
                     }
                 }
                 
-                if (e.key === ' ' && mineAmmo > 0 && !gameOver && !gamePaused) {
+                if (e.key === ' ' && mineAmmo > 0 && !gameOver && !gamePaused && hp > 0) {
                     mines.push({
                         x: player.x + player.width / 2 - 30,
                         y: player.y + player.height,
@@ -4887,10 +5759,14 @@
                     mineAmmo--;
                     mineRegenTime = Date.now();
                     
-                    // 如果发射的是分裂水雷，关闭气泡提示
+                    // 如果发射的是分裂水雷，减少计数
                     if (splitMineActive) {
-                        splitMineActive = false;
-                        splitMineBubble.active = false;
+                        splitMineCount--;
+                        // 30颗发射完毕后关闭分裂水雷
+                        if (splitMineCount <= 0) {
+                            splitMineActive = false;
+                            splitMineBubble.active = false;
+                        }
                     }
                 }
 
@@ -4978,8 +5854,7 @@
                     resetGame();
                     break;
                 case 2: // 配置战舰
-                    hidePauseScreen();
-                    showSkillPanel();
+                    transitionToSkillPanel('pause');
                     break;
             }
         }
@@ -5065,24 +5940,14 @@
         
         // 处理游戏结束选项
         function handleGameOverAction() {
-            hideGameOverScreen();
-            
             if (gameOverOption === 0) {
                 // 重新挑战 - 重置选项并重新开始
+                hideGameOverScreen();
                 gameOverOption = 0;
                 initGame();
             } else {
                 // 重新配置战船 - 返回技能面板
-                gameOverOption = 0;
-                gameState.currentScreen = 'skill';
-                document.getElementById('gameCanvas').style.display = 'none';
-                document.getElementById('skillPanel').style.display = 'flex';
-                // 重置技能点
-                gameState.skillPoints = { speed: 0, hp: 0, ammo: 0 };
-                // 重置船只位置
-                document.querySelector('.playerShipDisplay').style.transform = '';
-                document.querySelector('.playerShipDisplay').style.transition = '';
-                updateSkillUI();
+                transitionToSkillPanel('gameover');
             }
         }
 
@@ -5121,9 +5986,22 @@
                 });
                 missiles = [];
                 
+                // 清空Boss发出的子弹
+                bossBullets.forEach(bullet => {
+                    createExplosion(bullet.x, bullet.y);
+                });
+                bossBullets = [];
+                
+                // 清空Boss发出的导弹
+                bossMissiles.forEach(missile => {
+                    createExplosion(missile.x + missile.width/2, missile.y + missile.height/2);
+                });
+                bossMissiles = [];
+                
                 // 消灭所有潜艇
                 submarines.forEach(sub => {
-                    createExplosion(sub.x + sub.width/2, sub.y + sub.height/2);
+                    const scoreValue = sub.isGold ? 100 : 10;
+                    createExplosion(sub.x + sub.width/2, sub.y + sub.height/2, false, scoreValue);
                     createFragments(sub.x + sub.width/2, sub.y + sub.height/2);
                     // 金色潜艇掉落道具
                     if (sub.isGold) {
@@ -5131,8 +6009,8 @@
                         const dropType = sub.isFirstGold ? 'split' : null;
                         dropPowerUp(sub.x, sub.y, dropType);
                     }
-                    // 计分：普通潜艇10分，金色潜艇100分
-                    score += sub.isGold ? 100 : 10;
+                    // 计分
+                    score += scoreValue;
                 });
                 
                 submarines = [];
@@ -5160,10 +6038,13 @@
                 }
             }, 300);
             
-            // 时停结束后重新生成潜艇
+            // 时停结束后重新生成潜艇（Boss战期间不生成）
             setTimeout(() => {
                 timeStopEffect.active = false;
-                initSubmarines();
+                // Boss出场或被击败后不再生成新潜艇
+                if (!boss.active && !bossDefeatState.showBubble) {
+                    initSubmarines();
+                }
             }, 400);
         }
 

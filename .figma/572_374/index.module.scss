@@ -1,0 +1,118 @@
+* {
+  box-sizing: border-box;
+}
+
+.group72 {
+  position: relative;
+  width: 71px;
+  height: 372px;
+
+  .rectangle107 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 51px;
+    height: 66px;
+  }
+
+  .mAp {
+    position: absolute;
+    top: 15px;
+    left: 6px;
+    width: 58px;
+    height: 15px;
+    line-height: 15px;
+    letter-spacing: -1.17px;
+    color: #bababa;
+    font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 23px;
+  }
+
+  .rectangle106 {
+    display: flex;
+    position: absolute;
+    top: 37px;
+    left: 0;
+    align-items: flex-start;
+    padding: 45px 10px 49px 8px;
+    width: 71px;
+    height: 335px;
+    background-image: url(../image/mohdh180-tah46kh.svg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    .group73 {
+      display: flex;
+      position: relative;
+      flex-direction: column;
+      flex-grow: 1;
+      align-items: center;
+      padding: 106px 2px 0px 1px;
+
+      .autoWrapper {
+        position: absolute;
+        top: 0;
+        left: -76px;
+        width: 207px;
+        height: 235px;
+
+        .rectangle90 {
+          position: absolute;
+          top: 109px;
+          left: 0;
+          background: #959595;
+          width: 207px;
+          height: 11px;
+          rotate: 90deg;
+        }
+
+        .ellipse34 {
+          position: absolute;
+          top: 0;
+          left: 94px;
+          border: 2px solid #222222;
+          border-radius: 50%;
+          background: #d9d9d9;
+          width: 19px;
+          height: 19px;
+        }
+
+        .group64 {
+          position: absolute;
+          top: 207px;
+          left: 76px;
+          width: 53px;
+          height: 28px;
+        }
+      }
+
+      .autoWrapper2 {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        align-items: center;
+        align-self: stretch;
+        padding-right: 0;
+        padding-left: 0;
+
+        .a500 {
+          line-height: 12px;
+          letter-spacing: -0.94px;
+          color: #d9d9d9;
+          font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+          font-size: 19px;
+        }
+
+        .a1000 {
+          margin: 111px 0px 0px;
+          line-height: 12px;
+          letter-spacing: -0.94px;
+          color: #edea74;
+          font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+          font-size: 19px;
+        }
+      }
+    }
+  }
+}
