@@ -1,0 +1,1312 @@
+{
+  "frames": {
+    "4月28日(1)_00000": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 517
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 300,
+        "h": 517
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00001": {
+      "frame": {
+        "x": 302,
+        "y": 0,
+        "w": 300,
+        "h": 517
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 300,
+        "h": 517
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00002": {
+      "frame": {
+        "x": 604,
+        "y": 0,
+        "w": 299,
+        "h": 516
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 299,
+        "h": 516
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00003": {
+      "frame": {
+        "x": 905,
+        "y": 0,
+        "w": 299,
+        "h": 516
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 299,
+        "h": 516
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00004": {
+      "frame": {
+        "x": 1206,
+        "y": 0,
+        "w": 300,
+        "h": 516
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 300,
+        "h": 516
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00005": {
+      "frame": {
+        "x": 1508,
+        "y": 0,
+        "w": 300,
+        "h": 516
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 300,
+        "h": 516
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00006": {
+      "frame": {
+        "x": 1810,
+        "y": 0,
+        "w": 300,
+        "h": 515
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 300,
+        "h": 515
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00007": {
+      "frame": {
+        "x": 2112,
+        "y": 0,
+        "w": 299,
+        "h": 514
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 299,
+        "h": 514
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00008": {
+      "frame": {
+        "x": 2413,
+        "y": 0,
+        "w": 299,
+        "h": 514
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 299,
+        "h": 514
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00009": {
+      "frame": {
+        "x": 2714,
+        "y": 0,
+        "w": 300,
+        "h": 514
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 300,
+        "h": 514
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00010": {
+      "frame": {
+        "x": 3016,
+        "y": 0,
+        "w": 301,
+        "h": 514
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 514
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00011": {
+      "frame": {
+        "x": 3319,
+        "y": 0,
+        "w": 301,
+        "h": 514
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 514
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00012": {
+      "frame": {
+        "x": 3622,
+        "y": 0,
+        "w": 301,
+        "h": 514
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 514
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00013": {
+      "frame": {
+        "x": 0,
+        "y": 519,
+        "w": 301,
+        "h": 514
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 514
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00014": {
+      "frame": {
+        "x": 303,
+        "y": 519,
+        "w": 300,
+        "h": 513
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 300,
+        "h": 513
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00015": {
+      "frame": {
+        "x": 605,
+        "y": 519,
+        "w": 299,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 299,
+        "h": 512
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00016": {
+      "frame": {
+        "x": 906,
+        "y": 519,
+        "w": 302,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 34,
+        "y": 0,
+        "w": 302,
+        "h": 512
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00017": {
+      "frame": {
+        "x": 1210,
+        "y": 519,
+        "w": 301,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 512
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00018": {
+      "frame": {
+        "x": 1513,
+        "y": 519,
+        "w": 301,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 512
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00019": {
+      "frame": {
+        "x": 1816,
+        "y": 519,
+        "w": 301,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 512
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00020": {
+      "frame": {
+        "x": 2119,
+        "y": 519,
+        "w": 301,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 512
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00021": {
+      "frame": {
+        "x": 2422,
+        "y": 519,
+        "w": 301,
+        "h": 511
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 511
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00022": {
+      "frame": {
+        "x": 2725,
+        "y": 519,
+        "w": 300,
+        "h": 510
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 300,
+        "h": 510
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00023": {
+      "frame": {
+        "x": 3027,
+        "y": 519,
+        "w": 301,
+        "h": 510
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 510
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00024": {
+      "frame": {
+        "x": 3330,
+        "y": 519,
+        "w": 301,
+        "h": 510
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 510
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00025": {
+      "frame": {
+        "x": 3633,
+        "y": 519,
+        "w": 301,
+        "h": 510
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 510
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00026": {
+      "frame": {
+        "x": 0,
+        "y": 1035,
+        "w": 301,
+        "h": 510
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 510
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00027": {
+      "frame": {
+        "x": 303,
+        "y": 1035,
+        "w": 300,
+        "h": 509
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 300,
+        "h": 509
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00028": {
+      "frame": {
+        "x": 605,
+        "y": 1035,
+        "w": 300,
+        "h": 508
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 300,
+        "h": 508
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00029": {
+      "frame": {
+        "x": 907,
+        "y": 1035,
+        "w": 301,
+        "h": 518
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 301,
+        "h": 518
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00030": {
+      "frame": {
+        "x": 1210,
+        "y": 1035,
+        "w": 308,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 308,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00031": {
+      "frame": {
+        "x": 1520,
+        "y": 1035,
+        "w": 309,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 309,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00032": {
+      "frame": {
+        "x": 1831,
+        "y": 1035,
+        "w": 312,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 312,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00033": {
+      "frame": {
+        "x": 2145,
+        "y": 1035,
+        "w": 314,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 35,
+        "y": 0,
+        "w": 314,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00034": {
+      "frame": {
+        "x": 2461,
+        "y": 1035,
+        "w": 314,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 34,
+        "y": 0,
+        "w": 314,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00035": {
+      "frame": {
+        "x": 2777,
+        "y": 1035,
+        "w": 322,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 32,
+        "y": 0,
+        "w": 322,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00036": {
+      "frame": {
+        "x": 3101,
+        "y": 1035,
+        "w": 333,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 29,
+        "y": 0,
+        "w": 333,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00037": {
+      "frame": {
+        "x": 3436,
+        "y": 1035,
+        "w": 339,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 27,
+        "y": 0,
+        "w": 339,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00038": {
+      "frame": {
+        "x": 0,
+        "y": 1562,
+        "w": 353,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 353,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00039": {
+      "frame": {
+        "x": 355,
+        "y": 1562,
+        "w": 353,
+        "h": 528
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 353,
+        "h": 528
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00040": {
+      "frame": {
+        "x": 710,
+        "y": 1562,
+        "w": 354,
+        "h": 547
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 354,
+        "h": 547
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00041": {
+      "frame": {
+        "x": 1066,
+        "y": 1562,
+        "w": 356,
+        "h": 571
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 571
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00042": {
+      "frame": {
+        "x": 1424,
+        "y": 1562,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00043": {
+      "frame": {
+        "x": 1782,
+        "y": 1562,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00044": {
+      "frame": {
+        "x": 2140,
+        "y": 1562,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00045": {
+      "frame": {
+        "x": 2498,
+        "y": 1562,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00046": {
+      "frame": {
+        "x": 2856,
+        "y": 1562,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00047": {
+      "frame": {
+        "x": 3214,
+        "y": 1562,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00048": {
+      "frame": {
+        "x": 3572,
+        "y": 1562,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00049": {
+      "frame": {
+        "x": 0,
+        "y": 2146,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00050": {
+      "frame": {
+        "x": 358,
+        "y": 2146,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00051": {
+      "frame": {
+        "x": 716,
+        "y": 2146,
+        "w": 353,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 353,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00052": {
+      "frame": {
+        "x": 1071,
+        "y": 2146,
+        "w": 353,
+        "h": 528
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 353,
+        "h": 528
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00053": {
+      "frame": {
+        "x": 1426,
+        "y": 2146,
+        "w": 354,
+        "h": 547
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 354,
+        "h": 547
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00054": {
+      "frame": {
+        "x": 1782,
+        "y": 2146,
+        "w": 356,
+        "h": 571
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 571
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00055": {
+      "frame": {
+        "x": 2140,
+        "y": 2146,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00056": {
+      "frame": {
+        "x": 2498,
+        "y": 2146,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00057": {
+      "frame": {
+        "x": 2856,
+        "y": 2146,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00058": {
+      "frame": {
+        "x": 3214,
+        "y": 2146,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00059": {
+      "frame": {
+        "x": 3572,
+        "y": 2146,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00060": {
+      "frame": {
+        "x": 0,
+        "y": 2730,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00061": {
+      "frame": {
+        "x": 358,
+        "y": 2730,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00062": {
+      "frame": {
+        "x": 716,
+        "y": 2730,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00063": {
+      "frame": {
+        "x": 1074,
+        "y": 2730,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    },
+    "4月28日(1)_00064": {
+      "frame": {
+        "x": 1432,
+        "y": 2730,
+        "w": 356,
+        "h": 582
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 18,
+        "y": 0,
+        "w": 356,
+        "h": 582
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 600
+      }
+    }
+  },
+  "meta": {
+    "image": "atlas.png",
+    "size": {
+      "w": 4096,
+      "h": 4096
+    },
+    "scale": 1
+  }
+}

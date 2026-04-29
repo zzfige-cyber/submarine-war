@@ -6,6 +6,16 @@
     <title>潜艇大战 - 深海猎手</title>
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- 自定义字体 -->
+    <style>
+        @font-face {
+            font-family: 'HYQiHeiY3';
+            src: url('assets/fonts/HYQiHeiY3-HEW.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
     <style>
         * {
             margin: 0;
@@ -141,11 +151,13 @@
         }
         
         .skillSkyBgInner .skyLayer {
-            width: 50%;
+            width: 50.1%; /* 稍微增加宽度，确保没有缝隙 */
             height: 100%;
             background-image: url('assets/figma_image/screenshot_508_118.png');
-            background-size: 100% 100%;
+            background-size: cover; /* 使用 cover 确保填充 */
             background-repeat: no-repeat;
+            background-position: center;
+            margin-right: -1px; /* 负边距消除接缝 */
         }
         
         @keyframes skillSkyScroll {
@@ -1858,7 +1870,9 @@
             missile: new Image(),
             missileNight: new Image(),
             missileTop: new Image(),
-            missileTailFrames: [], // 导弹尾焰动画帧数组
+            missileTailFrames: [], // 导弹尾焰动画帧数组（保留兼容）
+            missileTailSprite: new Image(), // 导弹尾焰精灵图
+            missileTailSpriteData: null, // 导弹尾焰精灵图数据
             mine: new Image(),
             explosion: new Image(),
             explosionFrames: [],
@@ -2034,7 +2048,7 @@
         // Boss防御配置
         const BOSS_DEFENSE = {
             mineDamage: 1,      // 水雷伤害值
-            superWeaponDamage: 10, // 超级武器伤害值（等于10颗水雷）
+            superWeaponDamage: 7, // 超级武器伤害值（下调30%，原为10）
             maxHp: 20           // Boss总血量（需要20颗水雷才能击败）
         };
         
@@ -2257,9 +2271,11 @@
         ];
         
         function initLoading() {
-            // 计算总资源数（普通素材 + 爆炸序列帧 + 超级武器动态帧 + 导弹发射气泡帧 + 海面浪花帧 + 夜晚海面浪花帧 + Boss激光帧 + 导弹尾焰帧 + HTML图片）
-            const normalAssetCount = Object.keys(assets).length - 7; // 减去 explosionFrames, superWeaponBgFrames, missileLaunchBubbleFrames, waterSplashFrames, waterSplashFramesNight, bossLaserFrames 和 missileTailFrames 数组
-            const totalAssets = normalAssetCount + explosionFramePaths.length + superWeaponFramePaths.length + missileLaunchBubbleFramePaths.length + waterSplashFramePaths.length + waterSplashFramePathsNight.length + bossLaserFramePaths.length + missileTailFramePaths.length + htmlImagePaths.length;
+            // 计算总资源数（普通素材 + 爆炸序列帧 + 超级武器动态帧 + 导弹发射气泡帧 + 海面浪花帧 + 夜晚海面浪花帧 + Boss激光帧 + 导弹尾焰精灵图 + HTML图片）
+            const normalAssetCount = Object.keys(assets).length - 9; // 减去 explosionFrames, superWeaponBgFrames, missileLaunchBubbleFrames, waterSplashFrames, waterSplashFramesNight, bossLaserFrames, missileTailFrames, missileTailSprite 和 missileTailSpriteData
+            // 导弹尾焰现在使用精灵图：1张图片（JSON数据已嵌入代码，不需要加载）
+            const missileTailAssetCount = 1;
+            const totalAssets = normalAssetCount + explosionFramePaths.length + superWeaponFramePaths.length + missileLaunchBubbleFramePaths.length + waterSplashFramePaths.length + waterSplashFramePathsNight.length + bossLaserFramePaths.length + missileTailAssetCount + htmlImagePaths.length;
             let loadedCount = 0;
 
             function updateProgress() {
@@ -2286,7 +2302,7 @@
             
             // 加载普通素材
             for (const key in assets) {
-                if (key === 'explosionFrames' || key === 'superWeaponBgFrames' || key === 'missileLaunchBubbleFrames' || key === 'waterSplashFrames' || key === 'waterSplashFramesNight' || key === 'bossLaserFrames' || key === 'missileTailFrames') continue; // 跳过数组，单独处理
+                if (key === 'explosionFrames' || key === 'superWeaponBgFrames' || key === 'missileLaunchBubbleFrames' || key === 'waterSplashFrames' || key === 'waterSplashFramesNight' || key === 'bossLaserFrames' || key === 'missileTailFrames' || key === 'missileTailSprite' || key === 'missileTailSpriteData') continue; // 跳过数组和精灵图，单独处理
                 
                 assets[key].src = assetPaths[key];
                 
@@ -2432,26 +2448,26 @@
                 }
             });
 
-            // 加载导弹尾焰动画帧
-            missileTailFramePaths.forEach((path, index) => {
-                const frame = new Image();
-                frame.src = path;
-                assets.missileTailFrames.push(frame);
+            // 加载导弹尾焰精灵图
+            assets.missileTailSprite.src = 'assets/导弹尾焰动画/精灵图测试/atlas (1).png';
 
-                if (frame.complete) {
-                    console.log(`导弹尾焰帧 ${index + 1} 已缓存`);
+            // 精灵图数据直接嵌入（避免fetch本地文件的安全限制）
+            assets.missileTailSpriteData = {"frames":{"4月28日(1)_00000":{"frame":{"x":0,"y":0,"w":300,"h":517},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":517},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00001":{"frame":{"x":302,"y":0,"w":300,"h":517},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":517},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00002":{"frame":{"x":604,"y":0,"w":299,"h":516},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":299,"h":516},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00003":{"frame":{"x":905,"y":0,"w":299,"h":516},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":299,"h":516},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00004":{"frame":{"x":1206,"y":0,"w":300,"h":516},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":516},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00005":{"frame":{"x":1508,"y":0,"w":300,"h":516},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":516},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00006":{"frame":{"x":1810,"y":0,"w":300,"h":515},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":515},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00007":{"frame":{"x":2112,"y":0,"w":299,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":299,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00008":{"frame":{"x":2413,"y":0,"w":299,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":299,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00009":{"frame":{"x":2714,"y":0,"w":300,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00010":{"frame":{"x":3016,"y":0,"w":301,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00011":{"frame":{"x":3319,"y":0,"w":301,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00012":{"frame":{"x":3622,"y":0,"w":301,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00013":{"frame":{"x":0,"y":519,"w":301,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00014":{"frame":{"x":303,"y":519,"w":300,"h":513},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":513},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00015":{"frame":{"x":605,"y":519,"w":299,"h":512},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":299,"h":512},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00016":{"frame":{"x":906,"y":519,"w":302,"h":512},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":34,"y":0,"w":302,"h":512},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00017":{"frame":{"x":1210,"y":519,"w":301,"h":512},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":512},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00018":{"frame":{"x":1513,"y":519,"w":301,"h":512},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":512},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00019":{"frame":{"x":1816,"y":519,"w":301,"h":512},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":512},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00020":{"frame":{"x":2119,"y":519,"w":301,"h":512},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":512},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00021":{"frame":{"x":2422,"y":519,"w":301,"h":511},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":511},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00022":{"frame":{"x":2725,"y":519,"w":300,"h":510},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":510},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00023":{"frame":{"x":3027,"y":519,"w":301,"h":510},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":510},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00024":{"frame":{"x":3330,"y":519,"w":301,"h":510},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":510},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00025":{"frame":{"x":3633,"y":519,"w":301,"h":510},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":510},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00026":{"frame":{"x":0,"y":1035,"w":301,"h":510},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":510},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00027":{"frame":{"x":303,"y":1035,"w":300,"h":509},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":509},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00028":{"frame":{"x":605,"y":1035,"w":300,"h":508},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":508},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00029":{"frame":{"x":907,"y":1035,"w":301,"h":518},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":518},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00030":{"frame":{"x":1210,"y":1035,"w":308,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":308,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00031":{"frame":{"x":1520,"y":1035,"w":309,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":309,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00032":{"frame":{"x":1831,"y":1035,"w":312,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":312,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00033":{"frame":{"x":2145,"y":1035,"w":314,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":314,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00034":{"frame":{"x":2461,"y":1035,"w":314,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":34,"y":0,"w":314,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00035":{"frame":{"x":2777,"y":1035,"w":322,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":32,"y":0,"w":322,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00036":{"frame":{"x":3101,"y":1035,"w":333,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":29,"y":0,"w":333,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00037":{"frame":{"x":3436,"y":1035,"w":339,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":27,"y":0,"w":339,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00038":{"frame":{"x":0,"y":1562,"w":353,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":353,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00039":{"frame":{"x":355,"y":1562,"w":353,"h":528},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":353,"h":528},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00040":{"frame":{"x":710,"y":1562,"w":354,"h":547},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":354,"h":547},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00041":{"frame":{"x":1066,"y":1562,"w":356,"h":571},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":571},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00042":{"frame":{"x":1424,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00043":{"frame":{"x":1782,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00044":{"frame":{"x":2140,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00045":{"frame":{"x":2498,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00046":{"frame":{"x":2856,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00047":{"frame":{"x":3214,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00048":{"frame":{"x":3572,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00049":{"frame":{"x":0,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00050":{"frame":{"x":358,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00051":{"frame":{"x":716,"y":2146,"w":353,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":353,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00052":{"frame":{"x":1071,"y":2146,"w":353,"h":528},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":353,"h":528},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00053":{"frame":{"x":1426,"y":2146,"w":354,"h":547},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":354,"h":547},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00054":{"frame":{"x":1782,"y":2146,"w":356,"h":571},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":571},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00055":{"frame":{"x":2140,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00056":{"frame":{"x":2498,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00057":{"frame":{"x":2856,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00058":{"frame":{"x":3214,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00059":{"frame":{"x":3572,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00060":{"frame":{"x":0,"y":2730,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00061":{"frame":{"x":358,"y":2730,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00062":{"frame":{"x":716,"y":2730,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00063":{"frame":{"x":1074,"y":2730,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00064":{"frame":{"x":1432,"y":2730,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}}},"meta":{"image":"atlas.png","size":{"w":4096,"h":4096},"scale":1}};
+            console.log('导弹尾焰精灵图数据已嵌入');
+
+            if (assets.missileTailSprite.complete) {
+                console.log('导弹尾焰精灵图已缓存');
+                updateProgress();
+            } else {
+                assets.missileTailSprite.onload = () => {
+                    console.log('导弹尾焰精灵图加载成功');
                     updateProgress();
-                } else {
-                    frame.onload = () => {
-                        console.log(`导弹尾焰帧 ${index + 1} 加载成功`);
-                        updateProgress();
-                    };
-                    frame.onerror = () => {
-                        console.warn(`导弹尾焰帧 ${index + 1} 加载失败`);
-                        updateProgress();
-                    };
-                }
-            });
+                };
+                assets.missileTailSprite.onerror = () => {
+                    console.warn('导弹尾焰精灵图加载失败');
+                    updateProgress();
+                };
+            }
 
             // 加载HTML中使用的图片资源
             htmlImagePaths.forEach((path, index) => {
@@ -2803,7 +2819,7 @@
         let splitMineCount; // 分裂水雷剩余次数（30颗）
         let piercingActive; // 穿甲效果是否激活
         let gameStartTime; // 游戏开始时间（用于计时）
-        let finalGameTime; // 游戏结束时的最终时间（秒）
+        let finalGameTime = 0; // 游戏结束时的最终时间（秒）
         
         // 连击系统
         let comboSystem = {
@@ -4587,6 +4603,11 @@
 
         // 绘制Boss导弹
         function drawBossMissiles() {
+            // 调试日志
+            if (!window.bossMissileDebugLogged) {
+                console.log('drawBossMissiles 被调用, bossMissiles数量:', bossMissiles.length);
+                window.bossMissileDebugLogged = true;
+            }
             for (const missile of bossMissiles) {
                 if (assets.bossMissile.complete && assets.bossMissile.naturalWidth > 0) {
                     ctx.save();
@@ -4609,29 +4630,90 @@
             }
         }
 
-        // 绘制Boss导弹尾焰动画
+        // 绘制Boss导弹尾焰动画（使用精灵图）
         function drawBossMissileTail(missile) {
-            if (assets.missileTailFrames.length === 0) return;
+            // 优先使用精灵图，回退到序列帧
+            const sprite = assets.missileTailSprite;
+            const spriteData = assets.missileTailSpriteData;
 
-            const tailFrames = assets.missileTailFrames;
-            // 根据时间计算当前帧（循环播放）
-            const tailElapsed = Date.now() - missile.riseStartTime;
-            const tailFrameIndex = Math.floor((tailElapsed / 50) % tailFrames.length);
-            const tailFrame = tailFrames[tailFrameIndex];
+            // 调试日志
+            if (!window.tailDebugLogged) {
+                console.log('导弹尾焰绘制检查:', {
+                    spriteComplete: sprite.complete,
+                    spriteWidth: sprite.naturalWidth,
+                    hasSpriteData: !!spriteData,
+                    framesCount: spriteData ? Object.keys(spriteData.frames).length : 0,
+                    missileRiseStartTime: missile.riseStartTime
+                });
+                window.tailDebugLogged = true;
+            }
+            
+            // 每100帧输出一次调试信息
+            if (!window.tailDebugCounter) window.tailDebugCounter = 0;
+            window.tailDebugCounter++;
+            if (window.tailDebugCounter % 100 === 0) {
+                console.log('尾焰绘制状态:', {
+                    spriteComplete: sprite.complete,
+                    spriteWidth: sprite.naturalWidth,
+                    hasSpriteData: !!spriteData
+                });
+            }
 
-            if (tailFrame && tailFrame.complete && tailFrame.naturalWidth > 0) {
-                ctx.save();
-                // Boss场景透明度50%
-                ctx.globalAlpha = 0.5;
-                const tailScale = 0.5; // 缩放比例
-                const tailWidth = tailFrame.naturalWidth * tailScale;
-                const tailHeight = tailFrame.naturalHeight * tailScale;
-                // 尾焰相对导弹位置垂直向下移动350px（稍微离导弹近一点）
-                const tailOffsetY = 350;
-                // 计算尾焰Y位置（导弹尾部在 -missile.height/2）
-                const tailY = -missile.height/2 - tailHeight + tailOffsetY;
-                ctx.drawImage(tailFrame, -tailWidth/2, tailY, tailWidth, tailHeight);
-                ctx.restore();
+            if (spriteData && sprite.complete && sprite.naturalWidth > 0) {
+                // 使用精灵图渲染
+                const frames = Object.keys(spriteData.frames);
+                const tailElapsed = Date.now() - missile.riseStartTime;
+                const tailFrameIndex = Math.floor((tailElapsed / 50) % frames.length);
+                const frameName = frames[tailFrameIndex];
+                const frameData = spriteData.frames[frameName];
+
+                if (frameData) {
+                    ctx.save();
+                    ctx.globalAlpha = 0.5;
+                    const tailScale = 0.345; // 缩放比例（0.3 * 1.15 = 0.345，放大15%）
+                    const frame = frameData.frame;
+                    const tailWidth = frame.w * tailScale;
+                    const tailHeight = frame.h * tailScale;
+                    // 尾焰应该显示在导弹尾部（下方），调整位置
+                    const tailY = missile.height/2 + 20; // 导弹尾部下方
+
+                    // 调试日志
+                    if (!window.tailDrawDebugLogged) {
+                        console.log('尾焰绘制参数:', {
+                            frame: frame,
+                            tailWidth: tailWidth,
+                            tailHeight: tailHeight,
+                            tailY: tailY,
+                            missileHeight: missile.height
+                        });
+                        window.tailDrawDebugLogged = true;
+                    }
+
+                    ctx.drawImage(
+                        sprite,
+                        frame.x, frame.y, frame.w, frame.h,
+                        -tailWidth/2, tailY, tailWidth, tailHeight
+                    );
+                    ctx.restore();
+                }
+            } else if (assets.missileTailFrames.length > 0) {
+                // 回退到序列帧
+                const tailFrames = assets.missileTailFrames;
+                const tailElapsed = Date.now() - missile.riseStartTime;
+                const tailFrameIndex = Math.floor((tailElapsed / 50) % tailFrames.length);
+                const tailFrame = tailFrames[tailFrameIndex];
+
+                if (tailFrame && tailFrame.complete && tailFrame.naturalWidth > 0) {
+                    ctx.save();
+                    ctx.globalAlpha = 0.5;
+                    const tailScale = 0.5;
+                    const tailWidth = tailFrame.naturalWidth * tailScale;
+                    const tailHeight = tailFrame.naturalHeight * tailScale;
+                    const tailOffsetY = 350;
+                    const tailY = -missile.height/2 - tailHeight + tailOffsetY;
+                    ctx.drawImage(tailFrame, -tailWidth/2, tailY, tailWidth, tailHeight);
+                    ctx.restore();
+                }
             }
         }
 
@@ -6214,14 +6296,15 @@
                         // 穿过水平面时，尾焰透明度80%
                         drawMissileTail(missile, 0.8);
                     } else if (isAboveWater && hasTopImg) {
+                        // 先绘制尾焰动画（在导弹图层下方）
+                        drawMissileTail(missile, 0.6);
                         // 完全在水面上方，使用新素材
                         ctx.drawImage(missileTopImg, -missile.width/2, -missile.height/2, missile.width, missile.height);
-                        // 绘制尾焰动画（水面上方时透明度60%）
-                        drawMissileTail(missile, 0.6);
                     } else if (isBelowWater) {
-                        // 完全在水面下方，使用原素材并绘制尾焰（100%透明度）
-                        ctx.drawImage(missileImg, -missile.width/2, -missile.height/2, missile.width, missile.height);
+                        // 先绘制尾焰动画（在导弹图层下方）
                         drawMissileTail(missile, 1.0);
+                        // 完全在水面下方，使用原素材
+                        ctx.drawImage(missileImg, -missile.width/2, -missile.height/2, missile.width, missile.height);
                     } else {
                         // 素材未加载，使用原素材
                         ctx.drawImage(missileImg, -missile.width/2, -missile.height/2, missile.width, missile.height);
@@ -6246,32 +6329,60 @@
             });
         }
 
-        // 绘制导弹尾焰动画
+        // 绘制导弹尾焰动画（使用精灵图）
         function drawMissileTail(missile, waterAlpha) {
-            if (assets.missileTailFrames.length === 0) return;
+            const sprite = assets.missileTailSprite;
+            const spriteData = assets.missileTailSpriteData;
 
-            const tailFrames = assets.missileTailFrames;
-            // 根据时间计算当前帧（循环播放）
-            const tailElapsed = Date.now() - missile.startTime;
-            const tailFrameIndex = Math.floor((tailElapsed / 50) % tailFrames.length);
-            const tailFrame = tailFrames[tailFrameIndex];
+            // 优先使用精灵图
+            if (spriteData && sprite.complete && sprite.naturalWidth > 0) {
+                const frames = Object.keys(spriteData.frames);
+                const tailElapsed = Date.now() - missile.startTime;
+                const tailFrameIndex = Math.floor((tailElapsed / 50) % frames.length);
+                const frameName = frames[tailFrameIndex];
+                const frameData = spriteData.frames[frameName];
 
-            if (tailFrame && tailFrame.complete && tailFrame.naturalWidth > 0) {
-                ctx.save();
-                // 根据场景调整基础透明度：白天100%，夜晚和Boss场景50%
-                const isNightOrBoss = isNightScene || boss.active || bossDefeatState.showBubble;
-                const sceneAlpha = isNightOrBoss ? 0.5 : 1.0;
-                ctx.globalAlpha = waterAlpha * sceneAlpha; // 结合水面透明度和场景透明度
-                const tailScale = 0.5; // 缩放比例
-                const tailWidth = tailFrame.naturalWidth * tailScale;
-                const tailHeight = tailFrame.naturalHeight * tailScale;
-                // 尾焰相对导弹位置垂直向下移动400px
-                const tailOffsetY = 400;
-                // 计算尾焰在画布中的实际Y位置（考虑导弹旋转后的坐标）
-                const tailY = -missile.height/2 - tailHeight + tailOffsetY;
-                // 即使尾焰超出画布上方也继续绘制，不限制
-                ctx.drawImage(tailFrame, -tailWidth/2, tailY, tailWidth, tailHeight);
-                ctx.restore();
+                if (frameData) {
+                    ctx.save();
+                    // 根据场景调整基础透明度：白天100%，夜晚和Boss场景50%
+                    const isNightOrBoss = isNightScene || boss.active || bossDefeatState.showBubble;
+                    const sceneAlpha = isNightOrBoss ? 0.5 : 1.0;
+                    ctx.globalAlpha = waterAlpha * sceneAlpha;
+                    const tailScale = 0.345; // 缩放比例（0.3 * 1.15 = 0.345，放大15%）
+                    const frame = frameData.frame;
+                    const tailWidth = frame.w * tailScale;
+                    const tailHeight = frame.h * tailScale;
+                    // 尾焰显示在导弹尾部
+                    const tailY = missile.height/2 + 0;
+                    const tailX = -tailWidth/2 - 4; // 向左移动4像素
+
+                    ctx.drawImage(
+                        sprite,
+                        frame.x, frame.y, frame.w, frame.h,
+                        tailX, tailY, tailWidth, tailHeight
+                    );
+                    ctx.restore();
+                }
+            } else if (assets.missileTailFrames.length > 0) {
+                // 回退到序列帧
+                const tailFrames = assets.missileTailFrames;
+                const tailElapsed = Date.now() - missile.startTime;
+                const tailFrameIndex = Math.floor((tailElapsed / 50) % tailFrames.length);
+                const tailFrame = tailFrames[tailFrameIndex];
+
+                if (tailFrame && tailFrame.complete && tailFrame.naturalWidth > 0) {
+                    ctx.save();
+                    const isNightOrBoss = isNightScene || boss.active || bossDefeatState.showBubble;
+                    const sceneAlpha = isNightOrBoss ? 0.5 : 1.0;
+                    ctx.globalAlpha = waterAlpha * sceneAlpha;
+                    const tailScale = 0.5;
+                    const tailWidth = tailFrame.naturalWidth * tailScale;
+                    const tailHeight = tailFrame.naturalHeight * tailScale;
+                    const tailOffsetY = 400;
+                    const tailY = -missile.height/2 - tailHeight + tailOffsetY;
+                    ctx.drawImage(tailFrame, -tailWidth/2, tailY, tailWidth, tailHeight);
+                    ctx.restore();
+                }
             }
         }
 
@@ -6650,20 +6761,20 @@
             }
             
             // ========== 右上角 - 计时器 ==========
-            const scoreX = canvas.width - 40;
+            const scoreX = canvas.width - 230;
             const scoreY = 60;
-            
+
             // 计算游戏时间（秒:毫秒格式）
-            // 如果游戏结束，使用记录的最终时间；否则使用当前时间
-            const elapsedMs = gameOver ? finalGameTime : (Date.now() - gameStartTime);
+            // 如果游戏结束且已记录最终时间，使用记录的最终时间；否则使用当前时间
+            const elapsedMs = (gameOver && finalGameTime > 0) ? finalGameTime : (Date.now() - gameStartTime);
             const seconds = Math.floor(elapsedMs / 1000).toString().padStart(2, '0');
             const milliseconds = (elapsedMs % 1000).toString().padStart(3, '0').slice(0, 2);
             const timeString = `${seconds}:${milliseconds}`;
-            
+
             // 时间数字（黄色 #edea74）
             ctx.fillStyle = '#edea74';
-            ctx.font = '60px "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif';
-            ctx.textAlign = 'right';
+            ctx.font = 'bold 60px "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif';
+            ctx.textAlign = 'left';
             ctx.fillText(timeString, scoreX, scoreY);
             
             // ========== 左侧 - 分数进度条 ==========
