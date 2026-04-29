@@ -1,0 +1,75 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame {
+  position: relative;
+  width: 1666px;
+  height: 932px;
+
+  .rectangle123 {
+    position: absolute;
+    top: 13px;
+    left: 7px;
+    width: 1651px;
+    height: 905px;
+    rotate: 1deg;
+  }
+
+  .rectangle124 {
+    position: absolute;
+    top: 61px;
+    left: 59px;
+    background: #d9d9d9;
+    width: 1568px;
+    height: 817px;
+  }
+
+  .maskGroup {
+    position: absolute;
+    top: 59px;
+    left: 56px;
+    width: 1573px;
+    height: 142px;
+  }
+
+  .rectangle126 {
+    position: absolute;
+    top: 44px;
+    left: 582px;
+    background: #000000;
+    width: 530px;
+    height: 133px;
+  }
+
+  .text {
+    position: absolute;
+    top: 68px;
+    left: 625px;
+    width: 458px;
+    height: 75px;
+    line-height: 75px;
+    letter-spacing: -4.63px;
+    color: #d9d9d9;
+    font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 93px;
+    rotate: -4deg;
+  }
+
+  .maskGroup2 {
+    position: absolute;
+    top: 54px;
+    left: 941px;
+    width: 87px;
+    height: 89px;
+  }
+
+  .rectangle {
+    position: absolute;
+    top: 66px;
+    left: 1085px;
+    width: 222px;
+    height: 95px;
+    rotate: -179deg;
+  }
+}

@@ -1,0 +1,163 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame {
+  position: relative;
+  width: 881px;
+  height: 544px;
+
+  .rectangle123 {
+    position: absolute;
+    top: 8px;
+    left: 4px;
+    width: 874px;
+    height: 528px;
+    rotate: 1deg;
+  }
+
+  .group96 {
+    display: flex;
+    position: absolute;
+    top: 36px;
+    left: 31px;
+    flex-direction: column;
+    align-items: flex-start;
+    background: #d9d9d9;
+    padding: 172px 94px 134px 194px;
+    width: 830px;
+    height: 477px;
+
+    .text2 {
+      margin: 5px 0px 0px;
+      line-height: 28px;
+      letter-spacing: 0;
+      color: #000000;
+      font-family: "Lantinghei SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .text {
+      line-height: 30px;
+      letter-spacing: 0;
+      color: #000000;
+      font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 33px;
+    }
+
+    .autoWrapper {
+      display: flex;
+      align-items: flex-start;
+      align-self: stretch;
+      justify-content: space-between;
+      padding-right: 0;
+      padding-left: 32px;
+    }
+
+    .autoWrapper2 {
+      display: flex;
+      align-items: flex-start;
+      align-self: stretch;
+      justify-content: space-between;
+      margin-top: 13px;
+      padding-right: 4px;
+      padding-left: 32px;
+    }
+
+    .autoWrapper3 {
+      display: flex;
+      align-items: flex-start;
+      align-self: stretch;
+      justify-content: space-between;
+      margin-top: 15px;
+      padding-right: 307px;
+      padding-left: 98px;
+    }
+
+    .autoWrapper4 {
+      display: flex;
+      align-items: flex-start;
+      align-self: stretch;
+      justify-content: space-between;
+      margin-top: 13px;
+      padding-right: 236px;
+      padding-left: 0;
+
+      .aZhaoZhifei {
+        margin: 2px 0px 0px;
+        line-height: 28px;
+        letter-spacing: 0;
+        color: #000000;
+        font-family: "Lantinghei SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .maskGroup {
+    position: absolute;
+    top: 30px;
+    left: 498px;
+    width: 47px;
+    height: 53px;
+  }
+
+  .maskGroup2 {
+    display: flex;
+    position: absolute;
+    top: 34px;
+    left: 30px;
+    align-items: flex-start;
+    padding: 11px 621px 126px 19px;
+    width: 832px;
+    height: 151px;
+    background-image: url(../image/moje2hu4-sed013q.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    .submarineWar10 {
+      line-height: 13px;
+      letter-spacing: -1.05px;
+      color: #afafaf;
+      font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 21px;
+    }
+  }
+
+  .maskGroup3 {
+    position: absolute;
+    top: 32px;
+    left: 498px;
+    width: 46px;
+    height: 52px;
+  }
+
+  .group97 {
+    position: absolute;
+    top: 92px;
+    left: 389px;
+    width: 100px;
+    height: 103px;
+
+    .rectangle128 {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      background: #000000;
+      width: 97px;
+      height: 100px;
+      rotate: 2deg;
+    }
+
+    .image15 {
+      position: absolute;
+      top: 7px;
+      left: 7px;
+      width: 87px;
+      height: 87px;
+    }
+  }
+}

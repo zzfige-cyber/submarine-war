@@ -1,0 +1,81 @@
+* {
+  box-sizing: border-box;
+}
+
+.gameover {
+  position: relative;
+  width: 978px;
+  height: 387px;
+
+  .rectangle77 {
+    position: absolute;
+    top: 87px;
+    left: 38px;
+    background: #000000;
+    width: 135px;
+    height: 122px;
+  }
+
+  .rectangle78 {
+    position: absolute;
+    top: 158px;
+    left: 257px;
+    background: #000000;
+    width: 438px;
+    height: 191px;
+  }
+
+  .gAmeover {
+    position: absolute;
+    top: 1px;
+    left: 0;
+    width: 980px;
+    height: 319px;
+    line-height: 159px;
+    letter-spacing: -12.66px;
+    color: #ff5e00;
+    font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 253px;
+  }
+
+  .rectangle73 {
+    position: absolute;
+    top: 174px;
+    left: 478px;
+    background: #000000;
+    width: 114px;
+    height: 39px;
+  }
+
+  .frame {
+    position: absolute;
+    top: 165px;
+    left: 458px;
+    width: 148px;
+    height: 88px;
+  }
+
+  .frame2 {
+    position: absolute;
+    top: 160px;
+    left: 452px;
+    width: 160px;
+    height: 98px;
+  }
+
+  .rectangle {
+    position: absolute;
+    top: 80px;
+    left: 257px;
+    width: 81px;
+    height: 78px;
+  }
+
+  .maskGroup {
+    position: absolute;
+    top: 188px;
+    left: 134px;
+    width: 141px;
+    height: 144px;
+  }
+}

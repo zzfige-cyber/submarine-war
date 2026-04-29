@@ -1,0 +1,54 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame {
+  position: relative;
+  width: 432px;
+  height: 100px;
+
+  .rectangle125 {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: -1px;
+    align-items: flex-start;
+    padding: 6px 3px 3px 130px;
+    width: 432px;
+    height: 100px;
+    background-image: url(../image/moje2yd6-mc989su.svg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    .group91 {
+      margin-top: 28px;
+      width: 37px;
+      height: 32px;
+    }
+
+    .text {
+      margin: 29px 0px 0px 12px;
+      line-height: 32px;
+      letter-spacing: -2px;
+      color: #000000;
+      font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 40px;
+    }
+
+    .vector74 {
+      margin-left: 143px;
+      width: 30px;
+      height: 91px;
+    }
+  }
+
+  .vector73 {
+    position: absolute;
+    top: 68px;
+    left: 8px;
+    width: 29px;
+    height: 33px;
+    rotate: -92deg;
+  }
+}

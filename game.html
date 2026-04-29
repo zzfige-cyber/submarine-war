@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>潜艇大战 - 深海猎手</title>
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -173,22 +175,57 @@
         /* 技能面板容器 - 使用截图作为背景 */
         .skillPanelWrapper {
             position: absolute;
-            top: 158px;
-            left: 159px;
+            top: 175px;
+            left: 88px;
             width: 635px;
             height: 558px;
-            background-image: url('assets/figma_image/screenshot_514_221.png');
+            background-image: url('.figma/image/screenshot_618_177.png');
             background-position: center;
             background-size: contain;
             background-repeat: no-repeat;
             z-index: 100; /* 标题图片要在所有图层最上方 */
         }
 
+        /* 技能配置面板右侧按钮 */
+        .skillPanelSideButtons {
+            position: absolute;
+            top: 175px;
+            left: 1665px;
+            width: 274px;
+            height: 152px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .skillPanelSideBtn {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .skillPanelSideBtn:hover {
+            transform: scale(1.05);
+        }
+
+        #btnGameInfo {
+            width: 255px;
+            height: auto;
+        }
+
+        #btnGlobalLeaderboard {
+            width: 227px;
+            height: auto;
+            position: absolute;
+            left: 36px;
+            top: 75px;
+        }
+
         /* 剩余技能点数值 - 定位到截图上的位置 */
         .skillPointsValue {
             position: absolute;
             top: 110px;
-            left: 371px;
+            left: 413px;
             width: 65px;
             color: #d9fa05;
             font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
@@ -200,8 +237,8 @@
         /* 技能按钮区域 - 绝对定位到截图上的位置 */
         .skillButtonsContainer {
             position: absolute;
-            top: -15px;
-            left: -35px;
+            top: -13px;
+            left: 23px;
             width: 100%;
             height: 100%;
         }
@@ -210,7 +247,7 @@
         .skillBtnMinus1 {
             position: absolute;
             top: 238px;
-            left: 340px;
+            left: 368px;
             width: 28px;
             height: 28px;
             border: none;
@@ -237,8 +274,8 @@
         /* 减号按钮 - 装甲厚度 */
         .skillBtnMinus2 {
             position: absolute;
-            top: 328px;
-            left: 355px;
+            top: 324px;
+            left: 409px;
             width: 28px;
             height: 28px;
             border: none;
@@ -252,7 +289,7 @@
         .skillBtnPlus2 {
             position: absolute;
             top: 328px;
-            left: 470px;
+            left: 494px;
             width: 28px;
             height: 28px;
             border: none;
@@ -266,7 +303,7 @@
         .skillBtnMinus3 {
             position: absolute;
             top: 420px;
-            left: 365px;
+            left: 394px;
             width: 28px;
             height: 28px;
             border: none;
@@ -327,30 +364,30 @@
         /* 技能点 - 移动速度 */
         .skillDotsRow1 {
             position: absolute;
-            top: 230px;
-            left: 350px;
+            top: 231px;
+            left: 428px;
             display: flex;
             align-items: center;
             gap: 4px;
             transform: rotate(2deg);
         }
-        
+
         /* 技能点 - 装甲厚度 */
         .skillDotsRow2 {
             position: absolute;
             top: 312px;
-            left: 365px;
+            left: 470px;
             display: flex;
             align-items: center;
             gap: 4px;
             transform: rotate(-5deg);
         }
-        
+
         /* 技能点 - 弹药库 */
         .skillDotsRow3 {
             position: absolute;
-            top: 408px;
-            left: 385px;
+            top: 405px;
+            left: 458px;
             display: flex;
             align-items: center;
             gap: 4px;
@@ -371,7 +408,7 @@
             width: 100%;
             height: 100%;
         }
-        
+
         /* 玩家船只展示 */
         .playerShipDisplay {
             position: absolute;
@@ -472,7 +509,64 @@
             left: 84px;
             top: 55px;
         }
-        
+
+        /* 技能描述文本 */
+        .skillDescriptions {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .skillDesc {
+            position: absolute;
+            font-family: "Lantinghei SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            white-space: nowrap;
+            width: 200px;
+            text-align: left;
+        }
+
+        #speedDesc {
+            top: 233px;
+            left: 113px;
+            transform: rotate(-1deg);
+        }
+
+        #hpDesc {
+            top: 342px;
+            left: 160px;
+            transform: rotate(-9deg);
+        }
+
+        #ammoDesc {
+            top: 436px;
+            left: 195px;
+            transform: rotate(-12deg);
+        }
+
+        .skillDescHighlight {
+            color: #6fc900;
+        }
+
+        .skillDescNormal {
+            color: #a3a3a3;
+        }
+
+        /* 血量描述特殊颜色 */
+        #hpDesc .skillDescHighlight {
+            color: #ff5e00;
+        }
+
+        /* 弹药描述特殊颜色 */
+        #ammoDesc .skillDescHighlight {
+            color: #6fc900;
+        }
+
         /* 开始游戏按钮 - 使用图片素材 */
         .startGameBtnWrapper {
             position: absolute;
@@ -1114,6 +1208,305 @@
             transform: scale(1.05);
         }
         
+        /* 排行榜气泡样式 - 新设计 */
+        .leaderboardBubble {
+            position: absolute;
+            top: 444px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 200;
+            display: none;
+            width: 504px;
+            height: 264px;
+        }
+        
+        .leaderboardBubble.active {
+            display: block;
+            animation: leaderboardBubblePop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes leaderboardBubblePop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        .leaderboardBubbleBg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .leaderboardBubbleContent {
+            position: absolute;
+            top: 23px;
+            left: 11px;
+            width: 474px;
+            height: 224px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 36px 44px 80px 76px;
+        }
+        
+        .leaderboardBubbleTitle {
+            font-size: 44px;
+            color: #000000;
+            font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+            line-height: 22px;
+            letter-spacing: -2.22px;
+            margin: 0 0 0 13px;
+            font-weight: bold;
+            left: 68px;
+        }
+        
+        .playerNameInput {
+            position: absolute;
+            left: 82px;
+            top: 89px;
+            width: 332px;
+            height: 54px;
+            padding: 0 15px;
+            font-size: 24px;
+            border: 2px solid #ccc;
+            background: #f0f0f0;
+            outline: none;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        .playerNameInput:focus {
+            border-color: #b5fe12;
+        }
+        
+        .leaderboardUploadBtn {
+            position: absolute;
+            left: 97px;
+            width: 286px;
+            height: 107px;
+            top: 199px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            z-index: 3;
+        }
+        
+        .leaderboardUploadBtn:hover {
+            transform: scale(1.05);
+        }
+        
+        .leaderboardBubbleBtn.skipBtn {
+            background: #f0f0f0;
+            color: #666;
+        }
+        
+        .leaderboardBubbleBtn.skipBtn:hover {
+            background: #e0e0e0;
+            transform: scale(1.05);
+        }
+        
+        /* 排行榜弹窗样式 - 新设计 */
+        .leaderboardModal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .leaderboardModal.active {
+            display: flex;
+            animation: leaderboardModalFadeIn 0.3s ease;
+        }
+        
+        @keyframes leaderboardModalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .leaderboardModalContent {
+            position: relative;
+            width: 1666px;
+            height: 932px;
+            background-image: url('.figma/image/screenshot_619_533.png');
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 150px 126px 128px 156px;
+        }
+        
+        .leaderboardList {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 1286px;
+            position: absolute;
+            top: 194px;
+            gap: 19px;
+        }
+        
+        .leaderboardItem {
+            display: flex;
+            align-items: center;
+            width: 1286px;
+            height: 37px;
+            padding: 3px 66px 4px 24px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+            font-size: 36px;
+            color: #000000;
+        }
+        
+        /* NO.1-NO.10 统一使用同一个背景素材 */
+        .leaderboardItem.rank1,
+        .leaderboardItem.rank2,
+        .leaderboardItem.rank3,
+        .leaderboardItem.rank4,
+        .leaderboardItem.rank5,
+        .leaderboardItem.rank6,
+        .leaderboardItem.rank7,
+        .leaderboardItem.rank8,
+        .leaderboardItem.rank9,
+        .leaderboardItem.rank10 {
+            background-image: url('.figma/image/screenshot_605_446.png');
+        }
+        
+        /* 普通玩家行文字颜色 */
+        .leaderboardItem {
+            color: #636363;
+        }
+        
+        /* 高亮玩家行 - 使用特殊背景图，文字颜色为黄色 */
+        .leaderboardItem.highlight {
+            background-image: url('.figma/image/screenshot_605_477.png') !important;
+            color: #FFF90D;
+        }
+        
+        .leaderboardItemRank {
+            width: 124px;
+            line-height: 29px;
+            letter-spacing: -1.8px;
+        }
+        
+        .leaderboardItemName {
+            margin-left: 150px;
+            width: 188px;
+            line-height: 29px;
+            letter-spacing: -1.8px;
+        }
+        
+        .leaderboardItemTime {
+            margin-left: 249px;
+            width: 164px;
+            line-height: 29px;
+            letter-spacing: 0;
+            font-size: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .leaderboardItemTime .timeValue {
+            line-height: 29px;
+            letter-spacing: -1.8px;
+            font-size: 36px;
+        }
+        
+        .leaderboardItemTime .timeUnit {
+            line-height: 29px;
+            letter-spacing: -1.16px;
+            font-size: 23px;
+        }
+        
+        .leaderboardItemCombo {
+            margin-left: 162px;
+            width: 160px;
+            line-height: 29px;
+            letter-spacing: -1.8px;
+        }
+        
+        .leaderboardBackBtn {
+            position: absolute;
+            top: 820px;
+            left: 626px;
+            width: 432px;
+            height: 100px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .leaderboardBackBtn:hover {
+            transform: scale(1.05);
+        }
+
+        /* 游戏制作信息弹窗 */
+        .gameInfoModal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gameInfoModal.active {
+            display: flex;
+            animation: gameInfoModalFadeIn 0.3s ease;
+        }
+
+        @keyframes gameInfoModalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .gameInfoContent {
+            position: relative;
+            width: 881px;
+            height: 543px;
+            background-image: url('.figma/image/screenshot_618_158.png');
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .gameInfoBackBtn {
+            position: absolute;
+            top: 452px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 432px;
+            height: 100px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .gameInfoBackBtn:hover {
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        /* 彩带碎片样式 */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            z-index: 250;
+        }
+        
     </style>
 </head>
 <body>
@@ -1187,16 +1580,27 @@
                     <div class="skillDotsRow1" id="speedLevel">
                         <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
                         <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
-                        <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
                     </div>
                     <div class="skillDotsRow2" id="hpLevel">
-                        <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
                         <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
                         <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
                     </div>
                     <div class="skillDotsRow3" id="ammoLevel">
                         <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
                         <div class="skillDot"><img src="assets/skill_dot_empty.png" alt=""></div>
+                    </div>
+                </div>
+
+                <!-- 技能描述文本 -->
+                <div class="skillDescriptions">
+                    <div class="skillDesc" id="speedDesc">
+                        <span class="skillDescHighlight">初始</span><span class="skillDescNormal">移速</span>
+                    </div>
+                    <div class="skillDesc" id="hpDesc">
+                        <span class="skillDescHighlight">初始</span><span class="skillDescNormal">血量</span>
+                    </div>
+                    <div class="skillDesc" id="ammoDesc">
+                        <span class="skillDescHighlight">5枚</span><span class="skillDescNormal">鱼雷最大装填</span>
                     </div>
                 </div>
             </div>
@@ -1213,6 +1617,12 @@
                 <button class="startGameBtn" id="startGameBtn" onclick="startGame()" disabled>
                     <img src="assets/figma_image/screenshot_508_131.png" id="startGameBtnImg" alt="启航 STAR GAME">
                 </button>
+            </div>
+            
+            <!-- 技能配置面板右侧按钮 -->
+            <div class="skillPanelSideButtons">
+                <img src=".figma/image/screenshot_605_476.png" alt="游戏制作信息" class="skillPanelSideBtn" id="btnGameInfo" onclick="showGameInfo()">
+                <img src=".figma/image/screenshot_605_530.png" alt="全球排行榜" class="skillPanelSideBtn" id="btnGlobalLeaderboard" onclick="showGlobalLeaderboardFromSkillPanel()">
             </div>
         </div>
         
@@ -1264,7 +1674,7 @@
             <div class="victoryOverlay"></div>
             <div class="victoryContent">
                 <!-- 人物立绘 -->
-                <img src="assets/figma_image/screenshot_512_165.png" alt="人物立绘" class="victoryCharacter">
+                <img src=".figma/image/screenshot_605_123.png" alt="人物立绘" class="victoryCharacter">
                 <!-- 计分牌 -->
                 <div class="victoryScorePanel">
                     <img src="assets/figma_image/screenshot_571_3.png" alt="计分牌">
@@ -1276,10 +1686,47 @@
                     <img src="assets/figma_image/screenshot_259_1514.png" alt="配置战舰" class="victoryBtn" id="btnVictoryConfig" data-option="1">
                 </div>
             </div>
+            
+            <!-- 排行榜上传询问气泡 -->
+            <div id="leaderboardBubble" class="leaderboardBubble">
+                <img src=".figma/image/screenshot_605_132.png" alt="气泡背景" class="leaderboardBubbleBg">
+                <div class="leaderboardBubbleContent">
+                    <input type="text" id="playerNameInput" class="playerNameInput" placeholder="请输入英文ID" maxlength="20">
+                </div>
+                <img src=".figma/image/screenshot_605_140.png" alt="上传" class="leaderboardUploadBtn" id="btnUploadLeaderboard">
+            </div>
+            
+        </div>
+
+        <!-- 排行榜弹窗 -->
+        <div id="leaderboardModal" class="leaderboardModal">
+            <div class="leaderboardModalContent">
+                <div class="leaderboardList" id="leaderboardList">
+                    <!-- 排行榜列表将动态生成 -->
+                </div>
+                <img src=".figma/image/screenshot_605_282.png" alt="返回" class="leaderboardBackBtn" id="btnCloseLeaderboard">
+            </div>
+        </div>
+
+        <!-- 游戏制作信息弹窗 -->
+        <div id="gameInfoModal" class="gameInfoModal">
+            <div class="gameInfoContent">
+                <img src=".figma/image/screenshot_619_765.png" alt="返回" class="gameInfoBackBtn" id="btnCloseGameInfo" onclick="hideGameInfo()">
+            </div>
         </div>
     </div>
 
     <script>
+        // ==================== Supabase 配置 ====================
+        const SUPABASE_URL = 'https://qmgvhcnfvnydfughmvwr.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtZ3ZoY25mdm55ZGZ1Z2htdndyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNzA4MzcsImV4cCI6MjA5Mjk0NjgzN30.16nNAyl6aHj2vVqJiyGy7YcxYNC2UpmYfZUmgIGFlgQ';
+        
+        // 初始化 Supabase 客户端
+        let supabaseClient = null;
+        if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+        
         // ==================== 响应式缩放 ====================
         function updateGameScale() {
             const container = document.getElementById('gameContainer');
@@ -1319,17 +1766,17 @@
                 height: 1080
             },
             skillSystem: {
-                totalPoints: 5,
+                totalPoints: 4,
                 maxLevel: {
-                    speed: 3,
-                    hp: 3,
+                    speed: 2,
+                    hp: 2,
                     ammo: 2
                 }
             },
             player: {
                 baseSpeed: 5,
                 baseMaxHp: 100,
-                baseAmmo: 3
+                baseAmmo: 5
             }
         };
 
@@ -1381,6 +1828,7 @@
             visibilityMask: new Image(),
             visibilityMaskNight: new Image(),
             splitMineBubble: new Image(),
+            immunityBubbleImg: new Image(),
             gameOverTitle: new Image(),
             btnRetry: new Image(),
             btnConfig: new Image(),
@@ -1466,6 +1914,7 @@
             visibilityMask: 'assets/figma_image/screenshot_473_205.png',
             visibilityMaskNight: 'assets/figma_image/screenshot_474_216.png',
             splitMineBubble: 'assets/figma_image/screenshot_350_13.png',
+            immunityBubbleImg: '.figma/image/screenshot_618_408.png',
             gameOverTitle: 'assets/figma_image/screenshot_222_1196.png',
             btnRetry: 'assets/figma_image/screenshot_222_1157.png',
             btnConfig: 'assets/figma_image/screenshot_222_1158.png',
@@ -1756,9 +2205,10 @@
             'assets/figma_image/screenshot_259_1508.png',
             'assets/figma_image/screenshot_259_1514.png',
             'assets/skill_bg.png',
-            'assets/skill_dot_active.png',
+            '.figma/image/screenshot_619_741.png',
             'assets/skill_dot_empty.png',
-            'assets/figma_image/screenshot_513_199.png' // 操作提示气泡
+            'assets/figma_image/screenshot_513_199.png', // 操作提示气泡
+            '.figma/image/screenshot_618_408.png' // 免疫防护气泡
         ];
         
         function initLoading() {
@@ -1778,6 +2228,8 @@
                 if (loadedCount === totalAssets) {
                     gameState.assetsLoaded = true;
                     console.log('所有素材加载完成');
+                    // 加载排行榜数据
+                    loadLeaderboard();
                     setTimeout(() => {
                         showSkillPanel();
                     }, 500);
@@ -2108,7 +2560,7 @@
                 const dots = document.querySelectorAll(`#${skill}Level .skillDot img`);
                 
                 dots.forEach((dot, index) => {
-                    dot.src = index < level ? 'assets/skill_dot_active.png' : 'assets/skill_dot_empty.png';
+                    dot.src = index < level ? '.figma/image/screenshot_619_741.png' : 'assets/skill_dot_empty.png';
                 });
 
                 // 更新按钮状态和图片
@@ -2131,9 +2583,49 @@
             const startBtnImg = document.getElementById('startGameBtnImg');
             startBtn.disabled = remainingPoints > 0;
             startBtnImg.src = remainingPoints > 0 ? 'assets/figma_image/screenshot_508_131.png' : 'assets/figma_image/screenshot_472_104.png';
-            
+
+            // 更新技能描述
+            updateSkillDescriptions();
+
             // 更新船只展示图片
             updateSkillPanelShip();
+        }
+
+        // 更新技能描述文本
+        function updateSkillDescriptions() {
+            const speedLevel = gameState.skillPoints.speed;
+            const hpLevel = gameState.skillPoints.hp;
+            const ammoLevel = gameState.skillPoints.ammo;
+
+            // 速度描述
+            const speedDesc = document.getElementById('speedDesc');
+            if (speedLevel === 0) {
+                speedDesc.innerHTML = '<span class="skillDescHighlight" style="color: #0084ff;">初始</span><span class="skillDescNormal">移速</span>';
+            } else if (speedLevel === 1) {
+                speedDesc.innerHTML = '<span class="skillDescHighlight" style="color: #0084ff;">+50%</span><span class="skillDescNormal">移速</span>';
+            } else {
+                speedDesc.innerHTML = '<span class="skillDescHighlight" style="color: #0084ff;">+60%</span><span class="skillDescNormal">移速,鱼雷</span><span class="skillDescHighlight" style="color: #0084ff;">装填速度+</span><span class="skillDescNormal">100%</span>';
+            }
+
+            // 血量描述
+            const hpDesc = document.getElementById('hpDesc');
+            if (hpLevel === 0) {
+                hpDesc.innerHTML = '<span class="skillDescHighlight" style="color: #ff5e00;">初始</span><span class="skillDescNormal">血量</span>';
+            } else if (hpLevel === 1) {
+                hpDesc.innerHTML = '<span class="skillDescHighlight" style="color: #ff5e00;">+80%</span><span class="skillDescNormal">血量</span>';
+            } else {
+                hpDesc.innerHTML = '<span class="skillDescHighlight" style="color: #ff5e00;">+100%</span><span class="skillDescNormal">血量,</span><span class="skillDescHighlight" style="color: #ff5e00;">免疫1次</span><span class="skillDescNormal">致命伤</span>';
+            }
+
+            // 弹药描述
+            const ammoDesc = document.getElementById('ammoDesc');
+            if (ammoLevel === 0) {
+                ammoDesc.innerHTML = '<span class="skillDescHighlight" style="color: #6fc900;">5枚</span><span class="skillDescNormal">鱼雷最大装填</span>';
+            } else if (ammoLevel === 1) {
+                ammoDesc.innerHTML = '<span class="skillDescHighlight" style="color: #6fc900;">8枚</span><span class="skillDescNormal">鱼雷最大装填</span>';
+            } else {
+                ammoDesc.innerHTML = '<span class="skillDescHighlight" style="color: #6fc900;">8枚</span><span class="skillDescNormal">鱼雷,获得</span><span class="skillDescHighlight" style="color: #6fc900;">穿甲效果</span>';
+            }
         }
         
         // 保存上一次的技能等级，用于检测变化
@@ -2264,8 +2756,34 @@
         let superWeaponReady;
         let splitMineActive; // 分裂水雷是否激活
         let splitMineCount; // 分裂水雷剩余次数（30颗）
+        let piercingActive; // 穿甲效果是否激活
         let gameStartTime; // 游戏开始时间（用于计时）
         let finalGameTime; // 游戏结束时的最终时间（秒）
+        
+        // 连击系统
+        let comboSystem = {
+            active: false,
+            count: 0,
+            maxCount: 0, // 最高连击数
+            lastKillTime: 0,
+            timeout: 2000, // 2秒超时
+            displayCount: 0, // 用于动画显示的数字
+            animating: false, // 是否正在动画中
+            animationQueue: [], // 动画队列
+            animationStartTime: 0,
+            animationDuration: 500 // 总动画时长0.5秒，根据队列长度动态分配每个数字的时间
+        };
+        
+        // 排行榜数据（使用localStorage存储）
+        let leaderboardData = [];
+        
+        // 当前玩家游戏数据（用于排行榜）
+        let currentPlayerData = {
+            name: '',
+            time: 0,
+            combo: 0,
+            skills: { speed: 0, hp: 0, ammo: 0 }
+        };
         
         // MP动画状态
         let mpAnimation = {
@@ -2331,6 +2849,13 @@
             exitDuration: 200 // 消失动画200ms
         };
 
+        // 免疫伤害提示气泡
+        let immunityBubble = {
+            active: false,
+            startTime: 0,
+            duration: 3000 // 显示3秒钟
+        };
+
         function initGame() {
             // 根据技能点计算属性
             const speedLevel = gameState.skillPoints.speed;
@@ -2343,20 +2868,30 @@
                 y: 118,
                 width: 273,
                 height: 117,
-                maxSpeed: GAME_CONFIG.player.baseSpeed + speedLevel * 4,
+                maxSpeed: GAME_CONFIG.player.baseSpeed * (1 + (speedLevel === 1 ? 0.5 : speedLevel === 2 ? 1.0 : 0)),
                 velocityX: 0,  // 当前水平速度
-                maxHp: GAME_CONFIG.player.baseMaxHp + hpLevel * 50,
-                hp: GAME_CONFIG.player.baseMaxHp + hpLevel * 50,
+                maxHp: hpLevel === 0 ? 6 : hpLevel === 1 ? 10 : 15,
+                hp: hpLevel === 0 ? 6 : hpLevel === 1 ? 10 : 15,
                 skillLevels: {
                     speed: speedLevel,
                     hp: hpLevel,
                     ammo: ammoLevel
                 },
+                mineRegenRate: speedLevel >= 2 ? 0.5 : 1, // 2级速度时鱼雷装填速度+100%
                 shake: {
                     active: false,
                     startTime: 0,
                     duration: 300, // 抖动持续300ms
                     intensity: 5   // 抖动幅度
+                },
+                shield: {
+                    active: false,
+                    startTime: 0,
+                    duration: 3000 // 护盾持续3秒
+                },
+                fatalDamageImmunity: {
+                    used: false, // 是否已经使用过免疫
+                    hpRestore: 7 // 免疫后回复到的血量
                 }
             };
 
@@ -2441,18 +2976,32 @@
             playerDefeatState.gameOverTriggered = false;
 
             // 弹药系统
-            maxMineAmmo = GAME_CONFIG.player.baseAmmo + ammoLevel * 2;
+            maxMineAmmo = ammoLevel === 0 ? 5 : 8; // 0级5发，1级和2级8发
             mineAmmo = maxMineAmmo;
             mineRegenTime = 0;
             splitMineActive = false; // 重置分裂水雷状态
             splitMineCount = 0; // 重置分裂水雷计数
             splitMineBubble.active = false; // 重置分裂水雷气泡状态
-            
+            piercingActive = ammoLevel >= 2; // 2级弹药激活穿甲效果
+
+            // 重置连击系统
+            comboSystem.active = false;
+            comboSystem.count = 0;
+            comboSystem.maxCount = 0;
+            comboSystem.lastKillTime = 0;
+            comboSystem.displayCount = 0;
+            comboSystem.animating = false;
+            comboSystem.animationQueue = [];
+
             // 重置气泡动画状态
             superWeaponBubbleAnim.active = false;
             superWeaponBubbleAnim.phase = 'idle';
             splitMineBubbleAnim.active = false;
             splitMineBubbleAnim.phase = 'idle';
+
+            // 重置免疫伤害提示气泡
+            immunityBubble.active = false;
+            immunityBubble.startTime = 0;
 
             // 游戏对象数组
             submarines = [];
@@ -2617,6 +3166,18 @@
         function update() {
             // 更新玩家
             updatePlayer();
+
+            // 更新护盾状态
+            updateShield();
+
+            // 更新免疫伤害提示气泡
+            updateImmunityBubble();
+
+            // 更新连击状态
+            updateCombo();
+
+            // 更新连击数字动画
+            updateComboAnimation();
 
             // 更新水雷
             updateMines();
@@ -2967,7 +3528,7 @@
                     delay: 2000, // 2秒延迟后开始上浮
                     startTime: Date.now(),
                     active: true,
-                    damage: 5 // -5% HP
+                    damage: 1 // Boss子弹-1点生命值
                 });
             }
         }
@@ -3007,7 +3568,7 @@
                         targetX: null, // 锁定目标位置
                         targetY: null,
                         active: true,
-                        damage: 15 // -15% HP（提升50%）
+                        damage: 3 // Boss导弹-3点生命值
                     });
                 }, index * 200); // 每枚延迟0.2s
             });
@@ -3059,7 +3620,12 @@
                     }
                     
                     if (checkBulletPlayerCollision(bullet)) {
-                        hp -= bullet.damage;
+                        // 检查护盾效果
+                        if (player.shield && player.shield.active) {
+                            // 护盾激活，免疫伤害
+                        } else {
+                            hp -= bullet.damage;
+                        }
                         
                         // 创建爆炸效果
                         createExplosion(bullet.x, bullet.y);
@@ -3072,9 +3638,12 @@
                         
                         triggerDamageFlash();
                         bossBullets.splice(i, 1);
-                        
+
                         if (hp <= 0 && !playerDefeatState.active) {
-                            playerDefeated();
+                            // 检查是否可以触发致命伤害免疫
+                            if (!checkFatalDamageImmunity()) {
+                                playerDefeated();
+                            }
                         }
                         continue;
                     }
@@ -3140,7 +3709,12 @@
                 }
                 
                 if (checkMissilePlayerCollision(missile)) {
-                    hp -= missile.damage;
+                    // 检查护盾效果
+                    if (player.shield && player.shield.active) {
+                        // 护盾激活，免疫伤害
+                    } else {
+                        hp -= missile.damage;
+                    }
                     
                     // 创建爆炸效果
                     createExplosion(missile.x + missile.width / 2, missile.y + missile.height / 2);
@@ -3155,7 +3729,10 @@
                     bossMissiles.splice(i, 1);
 
                     if (hp <= 0 && !playerDefeatState.active) {
-                        playerDefeated();
+                        // 检查是否可以触发致命伤害免疫
+                        if (!checkFatalDamageImmunity()) {
+                            playerDefeated();
+                        }
                     }
                     continue;
                 }
@@ -3199,6 +3776,7 @@
         function bossDefeated() {
             console.log('Boss被击败！显示对话气泡...');
             boss.active = false;
+            gameOver = true; // 立即停止游戏更新，防止连击超时
 
             // 显示对话气泡
             bossDefeatState.showBubble = true;
@@ -3264,10 +3842,23 @@
         function showVictoryScreen() {
             const victoryScreen = document.getElementById('victoryScreen');
             const victoryScoreEl = document.getElementById('victoryScore');
-            
-            // 记录最终游戏时间（毫秒）
-            finalGameTime = Date.now() - gameStartTime;
+
+            // 如果还没有记录通关时间，则计算
+            if (finalGameTime === 0) {
+                finalGameTime = Date.now() - gameStartTime;
+            }
             gameOver = true;
+
+            // 保存当前玩家数据
+            currentPlayerData.time = finalGameTime;
+            currentPlayerData.combo = comboSystem.maxCount;
+            currentPlayerData.skills = { ...player.skillLevels };
+
+            console.log('通关数据保存:', {
+                time: finalGameTime,
+                combo: comboSystem.maxCount,
+                comboSystem: comboSystem
+            });
             
             // 更新通关时间（秒:毫秒格式）
             const victorySeconds = Math.floor(finalGameTime / 1000).toString().padStart(2, '0');
@@ -3276,6 +3867,282 @@
             
             // 显示通关画面
             victoryScreen.classList.add('active');
+            
+            // 延迟显示排行榜上传气泡
+            setTimeout(() => {
+                showLeaderboardBubble();
+            }, 1500);
+        }
+        
+        // 显示排行榜上传气泡
+        function showLeaderboardBubble() {
+            const bubble = document.getElementById('leaderboardBubble');
+            bubble.classList.add('active');
+        }
+        
+        // 隐藏排行榜上传气泡
+        function hideLeaderboardBubble() {
+            const bubble = document.getElementById('leaderboardBubble');
+            bubble.classList.remove('active');
+        }
+        
+        // 显示排行榜弹窗
+        function showLeaderboardModal() {
+            renderLeaderboard(true); // 显示高亮行
+            const modal = document.getElementById('leaderboardModal');
+            modal.classList.add('active');
+            createConfetti(); // 喷射彩带
+        }
+        
+        // 隐藏排行榜弹窗
+        function hideLeaderboardModal() {
+            const modal = document.getElementById('leaderboardModal');
+            modal.classList.remove('active');
+        }
+
+        // 显示游戏制作信息
+        function showGameInfo() {
+            const modal = document.getElementById('gameInfoModal');
+            modal.classList.add('active');
+        }
+
+        // 隐藏游戏制作信息
+        function hideGameInfo() {
+            const modal = document.getElementById('gameInfoModal');
+            modal.classList.remove('active');
+        }
+
+        // 从技能配置面板显示全球排行榜
+        async function showGlobalLeaderboardFromSkillPanel() {
+            await loadLeaderboard();
+            renderLeaderboard(false); // 不显示高亮行
+            const modal = document.getElementById('leaderboardModal');
+            modal.classList.add('active');
+        }
+
+        // 创建彩带碎片效果
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#EDEA74'];
+            const container = document.getElementById('victoryScreen');
+            
+            // 从两侧喷射彩带
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() < 0.5 ? '0px' : '100%';
+                    confetti.style.top = Math.random() * 100 + '%';
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.borderRadius = Math.random() < 0.5 ? '50%' : '0';
+                    container.appendChild(confetti);
+                    
+                    // 动画
+                    const targetX = Math.random() < 0.5 ? Math.random() * 50 + 20 : Math.random() * 50 + 30;
+                    const targetY = Math.random() * 100;
+                    
+                    confetti.animate([
+                        { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+                        { transform: `translate(${targetX}vw, ${targetY - 50}vh) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                    ], {
+                        duration: 1500 + Math.random() * 1000,
+                        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                    }).onfinish = () => confetti.remove();
+                }, i * 30);
+            }
+        }
+        
+        // 加载排行榜数据（从 Supabase）
+        async function loadLeaderboard() {
+            if (!supabaseClient) {
+                // 如果没有配置 Supabase，使用本地存储作为后备
+                const data = localStorage.getItem('submarineWarLeaderboard');
+                if (data) {
+                    leaderboardData = JSON.parse(data);
+                }
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('leaderboard')
+                    .select('*')
+                    .order('time', { ascending: true })
+                    .order('combo', { ascending: false })
+                    .limit(100);
+                
+                if (error) {
+                    console.error('加载排行榜失败:', error);
+                    return;
+                }
+                
+                // 转换数据格式
+                leaderboardData = data.map(item => ({
+                    name: item.name,
+                    time: item.time,
+                    combo: item.combo,
+                    skills: {
+                        speed: item.speed_level,
+                        hp: item.hp_level,
+                        ammo: item.ammo_level
+                    },
+                    date: item.created_at
+                }));
+            } catch (err) {
+                console.error('加载排行榜出错:', err);
+            }
+        }
+        
+        // 保存排行榜数据到本地（后备方案）
+        function saveLeaderboard() {
+            localStorage.setItem('submarineWarLeaderboard', JSON.stringify(leaderboardData));
+        }
+        
+        // 上传分数到排行榜（保存到 Supabase）
+        async function uploadToLeaderboard(playerName) {
+            if (!playerName || playerName.trim() === '') {
+                alert('请输入姓名！');
+                return false;
+            }
+            
+            // 检查是否只包含英文
+            if (!/^[a-zA-Z0-9\s]+$/.test(playerName)) {
+                alert('只能输入英文字母和数字！');
+                return false;
+            }
+            
+            currentPlayerData.name = playerName.trim();
+            
+            // 添加到本地数据
+            leaderboardData.push({
+                name: currentPlayerData.name,
+                time: currentPlayerData.time,
+                combo: currentPlayerData.combo,
+                skills: { ...currentPlayerData.skills },
+                date: new Date().toISOString()
+            });
+            
+            // 排序：按时间从低到高，时间相同按连击从高到低
+            leaderboardData.sort((a, b) => {
+                if (a.time !== b.time) {
+                    return a.time - b.time;
+                }
+                return b.combo - a.combo;
+            });
+            
+            // 只保留前100条记录
+            if (leaderboardData.length > 100) {
+                leaderboardData = leaderboardData.slice(0, 100);
+            }
+            
+            // 保存到本地作为后备
+            saveLeaderboard();
+            
+            // 如果配置了 Supabase，上传到云端
+            if (supabaseClient) {
+                try {
+                    console.log('正在上传到 Supabase...', {
+                        name: currentPlayerData.name,
+                        time: currentPlayerData.time,
+                        combo: currentPlayerData.combo,
+                        speed_level: currentPlayerData.skills.speed,
+                        hp_level: currentPlayerData.skills.hp,
+                        ammo_level: currentPlayerData.skills.ammo
+                    });
+                    
+                    const { data, error } = await supabaseClient
+                        .from('leaderboard')
+                        .insert({
+                            name: currentPlayerData.name,
+                            time: currentPlayerData.time,
+                            combo: currentPlayerData.combo,
+                            speed_level: currentPlayerData.skills.speed,
+                            hp_level: currentPlayerData.skills.hp,
+                            ammo_level: currentPlayerData.skills.ammo
+                        })
+                        .select();
+                    
+                    if (error) {
+                        console.error('上传到排行榜失败:', error);
+                        alert('上传失败: ' + error.message);
+                        return false;
+                    }
+                    
+                    console.log('上传成功:', data);
+                } catch (err) {
+                    console.error('上传排行榜出错:', err);
+                    alert('上传失败: ' + (err.message || '未知错误'));
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        // 渲染排行榜
+        function renderLeaderboard(showHighlight = true) {
+            const listEl = document.getElementById('leaderboardList');
+            listEl.innerHTML = '';
+            
+            // 找到当前玩家的排名
+            let playerRank = -1;
+            let playerIndex = -1;
+            
+            if (showHighlight && currentPlayerData.name) {
+                playerIndex = leaderboardData.findIndex(p => 
+                    p.name === currentPlayerData.name && 
+                    p.time === currentPlayerData.time &&
+                    p.combo === currentPlayerData.combo
+                );
+                
+                if (playerIndex !== -1) {
+                    playerRank = playerIndex + 1;
+                }
+            }
+            
+            // 显示Top10
+            const top10 = leaderboardData.slice(0, 10);
+            top10.forEach((player, index) => {
+                const isCurrentPlayer = showHighlight && index === playerIndex;
+                const item = createLeaderboardItem(index + 1, player, isCurrentPlayer);
+                listEl.appendChild(item);
+            });
+            
+            // 如果玩家不在Top10但在100名内，显示玩家行
+            if (showHighlight && playerRank > 10 && playerRank <= 100) {
+                const playerData = leaderboardData[playerIndex];
+                const item = createLeaderboardItem(playerRank, playerData, true);
+                listEl.appendChild(item);
+            }
+        }
+        
+        // 创建排行榜条目
+        function createLeaderboardItem(rank, player, isHighlight) {
+            const item = document.createElement('div');
+            item.className = 'leaderboardItem rank' + rank + (isHighlight ? ' highlight' : '');
+            
+            const seconds = Math.floor(player.time / 1000).toString().padStart(2, '0');
+            const milliseconds = (player.time % 1000).toString().padStart(3, '0').slice(0, 2);
+            
+            item.innerHTML = `
+                <span class="leaderboardItemRank">NO.${rank}</span>
+                <span class="leaderboardItemName">${player.name}</span>
+                <span class="leaderboardItemTime">
+                    <span class="timeValue">${seconds}:${milliseconds}</span>
+                    <span class="timeUnit">s</span>
+                </span>
+                <span class="leaderboardItemCombo">${player.combo}连击</span>
+            `;
+            
+            return item;
+        }
+        
+        // 格式化时间
+        function formatTime(ms) {
+            const seconds = Math.floor(ms / 1000).toString().padStart(2, '0');
+            const milliseconds = (ms % 1000).toString().padStart(3, '0').slice(0, 2);
+            return `${seconds}:${milliseconds}s`;
         }
         
         // 隐藏通关画面
@@ -3292,6 +4159,28 @@
         
         document.getElementById('btnVictoryConfig').addEventListener('click', () => {
             transitionToSkillPanel('victory');
+        });
+
+        // 排行榜按钮事件监听
+        document.getElementById('btnUploadLeaderboard').addEventListener('click', async () => {
+            const playerName = document.getElementById('playerNameInput').value;
+            const success = await uploadToLeaderboard(playerName);
+            if (success) {
+                hideLeaderboardBubble();
+                renderLeaderboard();
+                showLeaderboardModal();
+            }
+        });
+        
+        // 点击气泡外部关闭
+        document.getElementById('leaderboardBubble').addEventListener('click', (e) => {
+            if (e.target.id === 'leaderboardBubble') {
+                hideLeaderboardBubble();
+            }
+        });
+
+        document.getElementById('btnCloseLeaderboard').addEventListener('click', () => {
+            hideLeaderboardModal();
         });
 
         // 检查水雷与Boss碰撞
@@ -3694,12 +4583,17 @@
             // 检查激光与玩家碰撞（延迟280ms后开始判定，等激光完全射出来）
             const laserElapsed = Date.now() - boss.laserStartTime;
             const collisionDelay = 280; // 延迟280ms开始判定
-            if (laserElapsed >= collisionDelay &&
+            const collisionEndTime = 1500; // 判定结束时间提前到1500ms（总时长2000ms）
+            if (laserElapsed >= collisionDelay && laserElapsed <= collisionEndTime &&
                 player.x + player.width / 2 > laserX - laserWidth / 2 &&
                 player.x + player.width / 2 < laserX + laserWidth / 2) {
-                // 激光直接秒杀玩家
-                // 直接清空HP
-                hp = 0;
+                // 检查护盾效果
+                if (player.shield && player.shield.active) {
+                    // 护盾激活，免疫伤害
+                } else {
+                    // Boss激光-20点生命值
+                    hp -= 20;
+                }
 
                 // 启动HP动画
                 hpAnimation.active = true;
@@ -3710,10 +4604,169 @@
                 triggerDamageFlash();
 
                 // 使用玩家死亡爆炸动画（参考Boss失败的爆炸动画）
-                if (!playerDefeatState.active) {
-                    playerDefeated();
+                if (hp <= 0 && !playerDefeatState.active) {
+                    // 检查是否可以触发致命伤害免疫
+                    if (!checkFatalDamageImmunity()) {
+                        playerDefeated();
+                    }
                 }
             }
+        }
+
+        // 激活护盾效果
+        function activateShield() {
+            if (!player.shield) {
+                player.shield = { active: false, startTime: 0, duration: 3000 };
+            }
+            player.shield.active = true;
+            player.shield.startTime = Date.now();
+            
+            // 全屏攻击所有潜艇1次
+            performScreenClearAttack();
+        }
+        
+        // 全屏攻击所有潜艇
+        function performScreenClearAttack() {
+            // 对所有潜艇造成伤害
+            for (let i = submarines.length - 1; i >= 0; i--) {
+                const sub = submarines[i];
+                const baseScore = sub.isGold ? 100 : 10; // 稀有潜艇100分，普通潜艇10分
+                const multiplier = getComboMultiplier();
+                const scoreValue = Math.floor(baseScore * multiplier);
+                createExplosion(sub.x + sub.width / 2, sub.y + sub.height / 2, false, scoreValue);
+                submarines.splice(i, 1);
+                score += scoreValue;
+                triggerCombo(); // 触发连击
+            }
+        }
+        
+        // 更新护盾状态
+        function updateShield() {
+            if (player.shield && player.shield.active) {
+                const elapsed = Date.now() - player.shield.startTime;
+                if (elapsed >= player.shield.duration) {
+                    player.shield.active = false;
+                }
+            }
+        }
+
+        // 检查并触发致命伤害免疫（2级血量技能）
+        function checkFatalDamageImmunity() {
+            // 只有2级血量且未使用过免疫效果时才触发
+            if (player.skillLevels.hp >= 2 && !player.fatalDamageImmunity.used) {
+                player.fatalDamageImmunity.used = true;
+                hp = player.fatalDamageImmunity.hpRestore;
+
+                // 显示免疫伤害提示气泡
+                immunityBubble.active = true;
+                immunityBubble.startTime = Date.now();
+
+                // 激活蓝色护盾效果
+                activateShield();
+
+                return true; // 免疫生效
+            }
+            return false; // 免疫未生效
+        }
+
+        // 更新免疫伤害提示气泡
+        function updateImmunityBubble() {
+            if (immunityBubble.active) {
+                const elapsed = Date.now() - immunityBubble.startTime;
+                if (elapsed >= immunityBubble.duration) {
+                    immunityBubble.active = false;
+                }
+            }
+        }
+        
+        // 更新连击状态
+        function updateCombo() {
+            if (comboSystem.active) {
+                const elapsed = Date.now() - comboSystem.lastKillTime;
+                if (elapsed >= comboSystem.timeout) {
+                    // 超过1秒没有新击毁，退出连击状态
+                    comboSystem.active = false;
+                    comboSystem.count = 0;
+                }
+            }
+        }
+        
+        // 触发连击（击毁潜艇时调用）
+        function triggerCombo() {
+            const now = Date.now();
+            
+            if (!comboSystem.active) {
+                // 首次进入连击状态
+                comboSystem.active = true;
+                comboSystem.count = 1;
+                comboSystem.displayCount = 1;
+                comboSystem.animationQueue = [];
+            } else {
+                // 继续连击
+                const elapsed = now - comboSystem.lastKillTime;
+                if (elapsed < comboSystem.timeout) {
+                    comboSystem.count++;
+                    // 将目标数字加入动画队列
+                    comboSystem.animationQueue.push(comboSystem.count);
+                } else {
+                    // 超时，重新开始连击
+                    comboSystem.count = 1;
+                    comboSystem.displayCount = 1;
+                    comboSystem.animationQueue = [];
+                }
+            }
+            
+            // 更新最高连击数
+            if (comboSystem.count > comboSystem.maxCount) {
+                comboSystem.maxCount = comboSystem.count;
+                console.log('更新最高连击数:', comboSystem.maxCount);
+            }
+
+            comboSystem.lastKillTime = now;
+        }
+        
+        // 更新连击数字动画
+        function updateComboAnimation() {
+            if (comboSystem.animationQueue.length > 0 && !comboSystem.animating) {
+                // 开始新的数字动画
+                comboSystem.animating = true;
+                comboSystem.animationStartTime = Date.now();
+                // 动态计算每个数字的动画时长，确保总时长不超过1秒
+                comboSystem.stepDuration = Math.min(
+                    comboSystem.animationDuration / comboSystem.animationQueue.length,
+                    200 // 每个数字最多200ms
+                );
+            }
+            
+            if (comboSystem.animating) {
+                const elapsed = Date.now() - comboSystem.animationStartTime;
+                const stepDuration = comboSystem.stepDuration || 200;
+                const totalSteps = comboSystem.animationQueue.length;
+                
+                // 计算当前应该显示到第几个数字
+                const currentStep = Math.min(Math.floor(elapsed / stepDuration), totalSteps);
+                const stepProgress = (elapsed % stepDuration) / stepDuration;
+                
+                // 使用缓动函数
+                const easeProgress = 1 - Math.pow(1 - stepProgress, 3);
+                
+                if (currentStep >= totalSteps) {
+                    // 动画完成，显示最终数字
+                    comboSystem.displayCount = comboSystem.animationQueue[totalSteps - 1] || comboSystem.displayCount;
+                    comboSystem.animationQueue = []; // 清空队列
+                    comboSystem.animating = false;
+                } else {
+                    // 在当前步骤内插值
+                    const startCount = currentStep === 0 ? comboSystem.displayCount : comboSystem.animationQueue[currentStep - 1];
+                    const targetCount = comboSystem.animationQueue[currentStep];
+                    comboSystem.displayCount = startCount + (targetCount - startCount) * easeProgress;
+                }
+            }
+        }
+        
+        // 获取连击倍率（1.5表示+50%）
+        function getComboMultiplier() {
+            return comboSystem.active && comboSystem.count >= 2 ? 1.5 : 1.0;
         }
 
         function updatePlayer() {
@@ -4125,7 +5178,8 @@
         function updateMineRegen() {
             if (mineAmmo < maxMineAmmo) {
                 const now = Date.now();
-                if (now - mineRegenTime >= 1000) {
+                const regenInterval = 1000 * (player.mineRegenRate || 1);
+                if (now - mineRegenTime >= regenInterval) {
                     mineAmmo++;
                     mineRegenTime = now;
                 }
@@ -4742,6 +5796,55 @@
                     ctx.save();
                     ctx.globalAlpha = alpha;
                     ctx.drawImage(assets.splitMineBubble, bubbleX + offsetX, baseBubbleY, bubbleWidth, bubbleHeight);
+                    ctx.restore();
+                }
+            }
+            
+            // 绘制护盾效果
+            if (player.shield && player.shield.active) {
+                const elapsed = Date.now() - player.shield.startTime;
+                const progress = elapsed / player.shield.duration;
+
+                // 护盾闪烁效果
+                const alpha = 0.3 + Math.sin(progress * Math.PI * 4) * 0.2;
+
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.strokeStyle = '#00BFFF'; // 蓝色护盾
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.arc(baseX + shipWidth / 2, baseY + shipHeight / 2, Math.max(shipWidth, shipHeight) * 0.56, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // 内部填充
+                ctx.fillStyle = 'rgba(0, 191, 255, 0.1)';
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // 绘制免疫伤害提示气泡
+            if (immunityBubble.active) {
+                const elapsed = Date.now() - immunityBubble.startTime;
+                const progress = Math.min(elapsed / immunityBubble.duration, 1);
+
+                // 计算透明度（淡入淡出效果）
+                let alpha = 1;
+                if (progress < 0.1) {
+                    alpha = progress / 0.1; // 淡入
+                } else if (progress > 0.8) {
+                    alpha = (1 - progress) / 0.2; // 淡出
+                }
+
+                // 使用图片素材绘制气泡，位置参考超级武器气泡
+                if (assets.immunityBubbleImg.complete && assets.immunityBubbleImg.naturalWidth > 0) {
+                    const bubbleWidth = 278;
+                    const bubbleHeight = 66;
+                    const bubbleX = baseX + shipWidth - 80;
+                    const bubbleY = baseY - 20;
+
+                    ctx.save();
+                    ctx.globalAlpha = alpha;
+                    ctx.drawImage(assets.immunityBubbleImg, bubbleX, bubbleY, bubbleWidth, bubbleHeight);
                     ctx.restore();
                 }
             }
@@ -5379,8 +6482,8 @@
             const ammoY = 25;
             const ammoSize = 14; // 菱形半边长
             const ammoGap = 20;
-            const totalAmmoBoxes = 5;
-            const filledAmmoBoxes = Math.min(mineAmmo, 5);
+            const totalAmmoBoxes = maxMineAmmo; // 使用最大弹药容量作为圆点总数
+            const filledAmmoBoxes = mineAmmo; // 当前弹药数量
             
             // 计算总宽度以居中
             const totalAmmoWidth = totalAmmoBoxes * (ammoSize * 2) + (totalAmmoBoxes - 1) * ammoGap;
@@ -5471,6 +6574,40 @@
                 }
             }
             
+            // ========== 右侧 - 连击显示 ==========
+            if (comboSystem.active && comboSystem.count >= 2) {
+                const comboX = canvas.width - 40; // X坐标再往右移
+                const comboY = 180; // Y坐标保持不变
+                
+                ctx.save();
+                
+                // 设置右对齐
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+                
+                // 金色大字显示连击数（面积缩小20%：50px -> 40px）
+                ctx.font = 'bold 40px "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif';
+                
+                // 黑色外描边（厚度+50%：4 -> 6）
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 6;
+                ctx.strokeText('x' + Math.floor(comboSystem.displayCount) + 'HIT', comboX, comboY);
+                
+                // 色号#EDEA74
+                ctx.fillStyle = '#EDEA74';
+                ctx.fillText('x' + Math.floor(comboSystem.displayCount) + 'HIT', comboX, comboY);
+                
+                // 连击提示文字（面积缩小20%：20px -> 16px，描边厚度+50%：2 -> 3）
+                ctx.font = 'bold 16px "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 3;
+                ctx.strokeText('COMBO!', comboX, comboY + 30); // 保持右对齐
+                ctx.fillStyle = '#EDEA74';
+                ctx.fillText('COMBO!', comboX, comboY + 30);
+                
+                ctx.restore();
+            }
+            
         }
 
         // ==================== 碰撞检测 ====================
@@ -5478,16 +6615,43 @@
             // 水雷 vs 潜艇
             for (let mIndex = mines.length - 1; mIndex >= 0; mIndex--) {
                 const mine = mines[mIndex];
+                
+                // 初始化水雷的已击中潜艇记录（如果没有）
+                if (mine.hitSubs === undefined) {
+                    mine.hitSubs = [];
+                }
+                
+                let hitSubIndex = -1;
                 for (let sIndex = submarines.length - 1; sIndex >= 0; sIndex--) {
                     const sub = submarines[sIndex];
+                    // 检查是否已击中过这艘潜艇（避免重复击中同一艘）
+                    if (mine.hitSubs.includes(sub)) {
+                        continue;
+                    }
+                    
                     if (checkCollision(mine, sub)) {
                         // 触发连锁爆炸
                         triggerChainExplosion(sub);
                         
-                        mines.splice(mIndex, 1);
+                        // 记录已击中的潜艇
+                        mine.hitSubs.push(sub);
+                        hitSubIndex = sIndex;
                         
+                        // 穿甲效果：2级弹药可以穿透1艘潜艇击中第2艘
+                        if (piercingActive && mine.hitSubs.length < 2) {
+                            // 穿甲效果激活且只击中1艘，水雷继续下落，不销毁
+                            break;
+                        }
+                        
+                        // 非穿甲效果或已击中2艘，销毁水雷
+                        mines.splice(mIndex, 1);
                         break; // 水雷已销毁，跳出潜艇循环
                     }
+                }
+                
+                // 如果已经击中2艘潜艇，销毁水雷
+                if (piercingActive && mine.hitSubs && mine.hitSubs.length >= 2) {
+                    mines.splice(mIndex, 1);
                 }
             }
 
@@ -5502,7 +6666,13 @@
                 if (checkCollision(missile, player)) {
                     createExplosion(player.x + player.width/2, player.y + player.height/2, true);
                     missiles.splice(mIndex, 1);
-                    hp -= 20;
+
+                    // 检查护盾效果
+                    if (player.shield && player.shield.active) {
+                        // 护盾激活，免疫伤害
+                    } else {
+                        hp -= 2; // 敌方导弹-2点生命值
+                    }
                     
                     // 启动HP动画
                     hpAnimation.active = true;
@@ -5518,7 +6688,10 @@
                     triggerDamageFlash();
 
                     if (hp <= 0 && !playerDefeatState.active) {
-                        playerDefeated();
+                        // 检查是否可以触发致命伤害免疫
+                        if (!checkFatalDamageImmunity()) {
+                            playerDefeated();
+                        }
                     }
                 }
             }
@@ -5647,8 +6820,10 @@
                 
                 // 0.5秒后执行爆炸
                 setTimeout(() => {
-                    // 计算分数
-                    const scoreValue = sub.isGold ? 100 : 10;
+                    // 计算分数（应用连击倍率）
+                    const baseScore = sub.isGold ? 100 : 10;
+                    const multiplier = getComboMultiplier();
+                    const scoreValue = Math.floor(baseScore * multiplier);
                     
                     createExplosion(sub.x + sub.width/2, sub.y + sub.height/2, false, scoreValue);
                     createFragments(sub.x + sub.width/2, sub.y + sub.height/2);
@@ -5667,6 +6842,7 @@
                     
                     // 计分
                     score += scoreValue;
+                    triggerCombo(); // 触发连击
                     
                     // 启动MP动画
                     const newMp = Math.min(mp + 10, 100);
@@ -5684,7 +6860,10 @@
             // 如果只有初始潜艇被炸（没有连锁），0.5秒后爆炸
             if (explodedSubs.length === 0) {
                 setTimeout(() => {
-                    const scoreValue = initialSub.isGold ? 100 : 10;
+                    // 计算分数（应用连击倍率）
+                    const baseScore = initialSub.isGold ? 100 : 10;
+                    const multiplier = getComboMultiplier();
+                    const scoreValue = Math.floor(baseScore * multiplier);
                     createExplosion(initialSub.x + initialSub.width/2, initialSub.y + initialSub.height/2, false, scoreValue);
                     createFragments(initialSub.x + initialSub.width/2, initialSub.y + initialSub.height/2);
                     
@@ -5699,8 +6878,9 @@
                         submarines.splice(index, 1);
                     }
                     
-                    // 计分：普通潜艇10分，金色潜艇100分
-                    score += initialSub.isGold ? 100 : 10;
+                    // 计分（应用连击倍率）
+                    score += scoreValue;
+                    triggerCombo(); // 触发连击
                     
                     // 启动MP动画
                     const newMp2 = Math.min(mp + 10, 100);
@@ -5882,6 +7062,20 @@
                 if ((e.key === 'm' || e.key === 'M') && !gameOver) {
                     mp = 100;
                     console.log('金手指：MP已充满！');
+                }
+                
+                // 作弊键：按 P 键直接通关
+                if ((e.key === 'p' || e.key === 'P') && !gameOver) {
+                    console.log('作弊：直接通关！');
+                    // 直接击败Boss
+                    boss.hp = 0;
+                    gameOver = true; // 立即停止游戏更新，防止连击超时
+                    bossDefeatState.showBubble = true;
+                    bossDefeatState.bubbleStartTime = Date.now();
+                    bossDefeatState.explosions = [];
+                    boss.active = false;
+                    // 记录通关时间
+                    finalGameTime = Date.now() - gameStartTime;
                 }
             }
         });
@@ -6095,7 +7289,10 @@
                 
                 // 消灭所有潜艇
                 submarines.forEach(sub => {
-                    const scoreValue = sub.isGold ? 100 : 10;
+                    // 计算分数（应用连击倍率）
+                    const baseScore = sub.isGold ? 100 : 10;
+                    const multiplier = getComboMultiplier();
+                    const scoreValue = Math.floor(baseScore * multiplier);
                     createExplosion(sub.x + sub.width/2, sub.y + sub.height/2, false, scoreValue);
                     createFragments(sub.x + sub.width/2, sub.y + sub.height/2);
                     // 金色潜艇掉落道具
@@ -6106,6 +7303,7 @@
                     }
                     // 计分
                     score += scoreValue;
+                    triggerCombo(); // 触发连击
                 });
                 
                 submarines = [];

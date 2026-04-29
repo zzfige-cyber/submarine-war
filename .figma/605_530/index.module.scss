@@ -1,0 +1,49 @@
+* {
+  box-sizing: border-box;
+}
+
+.frame {
+  position: relative;
+  width: 241px;
+  height: 80px;
+
+  .group94 {
+    position: absolute;
+    top: 0;
+    left: 26px;
+    width: 216px;
+    height: 80px;
+
+    .rectangle127 {
+      position: absolute;
+      top: 18px;
+      left: 2px;
+      width: 211px;
+      height: 44px;
+      rotate: -10deg;
+    }
+
+    .text {
+      position: absolute;
+      top: 16px;
+      left: 38px;
+      width: 135px;
+      height: 46px;
+      line-height: 45px;
+      letter-spacing: -1.4px;
+      color: #f5f5f5;
+      font-family: "HYQiHeiY3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 28px;
+      rotate: -10deg;
+    }
+  }
+
+  .group95 {
+    position: absolute;
+    top: 29px;
+    left: 3px;
+    width: 47px;
+    height: 38px;
+    rotate: -10deg;
+  }
+}
