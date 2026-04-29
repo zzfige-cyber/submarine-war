@@ -179,7 +179,7 @@
             left: 88px;
             width: 635px;
             height: 558px;
-            background-image: url('.figma/image/screenshot_618_177.png');
+            background-image: url('assets/figma_image/screenshot_618_177.png');
             background-position: center;
             background-size: contain;
             background-repeat: no-repeat;
@@ -214,6 +214,46 @@
         }
 
         #btnGlobalLeaderboard {
+            width: 227px;
+            height: auto;
+            position: absolute;
+            left: 36px;
+            top: 75px;
+        }
+
+        /* 通关页面右侧按钮 */
+        .victorySideButtons {
+            position: absolute;
+            top: 175px;
+            left: 1665px;
+            width: 274px;
+            height: 152px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 300;
+            display: none; /* 默认隐藏，通关时显示 */
+        }
+
+        .victorySideButtons.active {
+            display: flex;
+        }
+
+        .victorySideBtn {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .victorySideBtn:hover {
+            transform: scale(1.05);
+        }
+
+        #btnVictoryGameInfo {
+            width: 255px;
+            height: auto;
+        }
+
+        #btnVictoryLeaderboard {
             width: 227px;
             height: auto;
             position: absolute;
@@ -1334,7 +1374,7 @@
             position: relative;
             width: 1666px;
             height: 932px;
-            background-image: url('.figma/image/screenshot_619_533.png');
+            background-image: url('assets/figma_image/screenshot_619_533.png');
             background-position: center;
             background-size: contain;
             background-repeat: no-repeat;
@@ -1379,7 +1419,7 @@
         .leaderboardItem.rank8,
         .leaderboardItem.rank9,
         .leaderboardItem.rank10 {
-            background-image: url('.figma/image/screenshot_605_446.png');
+            background-image: url('assets/figma_image/screenshot_605_446.png');
         }
         
         /* 普通玩家行文字颜色 */
@@ -1389,7 +1429,7 @@
         
         /* 高亮玩家行 - 使用特殊背景图，文字颜色为黄色 */
         .leaderboardItem.highlight {
-            background-image: url('.figma/image/screenshot_605_477.png') !important;
+            background-image: url('assets/figma_image/screenshot_605_477.png') !important;
             color: #FFF90D;
         }
         
@@ -1477,7 +1517,7 @@
             position: relative;
             width: 881px;
             height: 543px;
-            background-image: url('.figma/image/screenshot_618_158.png');
+            background-image: url('assets/figma_image/screenshot_618_158.png');
             background-position: center;
             background-size: contain;
             background-repeat: no-repeat;
@@ -1621,8 +1661,8 @@
             
             <!-- 技能配置面板右侧按钮 -->
             <div class="skillPanelSideButtons">
-                <img src=".figma/image/screenshot_605_476.png" alt="游戏制作信息" class="skillPanelSideBtn" id="btnGameInfo" onclick="showGameInfo()">
-                <img src=".figma/image/screenshot_605_530.png" alt="全球排行榜" class="skillPanelSideBtn" id="btnGlobalLeaderboard" onclick="showGlobalLeaderboardFromSkillPanel()">
+                <img src="assets/figma_image/screenshot_605_476.png" alt="游戏制作信息" class="skillPanelSideBtn" id="btnGameInfo" onclick="showGameInfo()">
+                <img src="assets/figma_image/screenshot_605_530.png" alt="全球排行榜" class="skillPanelSideBtn" id="btnGlobalLeaderboard" onclick="showGlobalLeaderboardFromSkillPanel()">
             </div>
         </div>
         
@@ -1674,7 +1714,7 @@
             <div class="victoryOverlay"></div>
             <div class="victoryContent">
                 <!-- 人物立绘 -->
-                <img src=".figma/image/screenshot_605_123.png" alt="人物立绘" class="victoryCharacter">
+                <img src="assets/figma_image/screenshot_605_123.png" alt="人物立绘" class="victoryCharacter">
                 <!-- 计分牌 -->
                 <div class="victoryScorePanel">
                     <img src="assets/figma_image/screenshot_571_3.png" alt="计分牌">
@@ -1689,13 +1729,18 @@
             
             <!-- 排行榜上传询问气泡 -->
             <div id="leaderboardBubble" class="leaderboardBubble">
-                <img src=".figma/image/screenshot_605_132.png" alt="气泡背景" class="leaderboardBubbleBg">
+                <img src="assets/figma_image/screenshot_605_132.png" alt="气泡背景" class="leaderboardBubbleBg">
                 <div class="leaderboardBubbleContent">
                     <input type="text" id="playerNameInput" class="playerNameInput" placeholder="请输入英文ID" maxlength="20">
                 </div>
-                <img src=".figma/image/screenshot_605_140.png" alt="上传" class="leaderboardUploadBtn" id="btnUploadLeaderboard">
+                <img src="assets/figma_image/screenshot_605_140.png" alt="上传" class="leaderboardUploadBtn" id="btnUploadLeaderboard">
             </div>
-            
+
+            <!-- 通关页面右侧按钮 -->
+            <div class="victorySideButtons" id="victorySideButtons">
+                <img src="assets/figma_image/screenshot_605_476.png" alt="游戏制作信息" class="victorySideBtn" id="btnVictoryGameInfo" onclick="showGameInfo()">
+                <img src="assets/figma_image/screenshot_605_530.png" alt="全球排行榜" class="victorySideBtn" id="btnVictoryLeaderboard" onclick="showVictoryLeaderboard()">
+            </div>
         </div>
 
         <!-- 排行榜弹窗 -->
@@ -1704,14 +1749,14 @@
                 <div class="leaderboardList" id="leaderboardList">
                     <!-- 排行榜列表将动态生成 -->
                 </div>
-                <img src=".figma/image/screenshot_605_282.png" alt="返回" class="leaderboardBackBtn" id="btnCloseLeaderboard">
+                <img src="assets/figma_image/screenshot_605_282.png" alt="返回" class="leaderboardBackBtn" id="btnCloseLeaderboard">
             </div>
         </div>
 
         <!-- 游戏制作信息弹窗 -->
         <div id="gameInfoModal" class="gameInfoModal">
             <div class="gameInfoContent">
-                <img src=".figma/image/screenshot_619_765.png" alt="返回" class="gameInfoBackBtn" id="btnCloseGameInfo" onclick="hideGameInfo()">
+                <img src="assets/figma_image/screenshot_619_765.png" alt="返回" class="gameInfoBackBtn" id="btnCloseGameInfo" onclick="hideGameInfo()">
             </div>
         </div>
     </div>
@@ -1914,7 +1959,7 @@
             visibilityMask: 'assets/figma_image/screenshot_473_205.png',
             visibilityMaskNight: 'assets/figma_image/screenshot_474_216.png',
             splitMineBubble: 'assets/figma_image/screenshot_350_13.png',
-            immunityBubbleImg: '.figma/image/screenshot_618_408.png',
+            immunityBubbleImg: 'assets/figma_image/screenshot_618_408.png',
             gameOverTitle: 'assets/figma_image/screenshot_222_1196.png',
             btnRetry: 'assets/figma_image/screenshot_222_1157.png',
             btnConfig: 'assets/figma_image/screenshot_222_1158.png',
@@ -2043,7 +2088,7 @@
             bubbleDuration: 4000, // 对话气泡显示4秒
             explosionsStarted: false,
             explosionsStartTime: 0,
-            explosionsDuration: 2000, // 爆炸持续2秒
+            explosionsDuration: 4000, // 爆炸持续4秒，与气泡同步
             explosions: [], // 随机爆炸位置数组
             gameOverTriggered: false
         };
@@ -2205,10 +2250,10 @@
             'assets/figma_image/screenshot_259_1508.png',
             'assets/figma_image/screenshot_259_1514.png',
             'assets/skill_bg.png',
-            '.figma/image/screenshot_619_741.png',
+            'assets/figma_image/screenshot_619_741.png',
             'assets/skill_dot_empty.png',
             'assets/figma_image/screenshot_513_199.png', // 操作提示气泡
-            '.figma/image/screenshot_618_408.png' // 免疫防护气泡
+            'assets/figma_image/screenshot_618_408.png' // 免疫防护气泡
         ];
         
         function initLoading() {
@@ -2560,7 +2605,7 @@
                 const dots = document.querySelectorAll(`#${skill}Level .skillDot img`);
                 
                 dots.forEach((dot, index) => {
-                    dot.src = index < level ? '.figma/image/screenshot_619_741.png' : 'assets/skill_dot_empty.png';
+                    dot.src = index < level ? 'assets/figma_image/screenshot_619_741.png' : 'assets/skill_dot_empty.png';
                 });
 
                 // 更新按钮状态和图片
@@ -3774,13 +3819,22 @@
 
         // Boss被击败
         function bossDefeated() {
-            console.log('Boss被击败！显示对话气泡...');
+            console.log('Boss被击败！显示对话气泡和爆炸效果...');
             boss.active = false;
             gameOver = true; // 立即停止游戏更新，防止连击超时
+
+            // 记录最终游戏时间，停止计时器
+            if (finalGameTime === 0) {
+                finalGameTime = Date.now() - gameStartTime;
+            }
 
             // 显示对话气泡
             bossDefeatState.showBubble = true;
             bossDefeatState.bubbleStartTime = Date.now();
+
+            // 立即开始爆炸效果（与气泡同步）
+            bossDefeatState.explosionsStarted = true;
+            bossDefeatState.explosionsStartTime = Date.now();
 
             // 生成随机爆炸位置（Boss周围）
             bossDefeatState.explosions = [];
@@ -3788,7 +3842,7 @@
                 bossDefeatState.explosions.push({
                     x: boss.x + Math.random() * boss.width,
                     y: boss.y + Math.random() * boss.height,
-                    delay: i * 250, // 每个爆炸间隔250ms
+                    delay: i * 500, // 每个爆炸间隔500ms，4秒内分布8个爆炸
                     triggered: false
                 });
             }
@@ -3842,6 +3896,7 @@
         function showVictoryScreen() {
             const victoryScreen = document.getElementById('victoryScreen');
             const victoryScoreEl = document.getElementById('victoryScore');
+            const victorySideButtons = document.getElementById('victorySideButtons');
 
             // 如果还没有记录通关时间，则计算
             if (finalGameTime === 0) {
@@ -3859,15 +3914,18 @@
                 combo: comboSystem.maxCount,
                 comboSystem: comboSystem
             });
-            
+
             // 更新通关时间（秒:毫秒格式）
             const victorySeconds = Math.floor(finalGameTime / 1000).toString().padStart(2, '0');
             const victoryMs = (finalGameTime % 1000).toString().padStart(3, '0').slice(0, 2);
             victoryScoreEl.innerHTML = `${victorySeconds}:${victoryMs}<span class="timeUnit">s</span>`;
-            
+
             // 显示通关画面
             victoryScreen.classList.add('active');
-            
+
+            // 显示通关页面右侧按钮
+            victorySideButtons.classList.add('active');
+
             // 延迟显示排行榜上传气泡
             setTimeout(() => {
                 showLeaderboardBubble();
@@ -3912,12 +3970,88 @@
             modal.classList.remove('active');
         }
 
+        // 显示loading提示
+        function showLoadingToast(message = 'Loading...') {
+            const toast = document.createElement('div');
+            toast.id = 'loadingToast';
+            toast.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: #fff;
+                padding: 20px 40px;
+                border-radius: 10px;
+                font-size: 18px;
+                z-index: 9999;
+                pointer-events: none;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            return toast;
+        }
+
+        // 隐藏loading提示
+        function hideLoadingToast() {
+            const toast = document.getElementById('loadingToast');
+            if (toast) {
+                toast.remove();
+            }
+        }
+
         // 从技能配置面板显示全球排行榜
         async function showGlobalLeaderboardFromSkillPanel() {
-            await loadLeaderboard();
-            renderLeaderboard(false); // 不显示高亮行
-            const modal = document.getElementById('leaderboardModal');
-            modal.classList.add('active');
+            const toast = showLoadingToast('Loading...');
+            
+            // 设置5秒超时
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('timeout')), 5000);
+            });
+            
+            try {
+                await Promise.race([loadLeaderboard(), timeoutPromise]);
+                renderLeaderboard(false); // 不显示高亮行
+                const modal = document.getElementById('leaderboardModal');
+                modal.classList.add('active');
+            } catch (error) {
+                if (error.message === 'timeout') {
+                    alert('请稍后再试');
+                } else {
+                    console.error('加载排行榜失败:', error);
+                    alert('加载失败，请稍后再试');
+                }
+            } finally {
+                hideLoadingToast();
+            }
+        }
+
+        // 从通关页面显示全球排行榜
+        async function showVictoryLeaderboard() {
+            const toast = showLoadingToast('Loading...');
+            
+            // 设置5秒超时
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('timeout')), 5000);
+            });
+            
+            try {
+                await Promise.race([loadLeaderboard(), timeoutPromise]);
+                // 检查玩家是否已上传记录（通过检查currentPlayerData.name是否存在）
+                const hasUploaded = currentPlayerData.name && currentPlayerData.name !== '';
+                renderLeaderboard(hasUploaded); // 已上传显示高亮行，未上传不显示
+                const modal = document.getElementById('leaderboardModal');
+                modal.classList.add('active');
+            } catch (error) {
+                if (error.message === 'timeout') {
+                    alert('请稍后再试');
+                } else {
+                    console.error('加载排行榜失败:', error);
+                    alert('加载失败，请稍后再试');
+                }
+            } finally {
+                hideLoadingToast();
+            }
         }
 
         // 创建彩带碎片效果
@@ -4148,7 +4282,9 @@
         // 隐藏通关画面
         function hideVictoryScreen() {
             const victoryScreen = document.getElementById('victoryScreen');
+            const victorySideButtons = document.getElementById('victorySideButtons');
             victoryScreen.classList.remove('active');
+            victorySideButtons.classList.remove('active');
         }
         
         // 处理通关界面按钮事件
@@ -4248,14 +4384,8 @@
                 }
             }
             
-            // 4秒后开始爆炸效果
-            if (bubbleElapsed >= bossDefeatState.bubbleDuration) {
-                if (!bossDefeatState.explosionsStarted) {
-                    bossDefeatState.explosionsStarted = true;
-                    bossDefeatState.explosionsStartTime = now;
-                }
-                
-                // 触发爆炸
+            // 触发爆炸（与气泡同步进行）
+            if (bossDefeatState.explosionsStarted) {
                 const explosionElapsed = now - bossDefeatState.explosionsStartTime;
                 bossDefeatState.explosions.forEach(exp => {
                     if (!exp.triggered && explosionElapsed >= exp.delay) {
@@ -4263,13 +4393,13 @@
                         createExplosion(exp.x, exp.y);
                     }
                 });
-                
-                // 爆炸结束后显示通关画面
-                if (explosionElapsed >= bossDefeatState.explosionsDuration + 500) {
-                    if (!bossDefeatState.gameOverTriggered) {
-                        bossDefeatState.gameOverTriggered = true;
-                        showVictoryScreen();
-                    }
+            }
+            
+            // 气泡消失时（4秒后）显示通关画面
+            if (bubbleElapsed >= bossDefeatState.bubbleDuration) {
+                if (!bossDefeatState.gameOverTriggered) {
+                    bossDefeatState.gameOverTriggered = true;
+                    showVictoryScreen();
                 }
             }
         }
@@ -5260,7 +5390,10 @@
             drawBossHpBar();
             drawBossDefeatHpBar(); // Boss死亡时血条随爆炸消失
             drawUI();
-            
+
+            // 绘制免疫防护气泡（在最上层）
+            drawImmunityBubble();
+
             // 绘制游戏开始黑色渐现效果（在最上层）
             if (gameStartFade.active && gameStartFade.alpha > 0) {
                 ctx.save();
@@ -5822,31 +5955,34 @@
                 ctx.restore();
             }
 
-            // 绘制免疫伤害提示气泡
-            if (immunityBubble.active) {
-                const elapsed = Date.now() - immunityBubble.startTime;
-                const progress = Math.min(elapsed / immunityBubble.duration, 1);
+        }
 
-                // 计算透明度（淡入淡出效果）
-                let alpha = 1;
-                if (progress < 0.1) {
-                    alpha = progress / 0.1; // 淡入
-                } else if (progress > 0.8) {
-                    alpha = (1 - progress) / 0.2; // 淡出
-                }
+        // 绘制免疫伤害提示气泡（独立函数，确保在最上层）
+        function drawImmunityBubble() {
+            if (!immunityBubble.active) return;
 
-                // 使用图片素材绘制气泡，位置参考超级武器气泡
-                if (assets.immunityBubbleImg.complete && assets.immunityBubbleImg.naturalWidth > 0) {
-                    const bubbleWidth = 278;
-                    const bubbleHeight = 66;
-                    const bubbleX = baseX + shipWidth - 80;
-                    const bubbleY = baseY - 20;
+            const elapsed = Date.now() - immunityBubble.startTime;
+            const progress = Math.min(elapsed / immunityBubble.duration, 1);
 
-                    ctx.save();
-                    ctx.globalAlpha = alpha;
-                    ctx.drawImage(assets.immunityBubbleImg, bubbleX, bubbleY, bubbleWidth, bubbleHeight);
-                    ctx.restore();
-                }
+            // 计算透明度（淡入淡出效果）
+            let alpha = 1;
+            if (progress < 0.1) {
+                alpha = progress / 0.1; // 淡入
+            } else if (progress > 0.8) {
+                alpha = (1 - progress) / 0.2; // 淡出
+            }
+
+            // 使用图片素材绘制气泡，位置参考超级武器气泡
+            if (assets.immunityBubbleImg.complete && assets.immunityBubbleImg.naturalWidth > 0) {
+                const bubbleWidth = 228;
+                const bubbleHeight = 66;
+                const bubbleX = player.x + player.width - 80;
+                const bubbleY = player.y + 50 - 20;
+
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.drawImage(assets.immunityBubbleImg, bubbleX, bubbleY, bubbleWidth, bubbleHeight);
+                ctx.restore();
             }
         }
 
