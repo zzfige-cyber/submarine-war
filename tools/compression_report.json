@@ -1,0 +1,526 @@
+{
+  "config": {
+    "webp_quality": 60,
+    "webp_method": 6,
+    "png_compress_level": 9,
+    "max_dimension": null
+  },
+  "summary": {
+    "total_original_mb": 40.420668601989746,
+    "total_final_mb": 5.00422477722168,
+    "total_savings_mb": 35.416443824768066,
+    "savings_percentage": 87.61963878802504
+  },
+  "files": [
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/\u8d85\u7ea7\u6b66\u5668\u52a8\u6001\u76ae\u80a4/super_weapon_atlas.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/\u8d85\u7ea7\u6b66\u5668\u52a8\u6001\u76ae\u80a4/super_weapon_atlas_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 13991559,
+        "final_size": 976804,
+        "savings": 13014755,
+        "savings_pct": 93.01861929753503,
+        "format": "WebP",
+        "original_dim": [
+          8824,
+          2838
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/boss-\u6fc0\u5149/boss_laser_atlas.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/boss-\u6fc0\u5149/boss_laser_atlas_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 8431774,
+        "final_size": 1925206,
+        "savings": 6506568,
+        "savings_pct": 77.16724855291424,
+        "format": "WebP",
+        "original_dim": [
+          3648,
+          7560
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/\u5bfc\u5f39\u5c3e\u7130\u52a8\u753b/\u7cbe\u7075\u56fe\u6d4b\u8bd5/atlas (1).png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/\u5bfc\u5f39\u5c3e\u7130\u52a8\u753b/\u7cbe\u7075\u56fe\u6d4b\u8bd5/atlas (1)_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 6291202,
+        "final_size": 716910,
+        "savings": 5574292,
+        "savings_pct": 88.60456237138786,
+        "format": "WebP",
+        "original_dim": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/skill_bg.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/skill_bg_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 1604529,
+        "final_size": 55552,
+        "savings": 1548977,
+        "savings_pct": 96.53780018933905,
+        "format": "WebP",
+        "original_dim": [
+          1920,
+          1080
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_470_25.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_470_25_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 1294112,
+        "final_size": 88576,
+        "savings": 1205536,
+        "savings_pct": 93.15546104201182,
+        "format": "WebP",
+        "original_dim": [
+          1920,
+          753
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_331_247.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_331_247_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 1183395,
+        "final_size": 77192,
+        "savings": 1106203,
+        "savings_pct": 93.47707232158325,
+        "format": "WebP",
+        "original_dim": [
+          1920,
+          762
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_259_1523.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_259_1523_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 1137726,
+        "final_size": 62168,
+        "savings": 1075558,
+        "savings_pct": 94.53576695970735,
+        "format": "WebP",
+        "original_dim": [
+          1531,
+          971
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_571_3.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_571_3_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 1112880,
+        "final_size": 63456,
+        "savings": 1049424,
+        "savings_pct": 94.29803752426137,
+        "format": "WebP",
+        "original_dim": [
+          1531,
+          971
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_470_11.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_470_11_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 1080894,
+        "final_size": 106948,
+        "savings": 973946,
+        "savings_pct": 90.10559777369474,
+        "format": "WebP",
+        "original_dim": [
+          3693,
+          1080
+        ],
+        "mode": "P"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_470_6.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_470_6_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 1044227,
+        "final_size": 170018,
+        "savings": 874209,
+        "savings_pct": 83.71829113784646,
+        "format": "WebP",
+        "original_dim": [
+          3693,
+          1080
+        ],
+        "mode": "P"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_512_165.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_512_165_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 570518,
+        "final_size": 53680,
+        "savings": 516838,
+        "savings_pct": 90.59100676928686,
+        "format": "WebP",
+        "original_dim": [
+          729,
+          908
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_605_123.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_605_123_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 565042,
+        "final_size": 51988,
+        "savings": 513054,
+        "savings_pct": 90.7992680190145,
+        "format": "WebP",
+        "original_dim": [
+          722,
+          908
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_254_1370.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_254_1370_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 490295,
+        "final_size": 42944,
+        "savings": 447351,
+        "savings_pct": 91.24119152754973,
+        "format": "WebP",
+        "original_dim": [
+          1920,
+          558
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_261_1545.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_261_1545_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 446717,
+        "final_size": 44062,
+        "savings": 402655,
+        "savings_pct": 90.1364846200167,
+        "format": "WebP",
+        "original_dim": [
+          737,
+          830
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_254_1433.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_254_1433_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 422914,
+        "final_size": 38156,
+        "savings": 384758,
+        "savings_pct": 90.97783473708603,
+        "format": "WebP",
+        "original_dim": [
+          1920,
+          558
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_508_118.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_508_118_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 329274,
+        "final_size": 37868,
+        "savings": 291406,
+        "savings_pct": 88.49954748932501,
+        "format": "WebP",
+        "original_dim": [
+          2539,
+          1080
+        ],
+        "mode": "P"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_513_177.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_513_177_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 277572,
+        "final_size": 43220,
+        "savings": 234352,
+        "savings_pct": 84.42926519965991,
+        "format": "WebP",
+        "original_dim": [
+          1920,
+          1080
+        ],
+        "mode": "P"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_474_216.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_474_216_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 239454,
+        "final_size": 211262,
+        "savings": 28192,
+        "savings_pct": 11.773451268302054,
+        "format": "WebP",
+        "original_dim": [
+          3693,
+          803
+        ],
+        "mode": "P"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/player_ship_turbo.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/player_ship_turbo_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 204814,
+        "final_size": 41740,
+        "savings": 163074,
+        "savings_pct": 79.62053375257551,
+        "format": "WebP",
+        "original_dim": [
+          933,
+          334
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_211_477.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_211_477_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 198137,
+        "final_size": 32014,
+        "savings": 166123,
+        "savings_pct": 83.84249282062412,
+        "format": "WebP",
+        "original_dim": [
+          564,
+          302
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/\u6d77\u9762\u6d6a\u82b1\u7279\u6548/water_splash_atlas.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/\u6d77\u9762\u6d6a\u82b1\u7279\u6548/water_splash_atlas_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 194153,
+        "final_size": 69010,
+        "savings": 125143,
+        "savings_pct": 64.45586727992871,
+        "format": "WebP",
+        "original_dim": [
+          1800,
+          832
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/\u6d77\u9762\u6d6a\u82b1\u7279\u6548-\u591c\u665a/water_splash_night_atlas.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/\u6d77\u9762\u6d6a\u82b1\u7279\u6548-\u591c\u665a/water_splash_night_atlas_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 193759,
+        "final_size": 64178,
+        "savings": 129581,
+        "savings_pct": 66.87740956549115,
+        "format": "WebP",
+        "original_dim": [
+          1800,
+          832
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/\u6f5c\u8247\u7206\u70b8\u7d20\u6750/explosion_atlas.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/\u6f5c\u8247\u7206\u70b8\u7d20\u6750/explosion_atlas_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 188425,
+        "final_size": 40722,
+        "savings": 147703,
+        "savings_pct": 78.38821812392199,
+        "format": "WebP",
+        "original_dim": [
+          968,
+          726
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_605_456.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_605_456_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 167255,
+        "final_size": 17900,
+        "savings": 149355,
+        "savings_pct": 89.29777884069236,
+        "format": "WebP",
+        "original_dim": [
+          1666,
+          932
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_619_533.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_619_533_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 149825,
+        "final_size": 17176,
+        "savings": 132649,
+        "savings_pct": 88.53595861838812,
+        "format": "WebP",
+        "original_dim": [
+          1666,
+          932
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_618_158.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_618_158_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 138248,
+        "final_size": 16222,
+        "savings": 122026,
+        "savings_pct": 88.26601469822349,
+        "format": "WebP",
+        "original_dim": [
+          882,
+          544
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_473_205.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_473_205_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 117650,
+        "final_size": 126874,
+        "savings": -9224,
+        "savings_pct": -7.840203994900127,
+        "format": "WebP",
+        "original_dim": [
+          3693,
+          470
+        ],
+        "mode": "P"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/player_ship_large.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/player_ship_large_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 107133,
+        "final_size": 16222,
+        "savings": 90911,
+        "savings_pct": 84.85807360943873,
+        "format": "WebP",
+        "original_dim": [
+          522,
+          224
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_211_704.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/figma_image/screenshot_211_704_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 107133,
+        "final_size": 16222,
+        "savings": 90911,
+        "savings_pct": 84.85807360943873,
+        "format": "WebP",
+        "original_dim": [
+          522,
+          224
+        ],
+        "mode": "RGBA"
+      }
+    },
+    {
+      "original": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/logo.png",
+      "compressed": "/Users/bytedance/Desktop/vibe coding/submarine-war/assets/logo_compressed.webp",
+      "result": {
+        "success": true,
+        "original_size": 103527,
+        "final_size": 23020,
+        "savings": 80507,
+        "savings_pct": 77.76425473547962,
+        "format": "WebP",
+        "original_dim": [
+          524,
+          331
+        ],
+        "mode": "RGBA"
+      }
+    }
+  ]
+}

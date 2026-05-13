@@ -1667,7 +1667,7 @@
             <!-- 开始游戏按钮 -->
             <div class="startGameBtnWrapper">
                 <button class="startGameBtn" id="startGameBtn" onclick="startGame()" disabled>
-                    <img src="assets/figma_image/screenshot_508_131.png" id="startGameBtnImg" alt="启航 STAR GAME">
+                    <img src="assets/figma_image/开始游戏-灰色.png" id="startGameBtnImg" alt="启航 STAR GAME">
                 </button>
             </div>
             
@@ -1831,10 +1831,11 @@
                 }
             },
             player: {
-                baseSpeed: 5,
+                baseSpeed: 5 * 144, // 转换为每秒像素（原5每帧×144fps）
                 baseMaxHp: 100,
                 baseAmmo: 5
-            }
+            },
+            targetFPS: 144 // 原始游戏设计帧率（144Hz显示器）
         };
 
         // ==================== 游戏状态 ====================
@@ -1854,9 +1855,6 @@
             background: new Image(),
             backgroundWide: new Image(),
             backgroundNight: new Image(),
-            playerShip: new Image(),
-            playerShipArmor: new Image(),
-            playerShipTurbo: new Image(),
             shipBase: new Image(),
             shipTurbo: new Image(),
             shipArmor: new Image(),
@@ -1874,20 +1872,30 @@
             missileTailSprite: new Image(), // 导弹尾焰精灵图
             missileTailSpriteData: null, // 导弹尾焰精灵图数据
             mine: new Image(),
-            explosion: new Image(),
-            explosionFrames: [],
-            missileLaunchBubbleFrames: [], // 导弹发射气泡特效帧数组
-            waterSplashFrames: [], // 海面浪花特效帧数组
-            waterSplashFramesNight: [], // 夜晚海面浪花特效帧数组
-            powerUpHp: new Image(),
-            powerUpRange: new Image(),
+            explosionFrames: [], // 爆炸序列帧数组（保留兼容）
+            explosionSprite: new Image(), // 爆炸精灵图
+            explosionSpriteData: null, // 爆炸精灵图数据
+            missileLaunchBubbleFrames: [], // 导弹发射气泡特效帧数组（保留兼容）
+            missileBubbleSprite: new Image(), // 导弹发射气泡精灵图
+            missileBubbleSpriteData: null, // 导弹发射气泡精灵图数据
+            waterSplashFrames: [], // 海面浪花特效帧数组（保留兼容）
+            waterSplashSprite: new Image(), // 海面浪花精灵图
+            waterSplashSpriteData: null, // 海面浪花精灵图数据
+            waterSplashFramesNight: [], // 夜晚海面浪花特效帧数组（保留兼容）
+            waterSplashNightSprite: new Image(), // 夜晚海面浪花精灵图
+            waterSplashNightSpriteData: null, // 夜晚海面浪花精灵图数据
             superWeaponBg: new Image(),
-            superWeaponBgFrames: [], // 动态皮肤帧数组
+            superWeaponBgFrames: [], // 动态皮肤帧数组（保留兼容）
+            superWeaponSprite: new Image(), // 超级武器精灵图
+            superWeaponSpriteData: null, // 超级武器精灵图数据
             superWeaponBubble: new Image(),
             visibilityMask: new Image(),
             visibilityMaskNight: new Image(),
             splitMineBubble: new Image(),
             immunityBubbleImg: new Image(),
+            powerUpHp: new Image(),
+            powerUpRange: new Image(),
+            powerUpSplit: new Image(),
             gameOverTitle: new Image(),
             btnRetry: new Image(),
             btnConfig: new Image(),
@@ -1912,7 +1920,9 @@
             scoreProgressBar: new Image(), // 分数进度条
             scoreProgressIndicator: new Image(), // 分数进度指示器（玩家船图标）
             bossLaserWarning: new Image(), // Boss激光预警贴图
-            bossLaserFrames: [] // Boss激光动画帧数组
+            bossLaserFrames: [], // Boss激光动画帧数组（保留兼容）
+            bossLaserSprite: new Image(), // Boss激光精灵图
+            bossLaserSpriteData: null // Boss激光精灵图数据
         };
         
         // 场景状态
@@ -1923,8 +1933,8 @@
             active: false,
             startTime: 0,
             duration: 3000, // 3秒内完成加速过渡
-            fromSpeed: 1.5,
-            toSpeed: 9.0
+            fromSpeed: 1.5 * 144, // 转换为每秒像素（144Hz基准）
+            toSpeed: 9.0 * 144 // 转换为每秒像素（144Hz基准）
         };
         
         // Boss出场时场景速度过渡状态（从夜晚速度过渡回白天速度）
@@ -1932,8 +1942,8 @@
             active: false,
             startTime: 0,
             duration: 2000, // 2秒内完成减速过渡
-            fromSpeed: 9.0,
-            toSpeed: 1.5
+            fromSpeed: 9.0 * 144, // 转换为每秒像素（144Hz基准）
+            toSpeed: 1.5 * 144 // 转换为每秒像素（144Hz基准）
         };
         
         // 场景背景渐变过渡状态
@@ -1948,9 +1958,6 @@
             background: 'assets/background.png',
             backgroundWide: 'assets/figma_image/screenshot_470_6.png',
             backgroundNight: 'assets/figma_image/screenshot_470_11.png',
-            playerShip: 'assets/player_ship.png',
-            playerShipArmor: 'assets/player_ship_armor.png',
-            playerShipTurbo: 'assets/player_ship_turbo.png',
             shipBase: 'assets/figma_image/screenshot_211_704.png?v=2',
             shipTurbo: 'assets/figma_image/screenshot_218_1099.png?v=2',
             shipArmor: 'assets/figma_image/screenshot_218_1105.png?v=2',
@@ -1965,15 +1972,15 @@
             missileNight: 'assets/figma_image/screenshot_534_8.png',
             missileTop: 'assets/figma_image/screenshot_509_221.png',
             mine: 'assets/figma_image/screenshot_202_60.png',
-            explosion: 'assets/explosion.png',
-            powerUpHp: 'assets/figma_image/screenshot_226_1243.png',
-            powerUpRange: 'assets/figma_image/screenshot_226_1260.png',
             superWeaponBg: 'assets/figma_image/screenshot_470_25.png',
             superWeaponBubble: 'assets/figma_image/screenshot_325_90.png',
             visibilityMask: 'assets/figma_image/screenshot_473_205.png',
             visibilityMaskNight: 'assets/figma_image/screenshot_474_216.png',
             splitMineBubble: 'assets/figma_image/screenshot_350_13.png',
             immunityBubbleImg: 'assets/figma_image/screenshot_618_408.png',
+            powerUpHp: 'assets/figma_image/hp道具.png',
+            powerUpRange: 'assets/figma_image/分裂弹道具.png',
+            powerUpSplit: 'assets/figma_image/分裂弹道具.png',
             gameOverTitle: 'assets/figma_image/screenshot_222_1196.png',
             btnRetry: 'assets/figma_image/screenshot_222_1157.png',
             btnConfig: 'assets/figma_image/screenshot_222_1158.png',
@@ -1997,7 +2004,14 @@
             controlHintBubble: 'assets/figma_image/screenshot_513_199.png', // 操作提示气泡
             scoreProgressBar: 'assets/figma_image/screenshot_577_652.png', // 分数进度条
             scoreProgressIndicator: 'assets/figma_image/screenshot_572_364.png', // 分数进度指示器（玩家船图标）
-            bossLaserWarning: 'assets/figma_image/screenshot_584_34.png' // Boss激光预警贴图
+            bossLaserWarning: 'assets/figma_image/screenshot_584_34.png', // Boss激光预警贴图
+            bossLaserSprite: 'assets/sprites/boss_laser.webp', // Boss激光精灵图
+            missileTailSprite: 'assets/sprites/missile_tail.webp', // 导弹尾焰精灵图
+            explosionSprite: 'assets/sprites/explosion.webp', // 爆炸精灵图
+            superWeaponSprite: 'assets/sprites/super_weapon.webp', // 超级武器精灵图
+            missileBubbleSprite: 'assets/sprites/missile_bubble.png', // 导弹发射气泡精灵图
+            waterSplashSprite: 'assets/sprites/water_splash.webp', // 海面浪花精灵图
+            waterSplashNightSprite: 'assets/sprites/water_splash_night.webp' // 夜晚海面浪花精灵图
         };
         
         // 游戏暂停状态
@@ -2006,7 +2020,7 @@
         
         // 背景滚动状态
         let backgroundScrollX = 0;
-        const backgroundScrollSpeed = 1.5; // 滚动速度，越小越慢
+        const backgroundScrollSpeed = 1.5 * 144; // 滚动速度，越小越慢（转换为每秒像素，144Hz基准）
         
         // 超级武器特效状态
         let superWeaponEffect = {
@@ -2047,8 +2061,8 @@
         // Boss状态
         // Boss防御配置
         const BOSS_DEFENSE = {
-            mineDamage: 1,      // 水雷伤害值
-            superWeaponDamage: 7, // 超级武器伤害值（下调30%，原为10）
+            mineDamage: 0.8,      // 水雷伤害值（下调20%，原为1）
+            superWeaponDamage: 4, // 超级武器伤害值（下调40%，原为7）
             maxHp: 20           // Boss总血量（需要20颗水雷才能击败）
         };
         
@@ -2090,7 +2104,7 @@
             // 移动相关
             moveTargetX: 0,
             moveTargetY: 0,
-            moveSpeed: 5,
+            moveSpeed: 5 * 144, // 转换为每秒像素（144Hz基准）
             lastMoveTime: 0,
             moveInterval: 1500 // 每1.5秒改变一次移动目标
         };
@@ -2121,128 +2135,6 @@
         let bossBullets = [];
         let bossMissiles = [];
 
-        // 爆炸序列帧路径
-        const explosionFramePaths = [
-            'assets/潜艇爆炸素材/boom-1.png',
-            'assets/潜艇爆炸素材/boom-2.png',
-            'assets/潜艇爆炸素材/boom-3.png',
-            'assets/潜艇爆炸素材/boom-4.png',
-            'assets/潜艇爆炸素材/boom-5.png',
-            'assets/潜艇爆炸素材/boom-6.png',
-            'assets/潜艇爆炸素材/boom-7.png',
-            'assets/潜艇爆炸素材/boom-8.png',
-            'assets/潜艇爆炸素材/boom-9.png',
-            'assets/潜艇爆炸素材/boom-10.png'
-        ];
-
-        // 超级武器动态皮肤帧路径
-        const superWeaponFramePaths = [
-            'assets/超级武器动态皮肤/jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00000.png',
-            'assets/超级武器动态皮肤/jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00001.png',
-            'assets/超级武器动态皮肤/jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00002.png',
-            'assets/超级武器动态皮肤/jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00003.png',
-            'assets/超级武器动态皮肤/jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00004.png',
-            'assets/超级武器动态皮肤/jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00005.png',
-            'assets/超级武器动态皮肤/jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00006.png',
-            'assets/超级武器动态皮肤/jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00007.png',
-            'assets/超级武器动态皮肤/jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00008.png',
-            'assets/超级武器动态皮肤/jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00009.png',
-            'assets/超级武器动态皮肤/jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00010.png'
-        ];
-
-        // 导弹发射气泡特效帧路径
-        const missileLaunchBubbleFramePaths = [
-            'assets/导弹发射-序列帧/导弹发射气泡-1.png',
-            'assets/导弹发射-序列帧/导弹发射气泡-2.png',
-            'assets/导弹发射-序列帧/导弹发射气泡-3.png',
-            'assets/导弹发射-序列帧/导弹发射气泡-4.png'
-        ];
-
-        // 导弹尾焰动画帧路径（65帧）
-        const missileTailFramePaths = Array.from({ length: 65 }, (_, i) => {
-            const frameNum = i.toString().padStart(5, '0');
-            return `assets/导弹尾焰动画/4月28日(1)_${frameNum}.png`;
-        });
-
-        // 海面浪花特效帧路径
-        const waterSplashFramePaths = [
-            'assets/海面浪花特效/01.png',
-            'assets/海面浪花特效/02.png',
-            'assets/海面浪花特效/03.png',
-            'assets/海面浪花特效/04.png',
-            'assets/海面浪花特效/05.png',
-            'assets/海面浪花特效/06.png',
-            'assets/海面浪花特效/07.png',
-            'assets/海面浪花特效/08.png',
-            'assets/海面浪花特效/09.png',
-            'assets/海面浪花特效/10.png',
-            'assets/海面浪花特效/11.png',
-            'assets/海面浪花特效/12.png',
-            'assets/海面浪花特效/13.png'
-        ];
-
-        // 夜晚海面浪花特效帧路径（适用于夜晚和Boss场景）
-        const waterSplashFramePathsNight = [
-            'assets/海面浪花特效-夜晚/1001.png',
-            'assets/海面浪花特效-夜晚/1002.png',
-            'assets/海面浪花特效-夜晚/1003.png',
-            'assets/海面浪花特效-夜晚/1004.png',
-            'assets/海面浪花特效-夜晚/1005.png',
-            'assets/海面浪花特效-夜晚/1006.png',
-            'assets/海面浪花特效-夜晚/1007.png',
-            'assets/海面浪花特效-夜晚/1008.png',
-            'assets/海面浪花特效-夜晚/1009.png',
-            'assets/海面浪花特效-夜晚/1010.png',
-            'assets/海面浪花特效-夜晚/1011.png',
-            'assets/海面浪花特效-夜晚/1012.png',
-            'assets/海面浪花特效-夜晚/1013.png'
-        ];
-
-        // Boss激光动画帧路径
-        const bossLaserFramePaths = [
-            'assets/boss-激光/4月28日_1_00000.png',
-            'assets/boss-激光/4月28日_1_00001.png',
-            'assets/boss-激光/4月28日_1_00002.png',
-            'assets/boss-激光/4月28日_1_00003.png',
-            'assets/boss-激光/4月28日_1_00004.png',
-            'assets/boss-激光/4月28日_1_00005.png',
-            'assets/boss-激光/4月28日_1_00006.png',
-            'assets/boss-激光/4月28日_1_00007.png',
-            'assets/boss-激光/4月28日_1_00008.png',
-            'assets/boss-激光/4月28日_1_00009.png',
-            'assets/boss-激光/4月28日_1_00010.png',
-            'assets/boss-激光/4月28日_1_00011.png',
-            'assets/boss-激光/4月28日_1_00012.png',
-            'assets/boss-激光/4月28日_1_00013.png',
-            'assets/boss-激光/4月28日_1_00014.png',
-            'assets/boss-激光/4月28日_1_00015.png',
-            'assets/boss-激光/4月28日_1_00016.png',
-            'assets/boss-激光/4月28日_1_00017.png',
-            'assets/boss-激光/4月28日_1_00018.png',
-            'assets/boss-激光/4月28日_1_00019.png',
-            'assets/boss-激光/4月28日_1_00020.png',
-            'assets/boss-激光/4月28日_1_00021.png',
-            'assets/boss-激光/4月28日_1_00022.png',
-            'assets/boss-激光/4月28日_1_00023.png',
-            'assets/boss-激光/4月28日_1_00024.png',
-            'assets/boss-激光/4月28日_1_00025.png',
-            'assets/boss-激光/4月28日_1_00026.png',
-            'assets/boss-激光/4月28日_1_00027.png',
-            'assets/boss-激光/4月28日_1_00028.png',
-            'assets/boss-激光/4月28日_1_00029.png',
-            'assets/boss-激光/4月28日_1_00030.png',
-            'assets/boss-激光/4月28日_1_00031.png',
-            'assets/boss-激光/4月28日_1_00032.png',
-            'assets/boss-激光/4月28日_1_00033.png',
-            'assets/boss-激光/4月28日_1_00034.png',
-            'assets/boss-激光/4月28日_1_00035.png',
-            'assets/boss-激光/4月28日_1_00036.png',
-            'assets/boss-激光/4月28日_1_00037.png',
-            'assets/boss-激光/4月28日_1_00038.png',
-            'assets/boss-激光/4月28日_1_00039.png',
-            'assets/boss-激光/4月28日_1_00040.png'
-        ];
-
         // ==================== 加载系统 ====================
         // 需要预加载的HTML图片资源路径
         const htmlImagePaths = [
@@ -2271,12 +2163,32 @@
         ];
         
         function initLoading() {
-            // 计算总资源数（普通素材 + 爆炸序列帧 + 超级武器动态帧 + 导弹发射气泡帧 + 海面浪花帧 + 夜晚海面浪花帧 + Boss激光帧 + 导弹尾焰精灵图 + HTML图片）
-            const normalAssetCount = Object.keys(assets).length - 9; // 减去 explosionFrames, superWeaponBgFrames, missileLaunchBubbleFrames, waterSplashFrames, waterSplashFramesNight, bossLaserFrames, missileTailFrames, missileTailSprite 和 missileTailSpriteData
-            // 导弹尾焰现在使用精灵图：1张图片（JSON数据已嵌入代码，不需要加载）
-            const missileTailAssetCount = 1;
-            const totalAssets = normalAssetCount + explosionFramePaths.length + superWeaponFramePaths.length + missileLaunchBubbleFramePaths.length + waterSplashFramePaths.length + waterSplashFramePathsNight.length + bossLaserFramePaths.length + missileTailAssetCount + htmlImagePaths.length;
+            // 计算总资源数（普通素材 + HTML图片）
+            // 现在所有序列帧都使用精灵图：explosion, superWeapon, missileBubble, waterSplash, waterSplashNight, bossLaser, missileTail
+            // 精灵图作为普通素材加载，JSON数据直接嵌入代码
+            const normalAssetCount = Object.keys(assets).length - 14; // 减去 14 个非图片项：explosionFrames, superWeaponBgFrames, missileLaunchBubbleFrames, waterSplashFrames, waterSplashFramesNight, bossLaserFrames, bossLaserSpriteData, missileTailFrames, missileTailSpriteData, explosionSpriteData, superWeaponSpriteData, missileBubbleSpriteData, waterSplashSpriteData, waterSplashNightSpriteData
+            const totalAssets = normalAssetCount + htmlImagePaths.length;
             let loadedCount = 0;
+            
+            // 调试日志
+            console.log('资源加载统计:', {
+                normalAssetCount,
+                htmlImages: htmlImagePaths.length,
+                totalAssets,
+                assetsKeys: Object.keys(assets).length,
+                assetPathsKeys: Object.keys(assetPaths).length
+            });
+            
+            // 检查 assets 和 assetPaths 是否匹配
+            const assetsKeys = Object.keys(assets);
+            const assetPathsKeys = Object.keys(assetPaths);
+            const missingPaths = assetsKeys.filter(key => 
+                !assetPathsKeys.includes(key) && 
+                !['explosionFrames', 'superWeaponBgFrames', 'missileLaunchBubbleFrames', 'waterSplashFrames', 'waterSplashFramesNight', 'bossLaserFrames', 'bossLaserSpriteData', 'missileTailFrames', 'missileTailSpriteData', 'explosionSpriteData', 'superWeaponSpriteData', 'missileBubbleSpriteData', 'waterSplashSpriteData', 'waterSplashNightSpriteData'].includes(key)
+            );
+            if (missingPaths.length > 0) {
+                console.error('缺少路径的素材:', missingPaths);
+            }
 
             function updateProgress() {
                 loadedCount++;
@@ -2286,7 +2198,9 @@
                 document.getElementById('loadingProgress').style.width = progress + '%';
                 document.getElementById('loadingText').textContent = `加载素材... ${progress}%`;
 
-                if (loadedCount === totalAssets) {
+                console.log(`加载进度: ${loadedCount}/${totalAssets} (${progress}%)`);
+
+                if (loadedCount >= totalAssets) {
                     gameState.assetsLoaded = true;
                     console.log('所有素材加载完成');
                     // 加载排行榜数据
@@ -2300,193 +2214,151 @@
             // 立即开始加载素材
             document.getElementById('loadingText').textContent = `加载素材... 0%`;
             
+            // 跟踪加载状态
+            const loadStatus = {};
+            
             // 加载普通素材
+            let normalAssetLoadedCount = 0;
+            const normalAssetTotal = Object.keys(assets).filter(key => 
+                !['explosionFrames', 'superWeaponBgFrames', 'missileLaunchBubbleFrames', 'waterSplashFrames', 'waterSplashFramesNight', 'bossLaserFrames', 'bossLaserSpriteData', 'missileTailFrames', 'missileTailSpriteData', 'explosionSpriteData', 'superWeaponSpriteData', 'missileBubbleSpriteData', 'waterSplashSpriteData', 'waterSplashNightSpriteData'].includes(key)
+            ).length;
+            console.log(`普通素材总数: ${normalAssetTotal}, assets总数: ${Object.keys(assets).length}`);
+            
             for (const key in assets) {
-                if (key === 'explosionFrames' || key === 'superWeaponBgFrames' || key === 'missileLaunchBubbleFrames' || key === 'waterSplashFrames' || key === 'waterSplashFramesNight' || key === 'bossLaserFrames' || key === 'missileTailFrames' || key === 'missileTailSprite' || key === 'missileTailSpriteData') continue; // 跳过数组和精灵图，单独处理
+                if (['explosionFrames', 'superWeaponBgFrames', 'missileLaunchBubbleFrames', 'waterSplashFrames', 'waterSplashFramesNight', 'bossLaserFrames', 'bossLaserSpriteData', 'missileTailFrames', 'missileTailSpriteData', 'explosionSpriteData', 'superWeaponSpriteData', 'missileBubbleSpriteData', 'waterSplashSpriteData', 'waterSplashNightSpriteData'].includes(key)) continue; // 跳过数组和精灵图数据，单独处理
                 
-                assets[key].src = assetPaths[key];
+                loadStatus[key] = 'loading';
                 
-                // 检查是否已经缓存
-                if (assets[key].complete) {
+                // 检查是否已经缓存（在设置src之前检查）
+                if (assets[key].complete && assets[key].naturalWidth > 0) {
                     console.log(`素材 ${key} 已缓存`);
+                    loadStatus[key] = 'cached';
+                    normalAssetLoadedCount++;
                     updateProgress();
-                } else {
-                    assets[key].onload = () => {
-                        console.log(`素材 ${key} 加载成功`);
-                        updateProgress();
-                    };
-                    assets[key].onerror = () => {
-                        console.warn(`素材 ${key} 加载失败，使用备用方案`);
-                        updateProgress();
-                    };
+                    continue; // 已缓存的素材不需要再设置事件监听
                 }
+                
+                // 未缓存的素材，设置事件监听器
+                assets[key].onload = () => {
+                    if (loadStatus[key] === 'loading') {
+                        console.log(`素材 ${key} 加载成功`);
+                        loadStatus[key] = 'loaded';
+                        normalAssetLoadedCount++;
+                        updateProgress();
+                    }
+                };
+                assets[key].onerror = () => {
+                    if (loadStatus[key] === 'loading') {
+                        console.error(`素材 ${key} 加载失败: ${assetPaths[key]}`);
+                        loadStatus[key] = 'error';
+                        normalAssetLoadedCount++;
+                        updateProgress();
+                    }
+                };
+                
+                // 设置 src（添加时间戳强制刷新缓存）
+                const cacheBuster = `?t=${Date.now()}`;
+                assets[key].src = assetPaths[key] + cacheBuster;
             }
             
-            // 加载爆炸序列帧
-            explosionFramePaths.forEach((path, index) => {
-                const frame = new Image();
-                frame.src = path;
-                assets.explosionFrames.push(frame);
-                
-                if (frame.complete) {
-                    console.log(`爆炸帧 ${index + 1} 已缓存`);
-                    updateProgress();
-                } else {
-                    frame.onload = () => {
-                        console.log(`爆炸帧 ${index + 1} 加载成功`);
-                        updateProgress();
-                    };
-                    frame.onerror = () => {
-                        console.warn(`爆炸帧 ${index + 1} 加载失败`);
-                        updateProgress();
-                    };
-                }
-            });
+            console.log(`普通素材初始化完成，已缓存: ${normalAssetLoadedCount}/${normalAssetTotal}`);
             
-            // 加载超级武器动态皮肤帧
-            superWeaponFramePaths.forEach((path, index) => {
-                const frame = new Image();
-                frame.src = path;
-                assets.superWeaponBgFrames.push(frame);
-                
-                if (frame.complete) {
-                    console.log(`超级武器帧 ${index + 1} 已缓存`);
-                    updateProgress();
-                } else {
-                    frame.onload = () => {
-                        console.log(`超级武器帧 ${index + 1} 加载成功`);
-                        updateProgress();
-                    };
-                    frame.onerror = () => {
-                        console.warn(`超级武器帧 ${index + 1} 加载失败`);
-                        updateProgress();
-                    };
+            // 10秒后检查哪些资源还在加载中
+            setTimeout(() => {
+                const stillLoading = Object.keys(loadStatus).filter(key => loadStatus[key] === 'loading');
+                const notStarted = Object.keys(assets).filter(key => 
+                    !['explosionFrames', 'superWeaponBgFrames', 'missileLaunchBubbleFrames', 'waterSplashFrames', 'waterSplashFramesNight', 'bossLaserFrames', 'bossLaserSpriteData', 'missileTailFrames', 'missileTailSpriteData', 'explosionSpriteData', 'superWeaponSpriteData', 'missileBubbleSpriteData', 'waterSplashSpriteData', 'waterSplashNightSpriteData'].includes(key) && 
+                    !loadStatus[key]
+                );
+                if (stillLoading.length > 0) {
+                    console.error('10秒后仍在加载的素材:', stillLoading);
                 }
-            });
+                if (notStarted.length > 0) {
+                    console.error('未开始加载的素材:', notStarted);
+                }
+                console.log('加载状态统计:', {
+                    total: normalAssetTotal,
+                    loaded: normalAssetLoadedCount,
+                    loading: Object.values(loadStatus).filter(s => s === 'loading').length,
+                    cached: Object.values(loadStatus).filter(s => s === 'cached').length,
+                    error: Object.values(loadStatus).filter(s => s === 'error').length,
+                    htmlImagesLoaded: htmlImagesLoaded,
+                    htmlImagesTotal: htmlImagesTotal,
+                    loadedCount: loadedCount,
+                    totalAssets: totalAssets
+                });
+            }, 10000);
+
+            // 60秒后强制完成加载（给大文件更多加载时间）
+            setTimeout(() => {
+                if (!gameState.assetsLoaded) {
+                    console.warn('加载超时，强制完成');
+                    console.log('加载状态详情:', loadStatus);
+                    while (loadedCount < totalAssets) {
+                        updateProgress();
+                    }
+                }
+            }, 60000);
             
-            // 加载导弹发射气泡特效帧
-            missileLaunchBubbleFramePaths.forEach((path, index) => {
-                const frame = new Image();
-                frame.src = path;
-                assets.missileLaunchBubbleFrames.push(frame);
-                
-                if (frame.complete) {
-                    console.log(`导弹发射气泡帧 ${index + 1} 已缓存`);
-                    updateProgress();
-                } else {
-                    frame.onload = () => {
-                        console.log(`导弹发射气泡帧 ${index + 1} 加载成功`);
-                        updateProgress();
-                    };
-                    frame.onerror = () => {
-                        console.warn(`导弹发射气泡帧 ${index + 1} 加载失败`);
-                        updateProgress();
-                    };
-                }
-            });
+            // 爆炸精灵图数据直接嵌入（JSON数据同步嵌入，不占用加载计数，精灵图图片本身已在普通素材中加载）
+            assets.explosionSpriteData = {"frames":{"boom-1.png":{"frame":{"x":0,"y":0,"w":242,"h":242}},"boom-2.png":{"frame":{"x":484,"y":0,"w":242,"h":242}},"boom-3.png":{"frame":{"x":726,"y":0,"w":242,"h":242}},"boom-4.png":{"frame":{"x":0,"y":242,"w":242,"h":242}},"boom-5.png":{"frame":{"x":242,"y":242,"w":242,"h":242}},"boom-6.png":{"frame":{"x":484,"y":242,"w":242,"h":242}},"boom-7.png":{"frame":{"x":726,"y":242,"w":242,"h":242}},"boom-8.png":{"frame":{"x":0,"y":484,"w":242,"h":242}},"boom-9.png":{"frame":{"x":242,"y":484,"w":242,"h":242}},"boom-10.png":{"frame":{"x":242,"y":0,"w":242,"h":242}}},"meta":{"image":"explosion_atlas.png","size":{"w":968,"h":726}}};
+            console.log('爆炸精灵图数据已嵌入');
             
-            // 加载海面浪花特效帧
-            waterSplashFramePaths.forEach((path, index) => {
-                const frame = new Image();
-                frame.src = path;
-                assets.waterSplashFrames.push(frame);
-                
-                if (frame.complete) {
-                    console.log(`海面浪花帧 ${index + 1} 已缓存`);
-                    updateProgress();
-                } else {
-                    frame.onload = () => {
-                        console.log(`海面浪花帧 ${index + 1} 加载成功`);
-                        updateProgress();
-                    };
-                    frame.onerror = () => {
-                        console.warn(`海面浪花帧 ${index + 1} 加载失败`);
-                        updateProgress();
-                    };
-                }
-            });
+            // 超级武器精灵图数据直接嵌入
+            assets.superWeaponSpriteData = {"frames":{"jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00000.png":{"frame":{"x":0,"y":0,"w":1103,"h":473}},"jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00001.png":{"frame":{"x":1103,"y":0,"w":1103,"h":473}},"jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00002.png":{"frame":{"x":2206,"y":0,"w":1103,"h":473}},"jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00003.png":{"frame":{"x":3309,"y":0,"w":1103,"h":473}},"jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00004.png":{"frame":{"x":0,"y":473,"w":1103,"h":473}},"jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00005.png":{"frame":{"x":1103,"y":473,"w":1103,"h":473}},"jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00006.png":{"frame":{"x":2206,"y":473,"w":1103,"h":473}},"jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00007.png":{"frame":{"x":3309,"y":473,"w":1103,"h":473}},"jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00008.png":{"frame":{"x":0,"y":946,"w":1103,"h":473}},"jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00009.png":{"frame":{"x":1103,"y":946,"w":1103,"h":473}},"jimeng-2026-04-25-4892-二次元动画风格，少女喊出fire，少女的头发随风飘动，背景有漫画感的速度线条移动_00010.png":{"frame":{"x":2206,"y":946,"w":1103,"h":473}}},"meta":{"image":"super_weapon_atlas_resized.webp","size":{"w":4412,"h":1419}}};
+            console.log('超级武器精灵图数据已嵌入');
+            
+            // 导弹发射气泡精灵图数据直接嵌入
+            assets.missileBubbleSpriteData = {"frames":{"导弹发射气泡-1.png":{"frame":{"x":0,"y":0,"w":105,"h":74}},"导弹发射气泡-2.png":{"frame":{"x":105,"y":0,"w":105,"h":74}},"导弹发射气泡-3.png":{"frame":{"x":0,"y":74,"w":105,"h":74}},"导弹发射气泡-4.png":{"frame":{"x":105,"y":74,"w":105,"h":74}}},"meta":{"image":"missile_bubble_atlas.png","size":{"w":210,"h":148}}};
+            console.log('导弹发射气泡精灵图数据已嵌入');
+            
+            // 海面浪花精灵图数据直接嵌入
+            assets.waterSplashSpriteData = {"frames":{"01.png":{"frame":{"x":0,"y":0,"w":450,"h":208}},"02.png":{"frame":{"x":450,"y":0,"w":450,"h":208}},"03.png":{"frame":{"x":900,"y":0,"w":450,"h":208}},"04.png":{"frame":{"x":1350,"y":0,"w":450,"h":208}},"05.png":{"frame":{"x":0,"y":208,"w":450,"h":208}},"06.png":{"frame":{"x":450,"y":208,"w":450,"h":208}},"07.png":{"frame":{"x":900,"y":208,"w":450,"h":208}},"08.png":{"frame":{"x":1350,"y":208,"w":450,"h":208}},"09.png":{"frame":{"x":0,"y":416,"w":450,"h":208}},"10.png":{"frame":{"x":450,"y":416,"w":450,"h":208}},"11.png":{"frame":{"x":900,"y":416,"w":450,"h":208}},"12.png":{"frame":{"x":1350,"y":416,"w":450,"h":208}},"13.png":{"frame":{"x":0,"y":624,"w":450,"h":208}}},"meta":{"image":"water_splash_atlas.png","size":{"w":1800,"h":832}}};
+            console.log('海面浪花精灵图数据已嵌入');
+            
+            // 夜晚海面浪花精灵图数据直接嵌入
+            assets.waterSplashNightSpriteData = {"frames":{"1001.png":{"frame":{"x":0,"y":0,"w":450,"h":208}},"1002.png":{"frame":{"x":450,"y":0,"w":450,"h":208}},"1003.png":{"frame":{"x":900,"y":0,"w":450,"h":208}},"1004.png":{"frame":{"x":1350,"y":0,"w":450,"h":208}},"1005.png":{"frame":{"x":0,"y":208,"w":450,"h":208}},"1006.png":{"frame":{"x":450,"y":208,"w":450,"h":208}},"1007.png":{"frame":{"x":900,"y":208,"w":450,"h":208}},"1008.png":{"frame":{"x":1350,"y":208,"w":450,"h":208}},"1009.png":{"frame":{"x":0,"y":416,"w":450,"h":208}},"1010.png":{"frame":{"x":450,"y":416,"w":450,"h":208}},"1011.png":{"frame":{"x":900,"y":416,"w":450,"h":208}},"1012.png":{"frame":{"x":1350,"y":416,"w":450,"h":208}},"1013.png":{"frame":{"x":0,"y":624,"w":450,"h":208}}},"meta":{"image":"water_splash_night_atlas.png","size":{"w":1800,"h":832}}};
+            console.log('夜晚海面浪花精灵图数据已嵌入');
 
-            // 加载夜晚海面浪花特效帧
-            waterSplashFramePathsNight.forEach((path, index) => {
-                const frame = new Image();
-                frame.src = path;
-                assets.waterSplashFramesNight.push(frame);
-
-                if (frame.complete) {
-                    console.log(`夜晚海面浪花帧 ${index + 1} 已缓存`);
-                    updateProgress();
-                } else {
-                    frame.onload = () => {
-                        console.log(`夜晚海面浪花帧 ${index + 1} 加载成功`);
-                        updateProgress();
-                    };
-                    frame.onerror = () => {
-                        console.warn(`夜晚海面浪花帧 ${index + 1} 加载失败`);
-                        updateProgress();
-                    };
-                }
-            });
-
-            // 加载Boss激光动画帧
-            bossLaserFramePaths.forEach((path, index) => {
-                const frame = new Image();
-                frame.src = path;
-                assets.bossLaserFrames.push(frame);
-
-                if (frame.complete) {
-                    console.log(`Boss激光帧 ${index + 1} 已缓存`);
-                    updateProgress();
-                } else {
-                    frame.onload = () => {
-                        console.log(`Boss激光帧 ${index + 1} 加载成功`);
-                        updateProgress();
-                    };
-                    frame.onerror = () => {
-                        console.warn(`Boss激光帧 ${index + 1} 加载失败`);
-                        updateProgress();
-                    };
-                }
-            });
-
-            // 加载导弹尾焰精灵图
-            assets.missileTailSprite.src = 'assets/导弹尾焰动画/精灵图测试/atlas (1).png';
-
-            // 精灵图数据直接嵌入（避免fetch本地文件的安全限制）
+            // Boss激光精灵图数据直接嵌入（避免fetch本地文件的安全限制）
+            assets.bossLaserSpriteData = {"frames":{"4月28日_1_00000.png":{"frame":{"x":0,"y":0,"w":304,"h":540}},"4月28日_1_00001.png":{"frame":{"x":304,"y":0,"w":304,"h":540}},"4月28日_1_00002.png":{"frame":{"x":608,"y":0,"w":304,"h":540}},"4月28日_1_00003.png":{"frame":{"x":912,"y":0,"w":304,"h":540}},"4月28日_1_00004.png":{"frame":{"x":1216,"y":0,"w":304,"h":540}},"4月28日_1_00005.png":{"frame":{"x":1520,"y":0,"w":304,"h":540}},"4月28日_1_00006.png":{"frame":{"x":0,"y":540,"w":304,"h":540}},"4月28日_1_00007.png":{"frame":{"x":304,"y":540,"w":304,"h":540}},"4月28日_1_00008.png":{"frame":{"x":608,"y":540,"w":304,"h":540}},"4月28日_1_00009.png":{"frame":{"x":912,"y":540,"w":304,"h":540}},"4月28日_1_00010.png":{"frame":{"x":1216,"y":540,"w":304,"h":540}},"4月28日_1_00011.png":{"frame":{"x":1520,"y":540,"w":304,"h":540}},"4月28日_1_00012.png":{"frame":{"x":0,"y":1080,"w":304,"h":540}},"4月28日_1_00013.png":{"frame":{"x":304,"y":1080,"w":304,"h":540}},"4月28日_1_00014.png":{"frame":{"x":608,"y":1080,"w":304,"h":540}},"4月28日_1_00015.png":{"frame":{"x":912,"y":1080,"w":304,"h":540}},"4月28日_1_00016.png":{"frame":{"x":1216,"y":1080,"w":304,"h":540}},"4月28日_1_00017.png":{"frame":{"x":1520,"y":1080,"w":304,"h":540}},"4月28日_1_00018.png":{"frame":{"x":0,"y":1620,"w":304,"h":540}},"4月28日_1_00019.png":{"frame":{"x":304,"y":1620,"w":304,"h":540}},"4月28日_1_00020.png":{"frame":{"x":608,"y":1620,"w":304,"h":540}},"4月28日_1_00021.png":{"frame":{"x":912,"y":1620,"w":304,"h":540}},"4月28日_1_00022.png":{"frame":{"x":1216,"y":1620,"w":304,"h":540}},"4月28日_1_00023.png":{"frame":{"x":1520,"y":1620,"w":304,"h":540}},"4月28日_1_00024.png":{"frame":{"x":0,"y":2160,"w":304,"h":540}},"4月28日_1_00025.png":{"frame":{"x":304,"y":2160,"w":304,"h":540}},"4月28日_1_00026.png":{"frame":{"x":608,"y":2160,"w":304,"h":540}},"4月28日_1_00027.png":{"frame":{"x":912,"y":2160,"w":304,"h":540}},"4月28日_1_00028.png":{"frame":{"x":1216,"y":2160,"w":304,"h":540}},"4月28日_1_00029.png":{"frame":{"x":1520,"y":2160,"w":304,"h":540}},"4月28日_1_00030.png":{"frame":{"x":0,"y":2700,"w":304,"h":540}},"4月28日_1_00031.png":{"frame":{"x":304,"y":2700,"w":304,"h":540}},"4月28日_1_00032.png":{"frame":{"x":608,"y":2700,"w":304,"h":540}},"4月28日_1_00033.png":{"frame":{"x":912,"y":2700,"w":304,"h":540}},"4月28日_1_00034.png":{"frame":{"x":1216,"y":2700,"w":304,"h":540}},"4月28日_1_00035.png":{"frame":{"x":1520,"y":2700,"w":304,"h":540}},"4月28日_1_00036.png":{"frame":{"x":0,"y":3240,"w":304,"h":540}},"4月28日_1_00037.png":{"frame":{"x":304,"y":3240,"w":304,"h":540}},"4月28日_1_00038.png":{"frame":{"x":608,"y":3240,"w":304,"h":540}},"4月28日_1_00039.png":{"frame":{"x":912,"y":3240,"w":304,"h":540}},"4月28日_1_00040.png":{"frame":{"x":1216,"y":3240,"w":304,"h":540}}},"meta":{"image":"boss_laser_atlas_resized.webp","size":{"w":1824,"h":3780}}};
+            console.log('Boss激光精灵图数据已嵌入');
+            
+            // 导弹尾焰精灵图数据直接嵌入（避免fetch本地文件的安全限制）
             assets.missileTailSpriteData = {"frames":{"4月28日(1)_00000":{"frame":{"x":0,"y":0,"w":300,"h":517},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":517},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00001":{"frame":{"x":302,"y":0,"w":300,"h":517},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":517},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00002":{"frame":{"x":604,"y":0,"w":299,"h":516},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":299,"h":516},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00003":{"frame":{"x":905,"y":0,"w":299,"h":516},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":299,"h":516},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00004":{"frame":{"x":1206,"y":0,"w":300,"h":516},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":516},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00005":{"frame":{"x":1508,"y":0,"w":300,"h":516},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":516},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00006":{"frame":{"x":1810,"y":0,"w":300,"h":515},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":515},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00007":{"frame":{"x":2112,"y":0,"w":299,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":299,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00008":{"frame":{"x":2413,"y":0,"w":299,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":299,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00009":{"frame":{"x":2714,"y":0,"w":300,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00010":{"frame":{"x":3016,"y":0,"w":301,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00011":{"frame":{"x":3319,"y":0,"w":301,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00012":{"frame":{"x":3622,"y":0,"w":301,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00013":{"frame":{"x":0,"y":519,"w":301,"h":514},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":514},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00014":{"frame":{"x":303,"y":519,"w":300,"h":513},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":513},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00015":{"frame":{"x":605,"y":519,"w":299,"h":512},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":299,"h":512},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00016":{"frame":{"x":906,"y":519,"w":302,"h":512},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":34,"y":0,"w":302,"h":512},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00017":{"frame":{"x":1210,"y":519,"w":301,"h":512},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":512},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00018":{"frame":{"x":1513,"y":519,"w":301,"h":512},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":512},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00019":{"frame":{"x":1816,"y":519,"w":301,"h":512},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":512},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00020":{"frame":{"x":2119,"y":519,"w":301,"h":512},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":512},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00021":{"frame":{"x":2422,"y":519,"w":301,"h":511},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":511},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00022":{"frame":{"x":2725,"y":519,"w":300,"h":510},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":510},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00023":{"frame":{"x":3027,"y":519,"w":301,"h":510},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":510},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00024":{"frame":{"x":3330,"y":519,"w":301,"h":510},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":510},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00025":{"frame":{"x":3633,"y":519,"w":301,"h":510},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":510},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00026":{"frame":{"x":0,"y":1035,"w":301,"h":510},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":510},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00027":{"frame":{"x":303,"y":1035,"w":300,"h":509},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":509},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00028":{"frame":{"x":605,"y":1035,"w":300,"h":508},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":300,"h":508},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00029":{"frame":{"x":907,"y":1035,"w":301,"h":518},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":301,"h":518},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00030":{"frame":{"x":1210,"y":1035,"w":308,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":308,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00031":{"frame":{"x":1520,"y":1035,"w":309,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":309,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00032":{"frame":{"x":1831,"y":1035,"w":312,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":312,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00033":{"frame":{"x":2145,"y":1035,"w":314,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":35,"y":0,"w":314,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00034":{"frame":{"x":2461,"y":1035,"w":314,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":34,"y":0,"w":314,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00035":{"frame":{"x":2777,"y":1035,"w":322,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":32,"y":0,"w":322,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00036":{"frame":{"x":3101,"y":1035,"w":333,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":29,"y":0,"w":333,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00037":{"frame":{"x":3436,"y":1035,"w":339,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":27,"y":0,"w":339,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00038":{"frame":{"x":0,"y":1562,"w":353,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":353,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00039":{"frame":{"x":355,"y":1562,"w":353,"h":528},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":353,"h":528},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00040":{"frame":{"x":710,"y":1562,"w":354,"h":547},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":354,"h":547},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00041":{"frame":{"x":1066,"y":1562,"w":356,"h":571},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":571},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00042":{"frame":{"x":1424,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00043":{"frame":{"x":1782,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00044":{"frame":{"x":2140,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00045":{"frame":{"x":2498,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00046":{"frame":{"x":2856,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00047":{"frame":{"x":3214,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00048":{"frame":{"x":3572,"y":1562,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00049":{"frame":{"x":0,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00050":{"frame":{"x":358,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00051":{"frame":{"x":716,"y":2146,"w":353,"h":525},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":353,"h":525},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00052":{"frame":{"x":1071,"y":2146,"w":353,"h":528},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":353,"h":528},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00053":{"frame":{"x":1426,"y":2146,"w":354,"h":547},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":354,"h":547},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00054":{"frame":{"x":1782,"y":2146,"w":356,"h":571},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":571},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00055":{"frame":{"x":2140,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00056":{"frame":{"x":2498,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00057":{"frame":{"x":2856,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00058":{"frame":{"x":3214,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00059":{"frame":{"x":3572,"y":2146,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00060":{"frame":{"x":0,"y":2730,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00061":{"frame":{"x":358,"y":2730,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00062":{"frame":{"x":716,"y":2730,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00063":{"frame":{"x":1074,"y":2730,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}},"4月28日(1)_00064":{"frame":{"x":1432,"y":2730,"w":356,"h":582},"rotated":false,"trimmed":true,"spriteSourceSize":{"x":18,"y":0,"w":356,"h":582},"sourceSize":{"w":400,"h":600}}},"meta":{"image":"atlas.png","size":{"w":4096,"h":4096},"scale":1}};
             console.log('导弹尾焰精灵图数据已嵌入');
 
-            if (assets.missileTailSprite.complete) {
-                console.log('导弹尾焰精灵图已缓存');
-                updateProgress();
-            } else {
-                assets.missileTailSprite.onload = () => {
-                    console.log('导弹尾焰精灵图加载成功');
-                    updateProgress();
-                };
-                assets.missileTailSprite.onerror = () => {
-                    console.warn('导弹尾焰精灵图加载失败');
-                    updateProgress();
-                };
-            }
-
             // 加载HTML中使用的图片资源
-            htmlImagePaths.forEach((path, index) => {
-                const img = new Image();
-                img.src = path;
-                
-                if (img.complete) {
-                    console.log(`HTML图片 ${path} 已缓存`);
-                    updateProgress();
-                } else {
+            let htmlImagesLoaded = 0;
+            const htmlImagesTotal = htmlImagePaths.length;
+            console.log(`开始加载 ${htmlImagesTotal} 个HTML图片`);
+            
+            // 使用 Promise 来确保所有 HTML 图片都被正确计数
+            const htmlImagePromises = htmlImagePaths.map((path) => {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    
+                    // 先设置事件监听器
                     img.onload = () => {
-                        console.log(`HTML图片 ${path} 加载成功`);
+                        htmlImagesLoaded++;
+                        console.log(`HTML图片 ${path} 加载成功 (${htmlImagesLoaded}/${htmlImagesTotal})`);
                         updateProgress();
+                        resolve(true);
                     };
                     img.onerror = () => {
-                        console.warn(`HTML图片 ${path} 加载失败`);
+                        htmlImagesLoaded++;
+                        console.error(`HTML图片 ${path} 加载失败 (${htmlImagesLoaded}/${htmlImagesTotal})`);
                         updateProgress();
+                        resolve(false);
                     };
-                }
+                    
+                    // 再设置 src
+                    img.src = path;
+                    
+                    // 如果图片已经缓存（同步加载完成），onload 可能已经被触发
+                    // 但如果还没触发，我们等待事件
+                    // 如果已经触发，上面的 onload 应该已经执行了
+                });
             });
         }
 
@@ -2643,7 +2515,7 @@
             const startBtn = document.getElementById('startGameBtn');
             const startBtnImg = document.getElementById('startGameBtnImg');
             startBtn.disabled = remainingPoints > 0;
-            startBtnImg.src = remainingPoints > 0 ? 'assets/figma_image/screenshot_508_131.png' : 'assets/figma_image/screenshot_472_104.png';
+            startBtnImg.src = remainingPoints > 0 ? 'assets/figma_image/开始游戏-灰色.png' : 'assets/figma_image/开始游戏.png';
 
             // 更新技能描述
             updateSkillDescriptions();
@@ -2744,6 +2616,8 @@
 
         // ==================== 游戏初始化 ====================
         let gameLoopId = null;
+        let lastFrameTime = 0; // 上一帧时间（用于delta time计算）
+        let deltaTime = 0; // 两帧之间的时间差（秒）
         
         function startGame() {
             const skillPanel = document.getElementById('skillPanel');
@@ -2820,6 +2694,8 @@
         let piercingActive; // 穿甲效果是否激活
         let gameStartTime; // 游戏开始时间（用于计时）
         let finalGameTime = 0; // 游戏结束时的最终时间（秒）
+        let pausedTime = 0; // 暂停时记录的时间点
+        let totalPausedDuration = 0; // 总的暂停时长（毫秒）
         
         // 连击系统
         let comboSystem = {
@@ -2966,6 +2842,10 @@
             superWeaponReady = false;
             gameStartTime = Date.now(); // 记录游戏开始时间
             finalGameTime = 0; // 重置最终游戏时间
+            pausedTime = 0; // 重置暂停时间
+            totalPausedDuration = 0; // 重置总暂停时长
+            lastFrameTime = 0; // 重置时间追踪
+            deltaTime = 0;
             
             // 初始化MP动画状态
             mpAnimation.displayMp = 0;
@@ -3162,7 +3042,7 @@
         
         // 获取潜艇速度 - 所有潜艇初始速度快10%
         function getSubmarineSpeed() {
-            return 1.87 * getDifficultyMultiplier();
+            return 1.87 * 144 * getDifficultyMultiplier(); // 转换为每秒像素（原1.87每帧×144fps）
         }
         
         // 获取导弹发射间隔
@@ -3200,6 +3080,15 @@
                 gameLoopId = null;
                 return;
             }
+
+            // 计算 delta time（两帧之间的时间差，秒）
+            const currentTime = Date.now();
+            if (lastFrameTime > 0) {
+                deltaTime = Math.min((currentTime - lastFrameTime) / 1000, 0.1); // 限制最大0.1秒，防止卡死
+            } else {
+                deltaTime = 1 / 60; // 第一帧使用60fps作为默认
+            }
+            lastFrameTime = currentTime;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -3404,10 +3293,10 @@
             // 入场动画
             if (!boss.entryComplete) {
                 const targetX = (canvas.width - boss.width) / 2; // 停在屏幕中间
-                const entrySpeed = 4; // 加快30%（从3增加到4）
+                const entrySpeed = 4 * 144; // 加快30%（从3增加到4）（转换为每秒像素，144Hz基准）
                 
                 if (boss.x > targetX) {
-                    boss.x -= entrySpeed;
+                    boss.x -= entrySpeed * deltaTime;
                 } else {
                     boss.x = targetX;
                     boss.entryComplete = true;
@@ -3556,16 +3445,16 @@
         function updateBossMovement() {
             // X方向移动
             const dx = boss.moveTargetX - boss.x;
-            if (Math.abs(dx) > boss.moveSpeed) {
-                boss.x += Math.sign(dx) * boss.moveSpeed;
+            if (Math.abs(dx) > boss.moveSpeed * deltaTime) {
+                boss.x += Math.sign(dx) * boss.moveSpeed * deltaTime;
             } else {
                 boss.x = boss.moveTargetX;
             }
             
             // Y方向移动（上下轻微移动）
             const dy = boss.moveTargetY - boss.y;
-            if (Math.abs(dy) > boss.moveSpeed) {
-                boss.y += Math.sign(dy) * boss.moveSpeed;
+            if (Math.abs(dy) > boss.moveSpeed * deltaTime) {
+                boss.y += Math.sign(dy) * boss.moveSpeed * deltaTime;
             } else {
                 boss.y = boss.moveTargetY;
             }
@@ -3578,7 +3467,7 @@
             
             for (let i = 0; i < bulletCount; i++) {
                 const angle = (Math.PI / bulletCount) * i + Math.random() * 0.5; // 扇形分布
-                const speed = 3 + Math.random() * 2;
+                const speed = (3 + Math.random() * 2) * 144; // 转换为每秒像素（144Hz基准）
                 
                 bossBullets.push({
                     x: boss.x + boss.width / 2,
@@ -3621,7 +3510,7 @@
                         y: boss.y + boss.height / 2,
                         width: 107, // Boss导弹宽度
                         height: 33, // Boss导弹高度
-                        speed: 2.5, // 初段上升速度减少50%（5 * 0.5 = 2.5）
+                        speed: 2.5 * 144, // 初段上升速度减少50%（5 * 0.5 = 2.5）（转换为每秒像素，144Hz基准）
                         angle: -Math.PI / 2, // 初始朝上（垂直发射）
                         phase: 'rising', // 阶段：rising=上升, tracking=追踪
                         riseStartTime: Date.now(),
@@ -3652,8 +3541,8 @@
                 
                 if (elapsed < bullet.delay) {
                     // 延迟期内做无规律运动
-                    bullet.x += bullet.vx;
-                    bullet.y += bullet.vy;
+                    bullet.x += bullet.vx * deltaTime;
+                    bullet.y += bullet.vy * deltaTime;
                     
                     // 边界反弹
                     if (bullet.x < 0 || bullet.x > canvas.width) bullet.vx *= -1;
@@ -3661,7 +3550,7 @@
                 } else {
                     // 延迟结束后垂直上浮
                     const prevY = bullet.y;
-                    bullet.y -= 4;
+                    bullet.y -= 4 * 144 * deltaTime; // 转换为每秒像素（144Hz基准）
                     
                     // 检测子弹是否飞出海平面（从水下到水上）
                     const waterLevelY = 274; // 水平面Y坐标
@@ -3731,7 +3620,7 @@
                     const elapsed = now - missile.riseStartTime;
                     
                     // 垂直上升
-                    missile.y += Math.sin(missile.angle) * missile.speed;
+                    missile.y += Math.sin(missile.angle) * missile.speed * deltaTime;
                     
                     // 检查是否完成上升阶段
                     if (elapsed >= missile.riseDuration) {
@@ -3749,8 +3638,8 @@
                     }
                 } else {
                     // 追踪阶段 - 直接朝锁定位置直线前进
-                    missile.x += Math.cos(missile.angle) * missile.speed;
-                    missile.y += Math.sin(missile.angle) * missile.speed;
+                    missile.x += Math.cos(missile.angle) * missile.speed * deltaTime;
+                    missile.y += Math.sin(missile.angle) * missile.speed * deltaTime;
                 }
                 
                 // 检查是否穿过水平面（从水下到水上），创建海浪特效
@@ -3839,9 +3728,9 @@
             boss.active = false;
             gameOver = true; // 立即停止游戏更新，防止连击超时
 
-            // 记录最终游戏时间，停止计时器
+            // 记录最终游戏时间，停止计时器（减去暂停时长）
             if (finalGameTime === 0) {
-                finalGameTime = Date.now() - gameStartTime;
+                finalGameTime = Date.now() - gameStartTime - totalPausedDuration;
             }
 
             // 显示对话气泡
@@ -3914,9 +3803,9 @@
             const victoryScoreEl = document.getElementById('victoryScore');
             const victorySideButtons = document.getElementById('victorySideButtons');
 
-            // 如果还没有记录通关时间，则计算
+            // 如果还没有记录通关时间，则计算（减去暂停时长）
             if (finalGameTime === 0) {
-                finalGameTime = Date.now() - gameStartTime;
+                finalGameTime = Date.now() - gameStartTime - totalPausedDuration;
             }
             gameOver = true;
 
@@ -4120,7 +4009,7 @@
                     .select('*')
                     .order('time', { ascending: true })
                     .order('combo', { ascending: false })
-                    .limit(100);
+                    .limit(500);
                 
                 if (error) {
                     console.error('加载排行榜失败:', error);
@@ -4181,9 +4070,9 @@
                 return b.combo - a.combo;
             });
             
-            // 只保留前100条记录
-            if (leaderboardData.length > 100) {
-                leaderboardData = leaderboardData.slice(0, 100);
+            // 只保留前500条记录
+            if (leaderboardData.length > 500) {
+                leaderboardData = leaderboardData.slice(0, 500);
             }
             
             // 保存到本地作为后备
@@ -4259,8 +4148,8 @@
                 listEl.appendChild(item);
             });
             
-            // 如果玩家不在Top10但在100名内，显示玩家行
-            if (showHighlight && playerRank > 10 && playerRank <= 100) {
+            // 如果玩家不在Top10但在500名内，显示玩家行
+            if (showHighlight && playerRank > 10 && playerRank <= 500) {
                 const playerData = leaderboardData[playerIndex];
                 const item = createLeaderboardItem(playerRank, playerData, true);
                 listEl.appendChild(item);
@@ -4696,24 +4585,6 @@
                     );
                     ctx.restore();
                 }
-            } else if (assets.missileTailFrames.length > 0) {
-                // 回退到序列帧
-                const tailFrames = assets.missileTailFrames;
-                const tailElapsed = Date.now() - missile.riseStartTime;
-                const tailFrameIndex = Math.floor((tailElapsed / 50) % tailFrames.length);
-                const tailFrame = tailFrames[tailFrameIndex];
-
-                if (tailFrame && tailFrame.complete && tailFrame.naturalWidth > 0) {
-                    ctx.save();
-                    ctx.globalAlpha = 0.5;
-                    const tailScale = 0.5;
-                    const tailWidth = tailFrame.naturalWidth * tailScale;
-                    const tailHeight = tailFrame.naturalHeight * tailScale;
-                    const tailOffsetY = 350;
-                    const tailY = -missile.height/2 - tailHeight + tailOffsetY;
-                    ctx.drawImage(tailFrame, -tailWidth/2, tailY, tailWidth, tailHeight);
-                    ctx.restore();
-                }
             }
         }
 
@@ -4748,52 +4619,50 @@
             }
             
             if (!boss.laserActive) return;
-            
+
             const laserX = boss.x + boss.width / 2;
             const laserWidth = 608; // 激光碰撞宽度与贴图显示宽度一致
-            
-            // 使用序列帧动画绘制激光
-            const frames = assets.bossLaserFrames;
-            if (frames.length > 0) {
+
+            // 使用精灵图绘制激光
+            const sprite = assets.bossLaserSprite;
+            const spriteData = assets.bossLaserSpriteData;
+
+            // 计算激光已持续时间
+            const laserElapsed = Date.now() - boss.laserStartTime;
+
+            if (spriteData && sprite.complete && sprite.naturalWidth > 0) {
                 // 根据激光持续时间计算当前帧
-                const laserElapsed = Date.now() - boss.laserStartTime;
+                const frames = Object.keys(spriteData.frames);
                 const frameIndex = Math.min(
                     Math.floor((laserElapsed / boss.laserDuration) * frames.length),
                     frames.length - 1
                 );
-                const currentFrame = frames[frameIndex];
-                
-                if (currentFrame && currentFrame.complete && currentFrame.naturalWidth > 0) {
-                    // 激光贴图尺寸：608*1080
-                    const laserImgWidth = currentFrame.naturalWidth;
-                    const laserImgHeight = currentFrame.naturalHeight;
+                const frameName = frames[frameIndex];
+                const frameData = spriteData.frames[frameName];
+
+                if (frameData) {
+                    const frame = frameData.frame;
                     const targetWidth = 608; // 目标显示宽度
                     const targetHeight = 1080; // 目标显示高度
-                    
+
                     // 激光从Boss中心点向上发射
-                    // Boss中心点位置
                     const bossCenterX = boss.x + boss.width / 2;
                     const bossCenterY = boss.y + boss.height / 2;
-                    
+
                     // 绘制激光（垂直向上）
                     ctx.save();
-                    // 移动到Boss中心点位置
                     ctx.translate(bossCenterX, bossCenterY);
-                    // 旋转180度使激光向上
                     ctx.rotate(Math.PI);
                     ctx.drawImage(
-                        currentFrame,
-                        -targetWidth / 2,
-                        0,
-                        targetWidth,
-                        targetHeight
+                        sprite,
+                        frame.x, frame.y, frame.w, frame.h,
+                        -targetWidth / 2, 0, targetWidth, targetHeight
                     );
                     ctx.restore();
                 }
             }
             
             // 检查激光与玩家碰撞（延迟280ms后开始判定，等激光完全射出来）
-            const laserElapsed = Date.now() - boss.laserStartTime;
             const collisionDelay = 280; // 延迟280ms开始判定
             const collisionEndTime = 1500; // 判定结束时间提前到1500ms（总时长2000ms）
             if (laserElapsed >= collisionDelay && laserElapsed <= collisionEndTime &&
@@ -4987,11 +4856,11 @@
                 // 减速到停止
                 const deceleration = player.maxSpeed * 0.2;
                 if (player.velocityX > 0) {
-                    player.velocityX = Math.max(player.velocityX - deceleration, 0);
+                    player.velocityX = Math.max(player.velocityX - deceleration * deltaTime * GAME_CONFIG.targetFPS, 0);
                 } else if (player.velocityX < 0) {
-                    player.velocityX = Math.min(player.velocityX + deceleration, 0);
+                    player.velocityX = Math.min(player.velocityX + deceleration * deltaTime * GAME_CONFIG.targetFPS, 0);
                 }
-                player.x += player.velocityX;
+                player.x += player.velocityX * deltaTime;
                 return;
             }
 
@@ -5011,21 +4880,21 @@
             if (targetVelocityX !== 0) {
                 // 加速阶段
                 if (player.velocityX < targetVelocityX) {
-                    player.velocityX = Math.min(player.velocityX + acceleration, targetVelocityX);
+                    player.velocityX = Math.min(player.velocityX + acceleration * deltaTime * GAME_CONFIG.targetFPS, targetVelocityX);
                 } else if (player.velocityX > targetVelocityX) {
-                    player.velocityX = Math.max(player.velocityX - acceleration, targetVelocityX);
+                    player.velocityX = Math.max(player.velocityX - acceleration * deltaTime * GAME_CONFIG.targetFPS, targetVelocityX);
                 }
             } else {
                 // 减速阶段（停止时的缓动）
                 if (player.velocityX > 0) {
-                    player.velocityX = Math.max(player.velocityX - deceleration, 0);
+                    player.velocityX = Math.max(player.velocityX - deceleration * deltaTime * GAME_CONFIG.targetFPS, 0);
                 } else if (player.velocityX < 0) {
-                    player.velocityX = Math.min(player.velocityX + deceleration, 0);
+                    player.velocityX = Math.min(player.velocityX + deceleration * deltaTime * GAME_CONFIG.targetFPS, 0);
                 }
             }
             
             // 应用速度
-            player.x += player.velocityX;
+            player.x += player.velocityX * deltaTime;
             
             // 边界检查
             if (player.x < 0) {
@@ -5041,7 +4910,7 @@
         function updateMines() {
             for (let i = mines.length - 1; i >= 0; i--) {
                 const mine = mines[i];
-                mine.y += mine.speed;
+                mine.y += mine.speed * deltaTime;
                 
                 // 分裂水雷逻辑：下降200距离后分裂为两个
                 if (mine.isSplitMine && !mine.hasSplit && mine.y > player.y + player.height + 200) {
@@ -5055,7 +4924,7 @@
                         speed: mine.speed,
                         isSplitMine: false,
                         hasSplit: false,
-                        vx: -2 // 向左偏移
+                        vx: -2 * 144 // 向左偏移（转换为每秒像素，144Hz基准）
                     });
                     mines.push({
                         x: mine.x + 30,
@@ -5065,7 +4934,7 @@
                         speed: mine.speed,
                         isSplitMine: false,
                         hasSplit: false,
-                        vx: 2 // 向右偏移
+                        vx: 2 * 144 // 向右偏移（转换为每秒像素，144Hz基准）
                     });
                     // 移除原水雷
                     mines.splice(i, 1);
@@ -5074,7 +4943,7 @@
                 
                 // 应用水平速度（用于分裂后的水雷）
                 if (mine.vx) {
-                    mine.x += mine.vx;
+                    mine.x += mine.vx * deltaTime;
                 }
                 
                 if (mine.y > canvas.height) {
@@ -5099,7 +4968,7 @@
                     const typeMultiplier = sub.subType === 0 ? 1.32 : 1.2; // 橘色潜艇快10%
                     subSpeed = speed * typeMultiplier;
                 }
-                sub.x -= subSpeed;
+                sub.x -= subSpeed * deltaTime;
 
                 if (sub.x < -240) {
                     // Boss出场或被击败后，潜艇移出画面即删除，不再刷新
@@ -5227,7 +5096,7 @@
         }
 
         function updateMissiles() {
-            const missileSpeed = 2.21 * getDifficultyMultiplier(); // 基础速度加快20%
+            const missileSpeed = 2.21 * 144 * getDifficultyMultiplier(); // 基础速度加快20%（转换为每秒像素，144Hz基准）
             const waterLevelY = 274; // 水平面Y坐标
             
             for (let i = missiles.length - 1; i >= 0; i--) {
@@ -5236,8 +5105,8 @@
                 
                 if (missile.phase === 'diagonal') {
                     // 45度斜向移动：direction为1时向左上，-1时向右上
-                    missile.x += missile.direction * missileSpeed * 0.7;
-                    missile.y -= missileSpeed * 0.7;
+                    missile.x += missile.direction * missileSpeed * 0.7 * deltaTime;
+                    missile.y -= missileSpeed * 0.7 * deltaTime;
                     if (missile.y <= missile.targetHeight) {
                         // 转为垂直阶段，以导弹尾部为圆点调整位置
                         missile.phase = 'vertical';
@@ -5250,7 +5119,7 @@
                         missile.y += tailOffsetY;
                     }
                 } else {
-                    missile.y -= missileSpeed * 0.9;
+                    missile.y -= missileSpeed * 0.9 * deltaTime;
                 }
                 
                 // 检测导弹是否飞出海平面（从水下到水上）
@@ -5330,22 +5199,24 @@
         // 绘制海面浪花特效
         function drawWaterSplashes() {
             waterSplashes.forEach(splash => {
-                // 使用水花创建时记录的场景类型来选择对应的帧数组
-                const frames = splash.isNight ? assets.waterSplashFramesNight : assets.waterSplashFrames;
+                // 使用水花创建时记录的场景类型来选择对应的精灵图数据
+                const spriteData = splash.isNight ? assets.waterSplashNightSpriteData : assets.waterSplashSpriteData;
+                const sprite = splash.isNight ? assets.waterSplashNightSprite : assets.waterSplashSprite;
+                const frames = getSpriteSheetFrames(spriteData);
                 const frameCount = frames.length;
-                if (frameCount === 0) return;
+                if (frameCount === 0 || !sprite || !sprite.complete) return;
 
                 const elapsed = Date.now() - splash.startTime;
                 const progress = elapsed / splash.duration;
                 const frameIndex = Math.min(Math.floor(progress * frameCount), frameCount - 1);
 
                 const frame = frames[frameIndex];
-                if (frame && frame.complete && frame.naturalWidth > 0) {
+                if (frame) {
                     // 应用缩放（默认为1，Boss子弹为0.2）
                     const scale = splash.scale || 1;
-                    const width = frame.naturalWidth * scale;
-                    const height = frame.naturalHeight * scale;
-                    ctx.drawImage(frame, splash.x - width / 2, splash.y - height / 2, width, height);
+                    const width = frame.w * scale;
+                    const height = frame.h * scale;
+                    ctx.drawImage(sprite, frame.x, frame.y, frame.w, frame.h, splash.x - width / 2, splash.y - height / 2, width, height);
                 }
             });
         }
@@ -5364,10 +5235,10 @@
 
         function updatePowerUps() {
             // 道具上浮速度比敌方导弹快50%，再上调20%
-            const powerUpSpeed = 2.3 * 1.5 * 1.2;
+            const powerUpSpeed = 2.3 * 1.5 * 1.2 * 144; // 转换为每秒像素（144Hz基准）
             for (let i = powerUps.length - 1; i >= 0; i--) {
                 const pu = powerUps[i];
-                pu.y -= powerUpSpeed;
+                pu.y -= powerUpSpeed * deltaTime;
                 if (pu.y < -60) {
                     powerUps.splice(i, 1);
                 }
@@ -5377,9 +5248,9 @@
         function updateFragments() {
             for (let i = fragments.length - 1; i >= 0; i--) {
                 const frag = fragments[i];
-                frag.y += frag.speedY;
-                frag.x += frag.speedX;
-                frag.alpha -= 0.01;
+                frag.y += frag.speedY * deltaTime;
+                frag.x += frag.speedX * deltaTime;
+                frag.alpha -= 0.01 * deltaTime * GAME_CONFIG.targetFPS;
                 
                 if (frag.alpha <= 0) {
                     fragments.splice(i, 1);
@@ -5532,8 +5403,8 @@
             const btnRetry = document.getElementById('btnRetry');
             const btnConfig = document.getElementById('btnConfig');
             
-            // 记录最终游戏时间（毫秒）
-            finalGameTime = Date.now() - gameStartTime;
+            // 记录最终游戏时间（毫秒，减去暂停时长）
+            finalGameTime = Date.now() - gameStartTime - totalPausedDuration;
             gameOver = true;
             
             // 更新时间（秒:毫秒格式）
@@ -5619,7 +5490,7 @@
                         currentScrollSpeed = sceneSpeedTransition.toSpeed;
                     }
                 }
-                backgroundScrollX -= currentScrollSpeed;
+                backgroundScrollX -= currentScrollSpeed * deltaTime;
                 
                 // 当滚动超过一张图宽度时重置，实现无缝循环
                 if (Math.abs(backgroundScrollX) >= scaledWidth) {
@@ -5727,17 +5598,18 @@
                 ctx.save();
                 ctx.globalAlpha = alpha;
                 
-                // 绘制超级武器动态皮肤（居中显示）
-                const frames = assets.superWeaponBgFrames;
-                if (frames.length > 0 && frames[0].complete && frames[0].naturalWidth > 0) {
+                // 绘制超级武器动态皮肤（使用精灵图）
+                const frames = getSpriteSheetFrames(assets.superWeaponSpriteData);
+                const sprite = assets.superWeaponSprite;
+                if (frames.length > 0 && sprite && sprite.complete && sprite.naturalWidth > 0) {
                     // 根据进度计算当前帧索引
                     const frameIndex = Math.min(
                         Math.floor(progress * frames.length),
                         frames.length - 1
                     );
-                    const bgImg = frames[frameIndex];
-                    const imgWidth = bgImg.naturalWidth;
-                    const imgHeight = bgImg.naturalHeight;
+                    const frame = frames[frameIndex];
+                    const imgWidth = frame.w;
+                    const imgHeight = frame.h;
                     
                     const scaleX = canvas.width / imgWidth;
                     const scaledWidth = imgWidth * scaleX;
@@ -5757,7 +5629,8 @@
                     const drawX = centerX + offsetX;
                     const drawY = centerY + offsetY;
                     
-                    ctx.drawImage(bgImg, drawX, drawY, scaledWidth, scaledHeight);
+                    // 从精灵图绘制当前帧
+                    ctx.drawImage(sprite, frame.x, frame.y, frame.w, frame.h, drawX, drawY, scaledWidth, scaledHeight);
                 } else if (assets.superWeaponBg.complete && assets.superWeaponBg.naturalWidth > 0) {
                     // 备用：使用静态图片
                     const bgImg = assets.superWeaponBg;
@@ -6138,8 +6011,9 @@
 
         // 绘制导弹发射气泡特效（在潜艇下方）
         function drawMissileLaunchBubbles() {
-            const frames = assets.missileLaunchBubbleFrames;
-            if (frames.length === 0) return;
+            const frames = getSpriteSheetFrames(assets.missileBubbleSpriteData);
+            const sprite = assets.missileBubbleSprite;
+            if (frames.length === 0 || !sprite || !sprite.complete) return;
             
             missileLaunchBubbles.forEach(bubble => {
                 const elapsed = Date.now() - bubble.startTime;
@@ -6152,11 +6026,11 @@
                 );
                 
                 const frame = frames[frameIndex];
-                if (frame && frame.complete && frame.naturalWidth > 0) {
+                if (frame) {
                     // 气泡大小 105*74
                     const width = 105;
                     const height = 74;
-                    ctx.drawImage(frame, bubble.x - width/2, bubble.y - height/2, width, height);
+                    ctx.drawImage(sprite, frame.x, frame.y, frame.w, frame.h, bubble.x - width/2, bubble.y - height/2, width, height);
                 }
             });
         }
@@ -6363,26 +6237,6 @@
                     );
                     ctx.restore();
                 }
-            } else if (assets.missileTailFrames.length > 0) {
-                // 回退到序列帧
-                const tailFrames = assets.missileTailFrames;
-                const tailElapsed = Date.now() - missile.startTime;
-                const tailFrameIndex = Math.floor((tailElapsed / 50) % tailFrames.length);
-                const tailFrame = tailFrames[tailFrameIndex];
-
-                if (tailFrame && tailFrame.complete && tailFrame.naturalWidth > 0) {
-                    ctx.save();
-                    const isNightOrBoss = isNightScene || boss.active || bossDefeatState.showBubble;
-                    const sceneAlpha = isNightOrBoss ? 0.5 : 1.0;
-                    ctx.globalAlpha = waterAlpha * sceneAlpha;
-                    const tailScale = 0.5;
-                    const tailWidth = tailFrame.naturalWidth * tailScale;
-                    const tailHeight = tailFrame.naturalHeight * tailScale;
-                    const tailOffsetY = 400;
-                    const tailY = -missile.height/2 - tailHeight + tailOffsetY;
-                    ctx.drawImage(tailFrame, -tailWidth/2, tailY, tailWidth, tailHeight);
-                    ctx.restore();
-                }
             }
         }
 
@@ -6402,13 +6256,21 @@
         }
 
         // 绘制爆炸效果（不包括击中玩家的爆炸）
+        // 从精灵图数据获取帧数组（按文件名排序）
+        function getSpriteSheetFrames(spriteData) {
+            if (!spriteData || !spriteData.frames) return [];
+            const frameNames = Object.keys(spriteData.frames).sort();
+            return frameNames.map(name => spriteData.frames[name].frame);
+        }
+
         function drawExplosions() {
             explosions.forEach(exp => {
                 // 跳过击中玩家的爆炸，在 drawPlayerHitExplosions 中绘制
                 if (exp.isPlayerHit) return;
                 
                 const elapsed = Date.now() - exp.startTime;
-                const frameCount = assets.explosionFrames.length;
+                const frames = getSpriteSheetFrames(assets.explosionSpriteData);
+                const frameCount = frames.length;
                 // 使用每个爆炸自己的动画时长（稀有潜艇750ms，普通500ms）
                 const animationDuration = exp.animationDuration || 500;
                 
@@ -6443,13 +6305,13 @@
                 ctx.fill();
                 ctx.restore();
                 
-                // 获取当前帧
-                const currentFrame = assets.explosionFrames[frameIndex];
+                // 从精灵图绘制当前帧
+                const frame = frames[frameIndex];
+                const sprite = assets.explosionSprite;
                 
-                // 绘制序列帧（在火光效果之上）
-                if (currentFrame && currentFrame.complete && currentFrame.naturalWidth > 0) {
+                if (frame && sprite && sprite.complete && sprite.naturalWidth > 0) {
                     const size = 195; // 爆炸显示大小（150 * 1.3 = 195）
-                    ctx.drawImage(currentFrame, exp.x - size/2, exp.y - size/2, size, size);
+                    ctx.drawImage(sprite, frame.x, frame.y, frame.w, frame.h, exp.x - size/2, exp.y - size/2, size, size);
                 } else {
                     // 备用绘制
                     const size = baseSize * expansion;
@@ -6491,7 +6353,8 @@
                 if (!exp.isPlayerHit) return;
                 
                 const elapsed = Date.now() - exp.startTime;
-                const frameCount = assets.explosionFrames.length;
+                const frames = getSpriteSheetFrames(assets.explosionSpriteData);
+                const frameCount = frames.length;
                 // 使用每个爆炸自己的动画时长（稀有潜艇750ms，普通500ms）
                 const animationDuration = exp.animationDuration || 500;
                 
@@ -6526,13 +6389,13 @@
                 ctx.fill();
                 ctx.restore();
                 
-                // 获取当前帧
-                const currentFrame = assets.explosionFrames[frameIndex];
+                // 从精灵图绘制当前帧
+                const frame = frames[frameIndex];
+                const sprite = assets.explosionSprite;
                 
-                // 绘制序列帧（在火光效果之上）
-                if (currentFrame && currentFrame.complete && currentFrame.naturalWidth > 0) {
+                if (frame && sprite && sprite.complete && sprite.naturalWidth > 0) {
                     const size = 195; // 爆炸显示大小（150 * 1.3 = 195）
-                    ctx.drawImage(currentFrame, exp.x - size/2, exp.y - size/2, size, size);
+                    ctx.drawImage(sprite, frame.x, frame.y, frame.w, frame.h, exp.x - size/2, exp.y - size/2, size, size);
                 } else {
                     // 备用绘制
                     const size = baseSize * expansion;
@@ -6552,7 +6415,7 @@
                 } else if (pu.type === 'range') {
                     puImage = assets.powerUpRange;
                 } else if (pu.type === 'split') {
-                    puImage = assets.powerUpRange; // 分裂弹暂时使用range素材
+                    puImage = assets.powerUpSplit;
                 }
                 
                 // 绘制道具图片
@@ -6765,8 +6628,15 @@
             const scoreY = 60;
 
             // 计算游戏时间（秒:毫秒格式）
-            // 如果游戏结束且已记录最终时间，使用记录的最终时间；否则使用当前时间
-            const elapsedMs = (gameOver && finalGameTime > 0) ? finalGameTime : (Date.now() - gameStartTime);
+            // 如果游戏结束且已记录最终时间，使用记录的最终时间；否则使用当前时间减去暂停时长
+            let elapsedMs;
+            if (gameOver && finalGameTime > 0) {
+                elapsedMs = finalGameTime;
+            } else {
+                // 计算当前暂停时长（如果正在暂停中）
+                const currentPauseDuration = gamePaused && pausedTime > 0 ? (Date.now() - pausedTime) : 0;
+                elapsedMs = Date.now() - gameStartTime - totalPausedDuration - currentPauseDuration;
+            }
             const seconds = Math.floor(elapsedMs / 1000).toString().padStart(2, '0');
             const milliseconds = (elapsedMs % 1000).toString().padStart(3, '0').slice(0, 2);
             const timeString = `${seconds}:${milliseconds}`;
@@ -6968,8 +6838,8 @@
                 }
             }
 
-            // 水雷 vs Boss
-            if (boss.active && boss.entryComplete) {
+            // 水雷 vs Boss（血条入场期间无敌，不掉血）
+            if (boss.active && boss.entryComplete && !boss.hpBarEntry.active) {
                 for (let mIndex = mines.length - 1; mIndex >= 0; mIndex--) {
                     const mine = mines[mIndex];
                     if (checkMineBossCollision(mine)) {
@@ -7177,8 +7047,8 @@
                     x: x,
                     y: y,
                     size: 8 + Math.random() * 16,
-                    speedX: (Math.random() - 0.5) * 6,
-                    speedY: 2 + Math.random() * 3,
+                    speedX: (Math.random() - 0.5) * 6 * 144, // 转换为每秒像素（144Hz基准）
+                    speedY: (2 + Math.random() * 3) * 144, // 转换为每秒像素（144Hz基准）
                     alpha: 1,
                     color: colorBase
                 });
@@ -7274,7 +7144,7 @@
                         y: player.y + player.height,
                         width: 60,
                         height: 61,
-                        speed: 5,
+                        speed: 5 * 144, // 转换为每秒像素（原5每帧×144fps）
                         isSplitMine: splitMineActive, // 是否为分裂水雷
                         hasSplit: false // 是否已经分裂过
                     });
@@ -7321,8 +7191,8 @@
                     bossDefeatState.bubbleStartTime = Date.now();
                     bossDefeatState.explosions = [];
                     boss.active = false;
-                    // 记录通关时间
-                    finalGameTime = Date.now() - gameStartTime;
+                    // 记录通关时间（减去暂停时长）
+                    finalGameTime = Date.now() - gameStartTime - totalPausedDuration;
                 }
             }
         });
@@ -7346,13 +7216,18 @@
         function pauseGame() {
             gamePaused = true;
             pauseOption = 0;
+            pausedTime = Date.now(); // 记录暂停开始时间
             showPauseScreen();
             updatePauseButtons();
         }
-        
+
         // 继续游戏
         function resumeGame() {
             gamePaused = false;
+            if (pausedTime > 0) {
+                totalPausedDuration += Date.now() - pausedTime; // 累加暂停时长
+                pausedTime = 0;
+            }
             hidePauseScreen();
         }
         
@@ -7555,8 +7430,8 @@
                 
                 submarines = [];
                 
-                // 对Boss造成伤害（如果Boss在场）
-                if (boss.active && boss.entryComplete) {
+                // 对Boss造成伤害（如果Boss在场且血条入场完成）
+                if (boss.active && boss.entryComplete && !boss.hpBarEntry.active) {
                     boss.hp = Math.max(0, boss.hp - BOSS_DEFENSE.superWeaponDamage);
                     
                     // 启动血量动画
