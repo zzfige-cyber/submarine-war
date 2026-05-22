@@ -1558,6 +1558,74 @@
             pointer-events: none;
             z-index: 250;
         }
+
+        /* 虚拟游戏按钮样式 */
+        .virtual-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: none;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 1500;
+            pointer-events: none;
+        }
+
+        .virtual-controls.active {
+            display: flex;
+        }
+
+        .movement-controls,
+        .action-controls {
+            display: flex;
+            gap: 15px;
+            pointer-events: auto;
+        }
+
+        .virtual-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .virtual-btn:active {
+            background: rgba(100, 200, 100, 0.6);
+            transform: scale(0.95);
+            border-color: rgba(100, 200, 100, 0.8);
+        }
+
+        /* 仅在触摸设备上显示虚拟按钮 */
+        @media (hover: none) and (pointer: coarse) {
+            .virtual-controls {
+                display: flex;
+            }
+        }
+
+        /* 移动端横屏适配 */
+        @media screen and (orientation: landscape) and (max-width: 1024px) {
+            .virtual-controls {
+                padding: 0 20px;
+                bottom: 15px;
+            }
+            .virtual-btn {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+        }
         
     </style>
 </head>
@@ -1603,26 +1671,26 @@
                 <!-- 技能按钮区域 -->
                 <div class="skillButtonsContainer">
                     <!-- 移动速度按钮 -->
-                    <button class="skillBtnMinus1" id="speedMinus" onclick="adjustSkill('speed', -1)">
+                    <button class="skillBtnMinus1" id="speedMinus" onclick="playBtnClickSound(); adjustSkill('speed', -1)">
                         <img src="assets/btn_minus_disabled.png" id="speedMinusImg" alt="-">
                     </button>
-                    <button class="skillBtnPlus1" id="speedPlus" onclick="adjustSkill('speed', 1)">
+                    <button class="skillBtnPlus1" id="speedPlus" onclick="playBtnClickSound(); adjustSkill('speed', 1)">
                         <img src="assets/btn_plus_enabled.png" id="speedPlusImg" alt="+">
                     </button>
                     
                     <!-- 装甲厚度按钮 -->
-                    <button class="skillBtnMinus2" id="hpMinus" onclick="adjustSkill('hp', -1)">
+                    <button class="skillBtnMinus2" id="hpMinus" onclick="playBtnClickSound(); adjustSkill('hp', -1)">
                         <img src="assets/btn_minus_disabled.png" id="hpMinusImg" alt="-">
                     </button>
-                    <button class="skillBtnPlus2" id="hpPlus" onclick="adjustSkill('hp', 1)">
+                    <button class="skillBtnPlus2" id="hpPlus" onclick="playBtnClickSound(); adjustSkill('hp', 1)">
                         <img src="assets/btn_plus_enabled.png" id="hpPlusImg" alt="+">
                     </button>
                     
                     <!-- 弹药库按钮 -->
-                    <button class="skillBtnMinus3" id="ammoMinus" onclick="adjustSkill('ammo', -1)">
+                    <button class="skillBtnMinus3" id="ammoMinus" onclick="playBtnClickSound(); adjustSkill('ammo', -1)">
                         <img src="assets/btn_minus_disabled.png" id="ammoMinusImg" alt="-">
                     </button>
-                    <button class="skillBtnPlus3" id="ammoPlus" onclick="adjustSkill('ammo', 1)">
+                    <button class="skillBtnPlus3" id="ammoPlus" onclick="playBtnClickSound(); adjustSkill('ammo', 1)">
                         <img src="assets/btn_plus_enabled.png" id="ammoPlusImg" alt="+">
                     </button>
                 </div>
@@ -1659,22 +1727,22 @@
             
             <!-- 随机点数按钮 -->
             <div class="randomPointsBtnWrapper">
-                <button class="randomPointsBtn" id="randomPointsBtn" onclick="randomizeSkills()">
+                <button class="randomPointsBtn" id="randomPointsBtn" onclick="playDiceSound(); randomizeSkills()">
                     <img src="assets/figma_image/screenshot_332_5.png" alt="随机点数">
                 </button>
             </div>
             
             <!-- 开始游戏按钮 -->
             <div class="startGameBtnWrapper">
-                <button class="startGameBtn" id="startGameBtn" onclick="startGame()" disabled>
+                <button class="startGameBtn" id="startGameBtn" onclick="playBtnClickSound(); startGame()" disabled>
                     <img src="assets/figma_image/开始游戏-灰色.png" id="startGameBtnImg" alt="启航 STAR GAME">
                 </button>
             </div>
             
             <!-- 技能配置面板右侧按钮 -->
             <div class="skillPanelSideButtons">
-                <img src="assets/figma_image/screenshot_605_476.png" alt="游戏制作信息" class="skillPanelSideBtn" id="btnGameInfo" onclick="showGameInfo()">
-                <img src="assets/figma_image/screenshot_605_530.png" alt="全球排行榜" class="skillPanelSideBtn" id="btnGlobalLeaderboard" onclick="showGlobalLeaderboardFromSkillPanel()">
+                <img src="assets/figma_image/screenshot_605_476.png" alt="游戏制作信息" class="skillPanelSideBtn" id="btnGameInfo" onclick="playBtnClickSound(); showGameInfo()">
+                <img src="assets/figma_image/screenshot_605_530.png" alt="全球排行榜" class="skillPanelSideBtn" id="btnGlobalLeaderboard" onclick="playBtnClickSound(); showGlobalLeaderboardFromSkillPanel()">
             </div>
         </div>
         
@@ -1750,8 +1818,8 @@
 
             <!-- 通关页面右侧按钮 -->
             <div class="victorySideButtons" id="victorySideButtons">
-                <img src="assets/figma_image/screenshot_605_476.png" alt="游戏制作信息" class="victorySideBtn" id="btnVictoryGameInfo" onclick="showGameInfo()">
-                <img src="assets/figma_image/screenshot_605_530.png" alt="全球排行榜" class="victorySideBtn" id="btnVictoryLeaderboard" onclick="showVictoryLeaderboard()">
+                <img src="assets/figma_image/screenshot_605_476.png" alt="游戏制作信息" class="victorySideBtn" id="btnVictoryGameInfo" onclick="playBtnClickSound(); showGameInfo()">
+                <img src="assets/figma_image/screenshot_605_530.png" alt="全球排行榜" class="victorySideBtn" id="btnVictoryLeaderboard" onclick="playBtnClickSound(); showVictoryLeaderboard()">
             </div>
         </div>
 
@@ -1768,7 +1836,22 @@
         <!-- 游戏制作信息弹窗 -->
         <div id="gameInfoModal" class="gameInfoModal">
             <div class="gameInfoContent">
-                <img src="assets/figma_image/screenshot_619_765.png" alt="返回" class="gameInfoBackBtn" id="btnCloseGameInfo" onclick="hideGameInfo()">
+                <img src="assets/figma_image/screenshot_619_765.png" alt="返回" class="gameInfoBackBtn" id="btnCloseGameInfo" onclick="playBtnClickSound(); hideGameInfo()">
+            </div>
+        </div>
+
+        <!-- 虚拟游戏按钮 -->
+        <div id="virtualControls" class="virtual-controls">
+            <!-- 左侧移动按钮 -->
+            <div class="movement-controls">
+                <button class="virtual-btn" id="btnLeft">◀</button>
+                <button class="virtual-btn" id="btnRight">▶</button>
+            </div>
+            <!-- 右侧操作按钮 -->
+            <div class="action-controls">
+                <button class="virtual-btn" id="btnPause">⏸</button>
+                <button class="virtual-btn" id="btnSuper">⚡</button>
+                <button class="virtual-btn" id="btnFire">🔥</button>
             </div>
         </div>
     </div>
@@ -1922,11 +2005,25 @@
             bossLaserWarning: new Image(), // Boss激光预警贴图
             bossLaserFrames: [], // Boss激光动画帧数组（保留兼容）
             bossLaserSprite: new Image(), // Boss激光精灵图
-            bossLaserSpriteData: null // Boss激光精灵图数据
+            bossLaserSpriteData: null, // Boss激光精灵图数据
+            bossLaserSound: new Audio(), // Boss激光发射音效
+            explosionSound: new Audio(), // 爆炸音效
+            waterSplashSound: new Audio(), // 浪花音效
+            bossBgm: new Audio(), // Boss阶段BGM
+            mainBgm: new Audio(), // 主游戏BGM
+            btnClickSound: new Audio(), // 按钮点击音效
+            bossWarningSound: new Audio(), // Boss出场警告音效
+            diceSound: new Audio(), // 骰子音效
+            superWeaponSound: new Audio(), // 超级武器音效
+            mpFullSound: new Audio(), // MP满了提示音效
+            splitAmmoSound: new Audio() // 分裂弹道具音效
         };
         
         // 场景状态
         let isNightScene = false;
+        
+        // MP满了音效播放标志
+        let mpFullSoundPlayed = false;
         
         // 场景速度过渡状态
         let sceneSpeedTransition = {
@@ -1956,62 +2053,73 @@
 
         const assetPaths = {
             background: 'assets/background.png',
-            backgroundWide: 'assets/figma_image/screenshot_470_6.png',
-            backgroundNight: 'assets/figma_image/screenshot_470_11.png',
-            shipBase: 'assets/figma_image/screenshot_211_704.png?v=2',
-            shipTurbo: 'assets/figma_image/screenshot_218_1099.png?v=2',
-            shipArmor: 'assets/figma_image/screenshot_218_1105.png?v=2',
-            shipAmmo: 'assets/figma_image/screenshot_218_1100.png?v=2',
-            submarine: 'assets/figma_image/screenshot_198_313.png',
-            submarine2: 'assets/figma_image/screenshot_202_32.png',
-            submarineNight: 'assets/figma_image/screenshot_534_4.png',
-            submarine2Night: 'assets/figma_image/screenshot_534_2.png',
-            goldSubmarine: 'assets/figma_image/screenshot_198_304.png',
-            goldSubmarineNight: 'assets/figma_image/screenshot_534_6.png',
-            missile: 'assets/figma_image/screenshot_509_220.png',
-            missileNight: 'assets/figma_image/screenshot_534_8.png',
-            missileTop: 'assets/figma_image/screenshot_509_221.png',
-            mine: 'assets/figma_image/screenshot_202_60.png',
-            superWeaponBg: 'assets/figma_image/screenshot_470_25.png',
-            superWeaponBubble: 'assets/figma_image/screenshot_325_90.png',
-            visibilityMask: 'assets/figma_image/screenshot_473_205.png',
-            visibilityMaskNight: 'assets/figma_image/screenshot_474_216.png',
-            splitMineBubble: 'assets/figma_image/screenshot_350_13.png',
-            immunityBubbleImg: 'assets/figma_image/screenshot_618_408.png',
-            powerUpHp: 'assets/figma_image/hp道具.png',
-            powerUpRange: 'assets/figma_image/分裂弹道具.png',
-            powerUpSplit: 'assets/figma_image/分裂弹道具.png',
-            gameOverTitle: 'assets/figma_image/screenshot_222_1196.png',
-            btnRetry: 'assets/figma_image/screenshot_222_1157.png',
-            btnConfig: 'assets/figma_image/screenshot_222_1158.png',
-            scorePanel: 'assets/figma_image/screenshot_222_1203.png',
-            bossWarning: 'assets/figma_image/screenshot_254_1433.png',
-            bossWarningHighlight: 'assets/figma_image/screenshot_254_1370.png',
-            boss: 'assets/figma_image/screenshot_211_477.png',
-            bossHpBar: 'assets/figma_image/screenshot_329_187.png',
-            pauseTitle: 'assets/figma_image/screenshot_220_190.png',
-            btnResume: 'assets/figma_image/screenshot_255_1506.png',
-            btnRetryPause: 'assets/figma_image/screenshot_220_176.png',
-            btnConfigPause: 'assets/figma_image/screenshot_220_182.png',
-            uiTopBar: 'assets/figma_image/screenshot_257_282.png',
-            victoryCharacter: 'assets/figma_image/screenshot_512_165.png',
-            victoryScorePanel: 'assets/figma_image/screenshot_571_3.png',
-            btnVictoryRetry: 'assets/figma_image/screenshot_259_1508.png',
-            btnVictoryConfig: 'assets/figma_image/screenshot_259_1514.png',
-            bossBullet: 'assets/figma_image/screenshot_517_506.png',
-            bossMissile: 'assets/figma_image/screenshot_517_484.png',
-            bossDefeatBubble: 'assets/figma_image/screenshot_519_513.png',
-            controlHintBubble: 'assets/figma_image/screenshot_513_199.png', // 操作提示气泡
-            scoreProgressBar: 'assets/figma_image/screenshot_577_652.png', // 分数进度条
-            scoreProgressIndicator: 'assets/figma_image/screenshot_572_364.png', // 分数进度指示器（玩家船图标）
-            bossLaserWarning: 'assets/figma_image/screenshot_584_34.png', // Boss激光预警贴图
+            backgroundWide: 'assets/figma_image/screenshot_470_6.webp',
+            backgroundNight: 'assets/figma_image/screenshot_470_11.webp',
+            shipBase: 'assets/figma_image/screenshot_211_704.webp?v=2',
+            shipTurbo: 'assets/figma_image/screenshot_218_1099.webp?v=2',
+            shipArmor: 'assets/figma_image/screenshot_218_1105.webp?v=2',
+            shipAmmo: 'assets/figma_image/screenshot_218_1100.webp?v=2',
+            submarine: 'assets/figma_image/screenshot_198_313.webp',
+            submarine2: 'assets/figma_image/screenshot_202_32.webp',
+            submarineNight: 'assets/figma_image/screenshot_534_4.webp',
+            submarine2Night: 'assets/figma_image/screenshot_534_2.webp',
+            goldSubmarine: 'assets/figma_image/screenshot_198_304.webp',
+            goldSubmarineNight: 'assets/figma_image/screenshot_534_6.webp',
+            missile: 'assets/figma_image/screenshot_509_220.webp',
+            missileNight: 'assets/figma_image/screenshot_534_8.webp',
+            missileTop: 'assets/figma_image/screenshot_509_221.webp',
+            mine: 'assets/figma_image/screenshot_202_60.webp',
+            superWeaponBg: 'assets/figma_image/screenshot_470_25.webp',
+            superWeaponBubble: 'assets/figma_image/screenshot_325_90.webp',
+            visibilityMask: 'assets/figma_image/screenshot_473_205.webp',
+            visibilityMaskNight: 'assets/figma_image/screenshot_474_216.webp',
+            splitMineBubble: 'assets/figma_image/screenshot_350_13.webp',
+            immunityBubbleImg: 'assets/figma_image/screenshot_618_408.webp',
+            powerUpHp: 'assets/figma_image/hp道具.webp',
+            powerUpRange: 'assets/figma_image/分裂弹道具.webp',
+            powerUpSplit: 'assets/figma_image/分裂弹道具.webp',
+            gameOverTitle: 'assets/figma_image/screenshot_222_1196.webp',
+            btnRetry: 'assets/figma_image/screenshot_222_1157.webp',
+            btnConfig: 'assets/figma_image/screenshot_222_1158.webp',
+            scorePanel: 'assets/figma_image/screenshot_222_1203.webp',
+            bossWarning: 'assets/figma_image/screenshot_254_1433.webp',
+            bossWarningHighlight: 'assets/figma_image/screenshot_254_1370.webp',
+            boss: 'assets/figma_image/screenshot_211_477.webp',
+            bossHpBar: 'assets/figma_image/screenshot_329_187.webp',
+            pauseTitle: 'assets/figma_image/screenshot_220_190.webp',
+            btnResume: 'assets/figma_image/screenshot_255_1506.webp',
+            btnRetryPause: 'assets/figma_image/screenshot_220_176.webp',
+            btnConfigPause: 'assets/figma_image/screenshot_220_182.webp',
+            uiTopBar: 'assets/figma_image/screenshot_257_282.webp',
+            victoryCharacter: 'assets/figma_image/screenshot_512_165.webp',
+            victoryScorePanel: 'assets/figma_image/screenshot_571_3.webp',
+            btnVictoryRetry: 'assets/figma_image/screenshot_259_1508.webp',
+            btnVictoryConfig: 'assets/figma_image/screenshot_259_1514.webp',
+            bossBullet: 'assets/figma_image/screenshot_517_506.webp',
+            bossMissile: 'assets/figma_image/screenshot_517_484.webp',
+            bossDefeatBubble: 'assets/figma_image/screenshot_519_513.webp',
+            controlHintBubble: 'assets/figma_image/screenshot_513_199.webp', // 操作提示气泡
+            scoreProgressBar: 'assets/figma_image/screenshot_577_652.webp', // 分数进度条
+            scoreProgressIndicator: 'assets/figma_image/screenshot_572_364.webp', // 分数进度指示器（玩家船图标）
+            bossLaserWarning: 'assets/figma_image/screenshot_584_34.webp', // Boss激光预警贴图
             bossLaserSprite: 'assets/sprites/boss_laser.webp', // Boss激光精灵图
             missileTailSprite: 'assets/sprites/missile_tail.webp', // 导弹尾焰精灵图
             explosionSprite: 'assets/sprites/explosion.webp', // 爆炸精灵图
             superWeaponSprite: 'assets/sprites/super_weapon.webp', // 超级武器精灵图
             missileBubbleSprite: 'assets/sprites/missile_bubble.png', // 导弹发射气泡精灵图
             waterSplashSprite: 'assets/sprites/water_splash.webp', // 海面浪花精灵图
-            waterSplashNightSprite: 'assets/sprites/water_splash_night.webp' // 夜晚海面浪花精灵图
+            waterSplashNightSprite: 'assets/sprites/water_splash_night.webp', // 夜晚海面浪花精灵图
+            bossLaserSound: '音效/boss激光.WAV', // Boss激光发射音效
+            explosionSound: '音效/爆炸.AAC', // 爆炸音效
+            waterSplashSound: '音效/浪花声音.AAC', // 浪花音效
+            bossBgm: '音效/boss bgm.mp3', // Boss阶段BGM
+            mainBgm: '音效/潜艇大战bgm.mp3', // 主游戏BGM
+            btnClickSound: '音效/btn点击.AAC', // 按钮点击音效
+            bossWarningSound: '音效/boss出场警告.AAC', // Boss出场警告音效
+            diceSound: '音效/骰子音效.AAC', // 骰子音效
+            superWeaponSound: '音效/必杀技.AAC', // 超级武器音效
+            mpFullSound: '音效/能量已满.mp3', // MP满了提示音效
+            splitAmmoSound: '音效/装载分裂弹语音.mp3' // 分裂弹道具音效
         };
         
         // 游戏暂停状态
@@ -2138,35 +2246,36 @@
         // ==================== 加载系统 ====================
         // 需要预加载的HTML图片资源路径
         const htmlImagePaths = [
-            'assets/figma_image/screenshot_211_704.png',
-            'assets/figma_image/screenshot_218_1099.png',
-            'assets/figma_image/screenshot_218_1105.png',
-            'assets/figma_image/screenshot_218_1100.png',
-            'assets/figma_image/screenshot_332_5.png',
-            'assets/figma_image/screenshot_220_190.png',
-            'assets/figma_image/screenshot_255_1506.png',
-            'assets/figma_image/screenshot_220_176.png',
-            'assets/figma_image/screenshot_220_182.png',
-            'assets/figma_image/screenshot_222_1203.png',
-            'assets/figma_image/screenshot_222_1196.png',
-            'assets/figma_image/screenshot_222_1157.png',
-            'assets/figma_image/screenshot_222_1158.png',
-            'assets/figma_image/screenshot_261_1545.png',
-            'assets/figma_image/screenshot_259_1523.png',
-            'assets/figma_image/screenshot_259_1508.png',
-            'assets/figma_image/screenshot_259_1514.png',
+            'assets/figma_image/screenshot_211_704.webp',
+            'assets/figma_image/screenshot_218_1099.webp',
+            'assets/figma_image/screenshot_218_1105.webp',
+            'assets/figma_image/screenshot_218_1100.webp',
+            'assets/figma_image/screenshot_332_5.webp',
+            'assets/figma_image/screenshot_220_190.webp',
+            'assets/figma_image/screenshot_255_1506.webp',
+            'assets/figma_image/screenshot_220_176.webp',
+            'assets/figma_image/screenshot_220_182.webp',
+            'assets/figma_image/screenshot_222_1203.webp',
+            'assets/figma_image/screenshot_222_1196.webp',
+            'assets/figma_image/screenshot_222_1157.webp',
+            'assets/figma_image/screenshot_222_1158.webp',
+            'assets/figma_image/screenshot_261_1545.webp',
+            'assets/figma_image/screenshot_259_1523.webp',
+            'assets/figma_image/screenshot_259_1508.webp',
+            'assets/figma_image/screenshot_259_1514.webp',
             'assets/skill_bg.png',
-            'assets/figma_image/screenshot_619_741.png',
+            'assets/figma_image/screenshot_619_741.webp',
             'assets/skill_dot_empty.png',
-            'assets/figma_image/screenshot_513_199.png', // 操作提示气泡
-            'assets/figma_image/screenshot_618_408.png' // 免疫防护气泡
+            'assets/figma_image/screenshot_513_199.webp', // 操作提示气泡
+            'assets/figma_image/screenshot_618_408.webp' // 免疫防护气泡
         ];
         
         function initLoading() {
             // 计算总资源数（普通素材 + HTML图片）
             // 现在所有序列帧都使用精灵图：explosion, superWeapon, missileBubble, waterSplash, waterSplashNight, bossLaser, missileTail
             // 精灵图作为普通素材加载，JSON数据直接嵌入代码
-            const normalAssetCount = Object.keys(assets).length - 14; // 减去 14 个非图片项：explosionFrames, superWeaponBgFrames, missileLaunchBubbleFrames, waterSplashFrames, waterSplashFramesNight, bossLaserFrames, bossLaserSpriteData, missileTailFrames, missileTailSpriteData, explosionSpriteData, superWeaponSpriteData, missileBubbleSpriteData, waterSplashSpriteData, waterSplashNightSpriteData
+            // 音效使用异步加载，不影响加载进度
+            const normalAssetCount = Object.keys(assets).length - 25; // 减去 25 个非图片项：explosionFrames, superWeaponBgFrames, missileLaunchBubbleFrames, waterSplashFrames, waterSplashFramesNight, bossLaserFrames, bossLaserSpriteData, missileTailFrames, missileTailSpriteData, explosionSpriteData, superWeaponSpriteData, missileBubbleSpriteData, waterSplashSpriteData, waterSplashNightSpriteData, bossLaserSound, explosionSound, waterSplashSound, bossBgm, mainBgm, btnClickSound, bossWarningSound, diceSound, superWeaponSound, mpFullSound, splitAmmoSound
             const totalAssets = normalAssetCount + htmlImagePaths.length;
             let loadedCount = 0;
             
@@ -2184,7 +2293,7 @@
             const assetPathsKeys = Object.keys(assetPaths);
             const missingPaths = assetsKeys.filter(key => 
                 !assetPathsKeys.includes(key) && 
-                !['explosionFrames', 'superWeaponBgFrames', 'missileLaunchBubbleFrames', 'waterSplashFrames', 'waterSplashFramesNight', 'bossLaserFrames', 'bossLaserSpriteData', 'missileTailFrames', 'missileTailSpriteData', 'explosionSpriteData', 'superWeaponSpriteData', 'missileBubbleSpriteData', 'waterSplashSpriteData', 'waterSplashNightSpriteData'].includes(key)
+                !['explosionFrames', 'superWeaponBgFrames', 'missileLaunchBubbleFrames', 'waterSplashFrames', 'waterSplashFramesNight', 'bossLaserFrames', 'bossLaserSpriteData', 'missileTailFrames', 'missileTailSpriteData', 'explosionSpriteData', 'superWeaponSpriteData', 'missileBubbleSpriteData', 'waterSplashSpriteData', 'waterSplashNightSpriteData', 'bossLaserSound', 'explosionSound', 'waterSplashSound', 'bossBgm', 'mainBgm', 'btnClickSound', 'bossWarningSound', 'diceSound', 'superWeaponSound', 'mpFullSound', 'splitAmmoSound'].includes(key)
             );
             if (missingPaths.length > 0) {
                 console.error('缺少路径的素材:', missingPaths);
@@ -2220,12 +2329,12 @@
             // 加载普通素材
             let normalAssetLoadedCount = 0;
             const normalAssetTotal = Object.keys(assets).filter(key => 
-                !['explosionFrames', 'superWeaponBgFrames', 'missileLaunchBubbleFrames', 'waterSplashFrames', 'waterSplashFramesNight', 'bossLaserFrames', 'bossLaserSpriteData', 'missileTailFrames', 'missileTailSpriteData', 'explosionSpriteData', 'superWeaponSpriteData', 'missileBubbleSpriteData', 'waterSplashSpriteData', 'waterSplashNightSpriteData'].includes(key)
+                !['explosionFrames', 'superWeaponBgFrames', 'missileLaunchBubbleFrames', 'waterSplashFrames', 'waterSplashFramesNight', 'bossLaserFrames', 'bossLaserSpriteData', 'missileTailFrames', 'missileTailSpriteData', 'explosionSpriteData', 'superWeaponSpriteData', 'missileBubbleSpriteData', 'waterSplashSpriteData', 'waterSplashNightSpriteData', 'bossLaserSound', 'explosionSound', 'waterSplashSound', 'bossBgm', 'mainBgm', 'btnClickSound', 'bossWarningSound', 'diceSound', 'superWeaponSound', 'mpFullSound', 'splitAmmoSound'].includes(key)
             ).length;
             console.log(`普通素材总数: ${normalAssetTotal}, assets总数: ${Object.keys(assets).length}`);
             
             for (const key in assets) {
-                if (['explosionFrames', 'superWeaponBgFrames', 'missileLaunchBubbleFrames', 'waterSplashFrames', 'waterSplashFramesNight', 'bossLaserFrames', 'bossLaserSpriteData', 'missileTailFrames', 'missileTailSpriteData', 'explosionSpriteData', 'superWeaponSpriteData', 'missileBubbleSpriteData', 'waterSplashSpriteData', 'waterSplashNightSpriteData'].includes(key)) continue; // 跳过数组和精灵图数据，单独处理
+                if (['explosionFrames', 'superWeaponBgFrames', 'missileLaunchBubbleFrames', 'waterSplashFrames', 'waterSplashFramesNight', 'bossLaserFrames', 'bossLaserSpriteData', 'missileTailFrames', 'missileTailSpriteData', 'explosionSpriteData', 'superWeaponSpriteData', 'missileBubbleSpriteData', 'waterSplashSpriteData', 'waterSplashNightSpriteData', 'bossLaserSound', 'explosionSound', 'waterSplashSound', 'bossBgm', 'mainBgm', 'btnClickSound', 'bossWarningSound', 'diceSound', 'superWeaponSound', 'mpFullSound', 'splitAmmoSound'].includes(key)) continue; // 跳过数组、精灵图数据和音效，单独处理
                 
                 loadStatus[key] = 'loading';
                 
@@ -2260,6 +2369,178 @@
                 const cacheBuster = `?t=${Date.now()}`;
                 assets[key].src = assetPaths[key] + cacheBuster;
             }
+            
+            // 加载音效（完全异步，不影响游戏加载进度）
+            setTimeout(() => {
+                // 加载Boss激光音效
+                if (assets.bossLaserSound && assetPaths.bossLaserSound) {
+                    try {
+                        assets.bossLaserSound.oncanplaythrough = () => {
+                            console.log('Boss激光音效加载成功');
+                        };
+                        assets.bossLaserSound.onerror = () => {
+                            console.error('Boss激光音效加载失败');
+                        };
+                        assets.bossLaserSound.src = assetPaths.bossLaserSound;
+                    } catch (e) {
+                        console.error('Boss激光音效加载异常:', e);
+                    }
+                }
+                
+                // 加载爆炸音效
+                if (assets.explosionSound && assetPaths.explosionSound) {
+                    try {
+                        assets.explosionSound.oncanplaythrough = () => {
+                            console.log('爆炸音效加载成功');
+                        };
+                        assets.explosionSound.onerror = () => {
+                            console.error('爆炸音效加载失败');
+                        };
+                        assets.explosionSound.src = assetPaths.explosionSound;
+                    } catch (e) {
+                        console.error('爆炸音效加载异常:', e);
+                    }
+                }
+                
+                // 加载浪花音效
+                if (assets.waterSplashSound && assetPaths.waterSplashSound) {
+                    try {
+                        assets.waterSplashSound.oncanplaythrough = () => {
+                            console.log('浪花音效加载成功');
+                        };
+                        assets.waterSplashSound.onerror = () => {
+                            console.error('浪花音效加载失败');
+                        };
+                        assets.waterSplashSound.src = assetPaths.waterSplashSound;
+                    } catch (e) {
+                        console.error('浪花音效加载异常:', e);
+                    }
+                }
+                
+                // 加载Boss BGM
+                if (assets.bossBgm && assetPaths.bossBgm) {
+                    try {
+                        assets.bossBgm.loop = true; // 设置循环播放
+                        assets.bossBgm.volume = 0.6; // 设置合适音量（上调20%）
+                        assets.bossBgm.oncanplaythrough = () => {
+                            console.log('Boss BGM加载成功');
+                        };
+                        assets.bossBgm.onerror = () => {
+                            console.error('Boss BGM加载失败');
+                        };
+                        assets.bossBgm.src = assetPaths.bossBgm;
+                    } catch (e) {
+                        console.error('Boss BGM加载异常:', e);
+                    }
+                }
+                
+                // 加载主游戏BGM
+                if (assets.mainBgm && assetPaths.mainBgm) {
+                    try {
+                        assets.mainBgm.loop = true; // 设置循环播放
+                        assets.mainBgm.volume = 0.5; // 设置合适音量
+                        assets.mainBgm.oncanplaythrough = () => {
+                            console.log('主游戏BGM加载成功');
+                        };
+                        assets.mainBgm.onerror = () => {
+                            console.error('主游戏BGM加载失败');
+                        };
+                        assets.mainBgm.src = assetPaths.mainBgm;
+                    } catch (e) {
+                        console.error('主游戏BGM加载异常:', e);
+                    }
+                }
+                
+                // 加载按钮点击音效
+                if (assets.btnClickSound && assetPaths.btnClickSound) {
+                    try {
+                        assets.btnClickSound.oncanplaythrough = () => {
+                            console.log('按钮点击音效加载成功');
+                        };
+                        assets.btnClickSound.onerror = () => {
+                            console.error('按钮点击音效加载失败');
+                        };
+                        assets.btnClickSound.src = assetPaths.btnClickSound;
+                    } catch (e) {
+                        console.error('按钮点击音效加载异常:', e);
+                    }
+                }
+                
+                // 加载Boss出场警告音效
+                if (assets.bossWarningSound && assetPaths.bossWarningSound) {
+                    try {
+                        assets.bossWarningSound.oncanplaythrough = () => {
+                            console.log('Boss警告音效加载成功');
+                        };
+                        assets.bossWarningSound.onerror = () => {
+                            console.error('Boss警告音效加载失败');
+                        };
+                        assets.bossWarningSound.src = assetPaths.bossWarningSound;
+                    } catch (e) {
+                        console.error('Boss警告音效加载异常:', e);
+                    }
+                }
+                
+                // 加载骰子音效
+                if (assets.diceSound && assetPaths.diceSound) {
+                    try {
+                        assets.diceSound.oncanplaythrough = () => {
+                            console.log('骰子音效加载成功');
+                        };
+                        assets.diceSound.onerror = () => {
+                            console.error('骰子音效加载失败');
+                        };
+                        assets.diceSound.src = assetPaths.diceSound;
+                    } catch (e) {
+                        console.error('骰子音效加载异常:', e);
+                    }
+                }
+                
+                // 加载超级武器音效
+                if (assets.superWeaponSound && assetPaths.superWeaponSound) {
+                    try {
+                        assets.superWeaponSound.oncanplaythrough = () => {
+                            console.log('超级武器音效加载成功');
+                        };
+                        assets.superWeaponSound.onerror = () => {
+                            console.error('超级武器音效加载失败');
+                        };
+                        assets.superWeaponSound.src = assetPaths.superWeaponSound;
+                    } catch (e) {
+                        console.error('超级武器音效加载异常:', e);
+                    }
+                }
+                
+                // 加载MP满了提示音效
+                if (assets.mpFullSound && assetPaths.mpFullSound) {
+                    try {
+                        assets.mpFullSound.oncanplaythrough = () => {
+                            console.log('MP满提示音效加载成功');
+                        };
+                        assets.mpFullSound.onerror = () => {
+                            console.error('MP满提示音效加载失败');
+                        };
+                        assets.mpFullSound.src = assetPaths.mpFullSound;
+                    } catch (e) {
+                        console.error('MP满提示音效加载异常:', e);
+                    }
+                }
+                
+                // 加载分裂弹道具音效
+                if (assets.splitAmmoSound && assetPaths.splitAmmoSound) {
+                    try {
+                        assets.splitAmmoSound.oncanplaythrough = () => {
+                            console.log('分裂弹道具音效加载成功');
+                        };
+                        assets.splitAmmoSound.onerror = () => {
+                            console.error('分裂弹道具音效加载失败');
+                        };
+                        assets.splitAmmoSound.src = assetPaths.splitAmmoSound;
+                    } catch (e) {
+                        console.error('分裂弹道具音效加载异常:', e);
+                    }
+                }
+            }, 100);
             
             console.log(`普通素材初始化完成，已缓存: ${normalAssetLoadedCount}/${normalAssetTotal}`);
             
@@ -2373,6 +2654,20 @@
             shipDisplay.style.transition = '';
             shipDisplay.style.transform = '';
             
+            // 播放主游戏 BGM
+            setTimeout(() => {
+                try {
+                    if (assets.mainBgm && assets.mainBgm.src) {
+                        assets.mainBgm.currentTime = 0;
+                        assets.mainBgm.play().catch(e => {
+                            console.log('主游戏 BGM 播放失败:', e);
+                        });
+                    }
+                } catch (e) {
+                    console.log('主游戏 BGM 播放异常:', e);
+                }
+            }, 0);
+            
             updateSkillUI();
         }
         
@@ -2396,12 +2691,47 @@
                     hidePauseScreen();
                 } else if (fromScreen === 'gameover') {
                     hideGameOverScreen();
+                    // 从游戏结束界面离开时重新开始主BGM
+                    setTimeout(() => {
+                        try {
+                            if (assets.bossBgm) {
+                                assets.bossBgm.pause();
+                                assets.bossBgm.currentTime = 0;
+                            }
+                            if (assets.mainBgm && assets.mainBgm.src) {
+                                assets.mainBgm.currentTime = 0;
+                                assets.mainBgm.play().catch(e => {
+                                    console.log('主游戏 BGM 播放失败:', e);
+                                });
+                            }
+                        } catch (e) {
+                            console.log('BGM 切换异常:', e);
+                        }
+                    }, 0);
                 } else if (fromScreen === 'victory') {
                     hideVictoryScreen();
+                    // 从通关界面离开时停止Boss BGM，重新开始主BGM
+                    setTimeout(() => {
+                        try {
+                            if (assets.bossBgm) {
+                                assets.bossBgm.pause();
+                                assets.bossBgm.currentTime = 0;
+                            }
+                            if (assets.mainBgm && assets.mainBgm.src) {
+                                assets.mainBgm.currentTime = 0;
+                                assets.mainBgm.play().catch(e => {
+                                    console.log('主游戏 BGM 播放失败:', e);
+                                });
+                            }
+                        } catch (e) {
+                            console.log('BGM 切换异常:', e);
+                        }
+                    }, 0);
                 }
                 
-                // 隐藏游戏画布
+                // 隐藏游戏画布和虚拟按钮
                 document.getElementById('gameCanvas').style.display = 'none';
+                virtualControls.classList.remove('active');
                 
                 // 重置技能点
                 gameState.skillPoints = { speed: 0, hp: 0, ammo: 0 };
@@ -2666,6 +2996,9 @@
                 document.getElementById('gameCanvas').style.display = 'block';
                 gameState.currentScreen = 'game';
                 
+                // 显示虚拟游戏按钮
+                updateVirtualControlsVisibility();
+                
                 initGame();
                 
                 // 确保只有一个游戏循环在运行
@@ -2763,7 +3096,8 @@
         let splitMineBubble = {
             active: false,
             startTime: 0,
-            duration: 3000 // 显示3秒钟
+            endTime: 0,
+            duration: 5000 // 显示5秒钟
         };
         
         // 超级武器气泡动画状态
@@ -2840,6 +3174,7 @@
             gameOver = false;
             gamePaused = false; // 确保游戏不是暂停状态
             superWeaponReady = false;
+            mpFullSoundPlayed = false; // 重置MP满音效播放标志
             gameStartTime = Date.now(); // 记录游戏开始时间
             finalGameTime = 0; // 重置最终游戏时间
             pausedTime = 0; // 重置暂停时间
@@ -3006,6 +3341,24 @@
             controlHintBubble.active = true;
             controlHintBubble.hasPlayerMoved = false;
             controlHintBubble.hasPlayerFired = false;
+            
+            // 停止所有BGM，然后重新开始主游戏BGM
+            setTimeout(() => {
+                try {
+                    if (assets.bossBgm) {
+                        assets.bossBgm.pause();
+                        assets.bossBgm.currentTime = 0;
+                    }
+                    if (assets.mainBgm && assets.mainBgm.src) {
+                        assets.mainBgm.currentTime = 0;
+                        assets.mainBgm.play().catch(e => {
+                            console.log('主游戏 BGM 播放失败:', e);
+                        });
+                    }
+                } catch (e) {
+                    console.log('BGM 切换异常:', e);
+                }
+            }, 0);
             
             // 重新初始化游戏
             initGame();
@@ -3283,6 +3636,26 @@
             
             // Boss出场时不清除现有潜艇，让它们继续移动直到离开画面
             
+            // 停止主游戏BGM，播放Boss BGM
+            setTimeout(() => {
+                try {
+                    // 先停止主游戏BGM
+                    if (assets.mainBgm) {
+                        assets.mainBgm.pause();
+                        assets.mainBgm.currentTime = 0;
+                    }
+                    // 播放Boss BGM
+                    if (assets.bossBgm && assets.bossBgm.src) {
+                        assets.bossBgm.currentTime = 0;
+                        assets.bossBgm.play().catch(e => {
+                            console.log('Boss BGM播放失败:', e);
+                        });
+                    }
+                } catch (e) {
+                    console.log('BGM切换异常:', e);
+                }
+            }, 0);
+            
             console.log('Boss激活，开始入场');
         }
 
@@ -3341,6 +3714,20 @@
                     boss.laserActive = true;
                     boss.laserStartTime = now;
                     console.log('Boss攻击3：激光发射！');
+                    // 播放激光发射音效（完全隔离，防止影响游戏逻辑）
+                    setTimeout(() => {
+                        try {
+                            if (assets.bossLaserSound && assets.bossLaserSound.src) {
+                                // 克隆音效对象，避免影响原始对象状态
+                                const sound = assets.bossLaserSound.cloneNode(true);
+                                sound.play().catch(e => {
+                                    console.log('Boss激光音效播放失败:', e);
+                                });
+                            }
+                        } catch (e) {
+                            console.log('Boss激光音效处理异常:', e);
+                        }
+                    }, 0);
                 }
                 return;
             }
@@ -3751,6 +4138,19 @@
                     triggered: false
                 });
             }
+            
+            // 只停止主BGM，Boss BGM继续播放到通关界面
+            setTimeout(() => {
+                try {
+                    if (assets.mainBgm) {
+                        assets.mainBgm.pause();
+                        assets.mainBgm.currentTime = 0;
+                    }
+                    // Boss BGM不停止，在通关界面继续播放
+                } catch (e) {
+                    console.log('BGM停止异常:', e);
+                }
+            }, 0);
         }
 
         // 玩家死亡爆炸动画（参考Boss失败的爆炸动画）
@@ -3770,6 +4170,22 @@
                     triggered: false
                 });
             }
+            
+            // 停止所有BGM
+            setTimeout(() => {
+                try {
+                    if (assets.mainBgm) {
+                        assets.mainBgm.pause();
+                        assets.mainBgm.currentTime = 0;
+                    }
+                    if (assets.bossBgm) {
+                        assets.bossBgm.pause();
+                        assets.bossBgm.currentTime = 0;
+                    }
+                } catch (e) {
+                    console.log('BGM停止异常:', e);
+                }
+            }, 0);
         }
 
         // 更新玩家死亡爆炸效果
@@ -4194,16 +4610,19 @@
         
         // 处理通关界面按钮事件
         document.getElementById('btnVictoryRetry').addEventListener('click', () => {
+            playBtnClickSound();
             hideVictoryScreen();
             resetGame();
         });
         
         document.getElementById('btnVictoryConfig').addEventListener('click', () => {
+            playBtnClickSound();
             transitionToSkillPanel('victory');
         });
 
         // 排行榜按钮事件监听
         document.getElementById('btnUploadLeaderboard').addEventListener('click', async () => {
+            playBtnClickSound();
             const playerName = document.getElementById('playerNameInput').value;
             const success = await uploadToLeaderboard(playerName);
             if (success) {
@@ -4216,11 +4635,13 @@
         // 点击气泡外部关闭
         document.getElementById('leaderboardBubble').addEventListener('click', (e) => {
             if (e.target.id === 'leaderboardBubble') {
+                playBtnClickSound();
                 hideLeaderboardBubble();
             }
         });
 
         document.getElementById('btnCloseLeaderboard').addEventListener('click', () => {
+            playBtnClickSound();
             hideLeaderboardModal();
         });
 
@@ -5151,6 +5572,24 @@
                 frameIndex: 0,
                 isNight: isNightOrBoss // 记录创建时的场景类型
             });
+            
+            // 播放浪花音效（完全隔离，防止影响游戏逻辑）
+            setTimeout(() => {
+                try {
+                    if (assets.waterSplashSound && assets.waterSplashSound.src) {
+                        // 克隆音效对象以支持同时播放多个浪花音效
+                        const sound = assets.waterSplashSound.cloneNode(true);
+                        // 基础音量0.3，随机变化±0.15，最终范围0.15-0.45
+                        const randomVolume = Math.max(0, Math.min(1, 0.3 + (Math.random() - 0.5) * 0.3));
+                        sound.volume = randomVolume;
+                        sound.play().catch(e => {
+                            console.log('浪花音效播放失败:', e);
+                        });
+                    }
+                } catch (e) {
+                    console.log('浪花音效播放异常:', e);
+                }
+            }, 0);
         }
 
         // 激光产生的浪花特效（持续时间减少30%，大小增加20%）
@@ -5234,8 +5673,8 @@
         }
 
         function updatePowerUps() {
-            // 道具上浮速度比敌方导弹快50%，再上调20%
-            const powerUpSpeed = 2.3 * 1.5 * 1.2 * 144; // 转换为每秒像素（144Hz基准）
+            // 道具上浮速度比敌方导弹快50%，再上调20%，然后减少40%
+            const powerUpSpeed = 2.3 * 1.5 * 1.2 * 0.6 * 144; // 转换为每秒像素（144Hz基准）
             for (let i = powerUps.length - 1; i >= 0; i--) {
                 const pu = powerUps[i];
                 pu.y -= powerUpSpeed * deltaTime;
@@ -5764,7 +6203,7 @@
             
             // 判断两个气泡是否同时显示
             const showSuperWeaponBubble = mp >= 100 && !superWeaponEffect.active;
-            const showSplitMineBubble = splitMineBubble.active;
+            const showSplitMineBubble = splitMineBubble.active && Date.now() < splitMineBubble.endTime;
             
             // 更新超级武器气泡动画状态
             if (showSuperWeaponBubble) {
@@ -5791,6 +6230,10 @@
                     splitMineBubbleAnim.phase = 'entry';
                 }
             } else {
+                // 如果时间到了，自动关闭active状态
+                if (splitMineBubble.active && Date.now() >= splitMineBubble.endTime) {
+                    splitMineBubble.active = false;
+                }
                 if (splitMineBubbleAnim.active && splitMineBubbleAnim.phase !== 'exit') {
                     // 开始消失动画
                     splitMineBubbleAnim.phase = 'exit';
@@ -6830,9 +7273,21 @@
                         // 激活分裂水雷，设置30颗计数
                         splitMineActive = true;
                         splitMineCount = 30; // 持续30颗水雷
-                        // 显示分裂水雷提示气泡
+                        // 显示分裂水雷提示气泡（持续5秒）
                         splitMineBubble.active = true;
                         splitMineBubble.startTime = Date.now();
+                        splitMineBubble.endTime = Date.now() + splitMineBubble.duration;
+                        
+                        // 播放分裂弹道具音效
+                        setTimeout(() => {
+                            try {
+                                if (assets.splitAmmoSound && assets.splitAmmoSound.src) {
+                                    const sound = assets.splitAmmoSound.cloneNode(true);
+                                    sound.volume = 0.72;
+                                    sound.play().catch(e => {});
+                                }
+                            } catch (e) {}
+                        }, 0);
                     }
                     powerUps.splice(pIndex, 1);
                 }
@@ -6860,6 +7315,11 @@
                         mpAnimation.fromMp = mpAnimation.displayMp;
                         mpAnimation.toMp = newMp;
                         mp = newMp;
+                        
+                        // MP满了播放提示音效
+                        if (mp >= 100) {
+                            playMpFullSound();
+                        }
                         
                         // 创建爆炸效果
                         createExplosion(boss.x + boss.width / 2, boss.y + boss.height / 2);
@@ -6893,6 +7353,78 @@
                 isGoldSub: isGoldSub, // 是否是稀有潜艇（用于延长显示时间）
                 animationDuration: isGoldSub ? 750 : 500 // 稀有潜艇动画时长+50%（750ms vs 500ms）
             });
+            
+            // 播放爆炸音效（完全隔离，防止影响游戏逻辑）
+            setTimeout(() => {
+                try {
+                    if (assets.explosionSound && assets.explosionSound.src) {
+                        // 克隆音效对象以支持同时播放多个爆炸音效
+                        const sound = assets.explosionSound.cloneNode(true);
+                        // 随机音量：0.52 到 1.0 之间（上调30%），每次爆炸音量略有不同
+                        const randomVolume = 0.52 + Math.random() * 0.48;
+                        sound.volume = randomVolume;
+                        sound.play().catch(e => {
+                            console.log('爆炸音效播放失败:', e);
+                        });
+                    }
+                } catch (e) {
+                    console.log('爆炸音效播放异常:', e);
+                }
+            }, 0);
+        }
+
+        // 播放按钮点击音效
+        function playBtnClickSound() {
+            setTimeout(() => {
+                try {
+                    if (assets.btnClickSound && assets.btnClickSound.src) {
+                        const sound = assets.btnClickSound.cloneNode(true);
+                        sound.volume = 0.6;
+                        sound.play().catch(e => {
+                            console.log('按钮点击音效播放失败:', e);
+                        });
+                    }
+                } catch (e) {
+                    console.log('按钮点击音效播放异常:', e);
+                }
+            }, 0);
+        }
+
+        // 播放骰子音效
+        function playDiceSound() {
+            setTimeout(() => {
+                try {
+                    if (assets.diceSound && assets.diceSound.src) {
+                        const sound = assets.diceSound.cloneNode(true);
+                        sound.volume = 0.7;
+                        sound.play().catch(e => {
+                            console.log('骰子音效播放失败:', e);
+                        });
+                    }
+                } catch (e) {
+                    console.log('骰子音效播放异常:', e);
+                }
+            }, 0);
+        }
+        
+        // 播放MP满了提示音效
+        function playMpFullSound() {
+            if (mpFullSoundPlayed) return; // 避免重复播放
+            mpFullSoundPlayed = true;
+            
+            setTimeout(() => {
+                try {
+                    if (assets.mpFullSound && assets.mpFullSound.src) {
+                        const sound = assets.mpFullSound.cloneNode(true);
+                        sound.volume = 0.9;
+                        sound.play().catch(e => {
+                            console.log('MP满提示音效播放失败:', e);
+                        });
+                    }
+                } catch (e) {
+                    console.log('MP满提示音效播放异常:', e);
+                }
+            }, 0);
         }
 
         // 连锁爆炸函数
@@ -6969,6 +7501,11 @@
                     mpAnimation.toMp = newMp;
                     mp = newMp;
                     
+                    // MP满了播放提示音效
+                    if (mp >= 100) {
+                        playMpFullSound();
+                    }
+                    
                     // 检查是否达到1000分，触发强敌来袭
                     checkBossWarning();
                 }, 100 + idx * 50); // 先等待100ms受击效果，再按距离延迟（50ms间隔）
@@ -7007,6 +7544,11 @@
                     mpAnimation.toMp = newMp2;
                     mp = newMp2;
                     
+                    // MP满了播放提示音效
+                    if (mp >= 100) {
+                        playMpFullSound();
+                    }
+                    
                     // 检查是否达到1000分，触发强敌来袭
                     checkBossWarning();
                 }, 100); // 0.1秒后爆炸
@@ -7020,6 +7562,21 @@
                 bossWarningEffect.shown = true;
                 bossWarningEffect.startTime = Date.now();
                 bossWarningEffect.currentY = bossWarningEffect.entryOffset;
+                
+                // 播放Boss警告音效（完全隔离，防止影响游戏逻辑）
+                setTimeout(() => {
+                    try {
+                        if (assets.bossWarningSound && assets.bossWarningSound.src) {
+                            const sound = assets.bossWarningSound.cloneNode(true);
+                            sound.volume = 0.7;
+                            sound.play().catch(e => {
+                                console.log('Boss警告音效播放失败:', e);
+                            });
+                        }
+                    } catch (e) {
+                        console.log('Boss警告音效播放异常:', e);
+                    }
+                }, 0);
             }
         }
 
@@ -7178,7 +7735,9 @@
                 // 金手指：按 M 键直接满MP，测试超级武器
                 if ((e.key === 'm' || e.key === 'M') && !gameOver) {
                     mp = 100;
+                    mpAnimation.displayMp = 100;
                     console.log('金手指：MP已充满！');
+                    playMpFullSound();
                 }
                 
                 // 作弊键：按 P 键直接通关
@@ -7199,6 +7758,167 @@
 
         document.addEventListener('keyup', (e) => {
             keys[e.key] = false;
+        });
+
+        // ==================== 设备检测机制 ====================
+        const isMobileDevice = (function() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            // 检测移动设备
+            const mobileKeywords = [
+                'Android', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone',
+                'Mobile', 'Opera Mini', 'IEMobile', 'WPDesktop'
+            ];
+            // 检测触摸支持
+            const hasTouchSupport = 'ontouchstart' in window || 
+                (window.DocumentTouch && document instanceof window.DocumentTouch) ||
+                navigator.maxTouchPoints > 0 ||
+                navigator.msMaxTouchPoints > 0;
+            
+            // 判断是否为移动设备
+            const isMobile = mobileKeywords.some(keyword => userAgent.indexOf(keyword) !== -1);
+            
+            // 结合触摸支持判断
+            return isMobile || hasTouchSupport;
+        })();
+
+        console.log('设备检测结果:', isMobileDevice ? '移动端' : 'PC端');
+
+        // ==================== 虚拟按钮控制 ====================
+        const virtualControls = document.getElementById('virtualControls');
+        const btnLeft = document.getElementById('btnLeft');
+        const btnRight = document.getElementById('btnRight');
+        const btnFire = document.getElementById('btnFire');
+        const btnSuper = document.getElementById('btnSuper');
+        const btnPause = document.getElementById('btnPause');
+
+        // 显示/隐藏虚拟按钮（仅在移动端显示）
+        function updateVirtualControlsVisibility() {
+            if (isMobileDevice && gameState.currentScreen === 'game') {
+                virtualControls.classList.add('active');
+            } else {
+                virtualControls.classList.remove('active');
+            }
+        }
+
+        // 移动按钮 - 左
+        btnLeft.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            keys['ArrowLeft'] = true;
+            if (controlHintBubble.active) {
+                controlHintBubble.hasPlayerMoved = true;
+                if (controlHintBubble.hasPlayerMoved && controlHintBubble.hasPlayerFired) {
+                    controlHintBubble.active = false;
+                }
+            }
+        });
+        btnLeft.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            keys['ArrowLeft'] = false;
+        });
+        btnLeft.addEventListener('mousedown', () => { keys['ArrowLeft'] = true; });
+        btnLeft.addEventListener('mouseup', () => { keys['ArrowLeft'] = false; });
+        btnLeft.addEventListener('mouseleave', () => { keys['ArrowLeft'] = false; });
+
+        // 移动按钮 - 右
+        btnRight.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            keys['ArrowRight'] = true;
+            if (controlHintBubble.active) {
+                controlHintBubble.hasPlayerMoved = true;
+                if (controlHintBubble.hasPlayerMoved && controlHintBubble.hasPlayerFired) {
+                    controlHintBubble.active = false;
+                }
+            }
+        });
+        btnRight.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            keys['ArrowRight'] = false;
+        });
+        btnRight.addEventListener('mousedown', () => { keys['ArrowRight'] = true; });
+        btnRight.addEventListener('mouseup', () => { keys['ArrowRight'] = false; });
+        btnRight.addEventListener('mouseleave', () => { keys['ArrowRight'] = false; });
+
+        // 发射按钮
+        btnFire.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameState.currentScreen === 'game' && mineAmmo > 0 && !gameOver && !gamePaused && hp > 0) {
+                mines.push({
+                    x: player.x + player.width / 2 - 30,
+                    y: player.y + player.height,
+                    width: 60,
+                    height: 61,
+                    speed: 5 * 144,
+                    isSplitMine: splitMineActive,
+                    hasSplit: false
+                });
+                mineAmmo--;
+                mineRegenTime = Date.now();
+                if (splitMineActive) {
+                    splitMineCount--;
+                    if (splitMineCount <= 0) {
+                        splitMineActive = false;
+                        splitMineBubble.active = false;
+                    }
+                }
+                if (controlHintBubble.active) {
+                    controlHintBubble.hasPlayerFired = true;
+                    if (controlHintBubble.hasPlayerMoved && controlHintBubble.hasPlayerFired) {
+                        controlHintBubble.active = false;
+                    }
+                }
+            }
+        });
+        btnFire.addEventListener('mousedown', (e) => {
+            if (gameState.currentScreen === 'game' && mineAmmo > 0 && !gameOver && !gamePaused && hp > 0) {
+                mines.push({
+                    x: player.x + player.width / 2 - 30,
+                    y: player.y + player.height,
+                    width: 60,
+                    height: 61,
+                    speed: 5 * 144,
+                    isSplitMine: splitMineActive,
+                    hasSplit: false
+                });
+                mineAmmo--;
+                mineRegenTime = Date.now();
+                if (splitMineActive) {
+                    splitMineCount--;
+                    if (splitMineCount <= 0) {
+                        splitMineActive = false;
+                        splitMineBubble.active = false;
+                    }
+                }
+            }
+        });
+
+        // 超级武器按钮
+        btnSuper.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameState.currentScreen === 'game' && !gameOver && mp >= 100) {
+                playBtnClickSound();
+                useSuperWeapon();
+            }
+        });
+        btnSuper.addEventListener('click', () => {
+            if (gameState.currentScreen === 'game' && !gameOver && mp >= 100) {
+                playBtnClickSound();
+                useSuperWeapon();
+            }
+        });
+
+        // 暂停按钮
+        btnPause.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameState.currentScreen === 'game' && !gameOver) {
+                playBtnClickSound();
+                togglePause();
+            }
+        });
+        btnPause.addEventListener('click', () => {
+            if (gameState.currentScreen === 'game' && !gameOver) {
+                playBtnClickSound();
+                togglePause();
+            }
         });
 
         // ==================== 暂停功能 ====================
@@ -7277,6 +7997,7 @@
         
         btnResumeEl.addEventListener('click', () => {
             if (!gamePaused) return;
+            playBtnClickSound();
             pauseOption = 0;
             handlePauseAction();
         });
@@ -7289,6 +8010,7 @@
         
         btnRetryPauseEl.addEventListener('click', () => {
             if (!gamePaused) return;
+            playBtnClickSound();
             pauseOption = 1;
             handlePauseAction();
         });
@@ -7301,6 +8023,7 @@
         
         btnConfigPauseEl.addEventListener('click', () => {
             if (!gamePaused) return;
+            playBtnClickSound();
             pauseOption = 2;
             handlePauseAction();
         });
@@ -7317,6 +8040,7 @@
         
         btnRetryEl.addEventListener('click', () => {
             if (!gameOver) return;
+            playBtnClickSound();
             gameOverOption = 0;
             handleGameOverAction();
         });
@@ -7334,6 +8058,7 @@
         
         btnConfigEl.addEventListener('click', () => {
             if (!gameOver) return;
+            playBtnClickSound();
             gameOverOption = 1;
             handleGameOverAction();
         });
@@ -7355,6 +8080,21 @@
                 // 重新挑战 - 重置选项并重新开始
                 hideGameOverScreen();
                 gameOverOption = 0;
+                
+                // 确保主游戏 BGM 正在播放
+                setTimeout(() => {
+                    try {
+                        if (assets.mainBgm && assets.mainBgm.src && assets.mainBgm.paused) {
+                            assets.mainBgm.currentTime = 0;
+                            assets.mainBgm.play().catch(e => {
+                                console.log('主游戏 BGM 播放失败:', e);
+                            });
+                        }
+                    } catch (e) {
+                        console.log('主游戏 BGM 播放异常:', e);
+                    }
+                }, 0);
+                
                 initGame();
             } else {
                 // 重新配置战船 - 返回技能面板
@@ -7372,12 +8112,30 @@
         }
 
         function useSuperWeapon() {
+            // 播放超级武器音效（完全隔离，防止影响游戏逻辑）
+            setTimeout(() => {
+                try {
+                    if (assets.superWeaponSound && assets.superWeaponSound.src) {
+                        const sound = assets.superWeaponSound.cloneNode(true);
+                        sound.volume = 0.8;
+                        sound.play().catch(e => {
+                            console.log('超级武器音效播放失败:', e);
+                        });
+                    }
+                } catch (e) {
+                    console.log('超级武器音效播放异常:', e);
+                }
+            }, 0);
+            
             // 启动MP动画（清空MP）
             mpAnimation.active = true;
             mpAnimation.startTime = Date.now();
             mpAnimation.fromMp = mpAnimation.displayMp;
             mpAnimation.toMp = 0;
             mp = 0;
+            
+            // 重置MP满音效播放标志，下次满了还能播放
+            mpFullSoundPlayed = false;
             
             // 激活超级武器特效（动画展示2秒）
             superWeaponEffect.active = true;
