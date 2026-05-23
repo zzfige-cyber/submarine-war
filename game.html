@@ -2025,6 +2025,9 @@
         // MP满了音效播放标志
         let mpFullSoundPlayed = false;
         
+        // BGM是否已播放标志
+        let bgmHasStarted = false;
+        
         // 场景速度过渡状态
         let sceneSpeedTransition = {
             active: false,
@@ -2198,6 +2201,11 @@
                 hpFillProgress: 0 // 血量填充进度 0-1
             },
             entryComplete: false, // 入场是否完成
+            // 入场时的透明度变化状态（无敌时间闪烁）
+            entryAlphaAnim: {
+                startTime: 0,
+                cycleDuration: 1000 // 一个完整的透明度变化周期1秒（100%-50%-100%）
+            },
             attackPattern: 0, // 当前攻击模式：0=未开始, 1=圆点子弹, 2=追踪导弹, 3=激光
             attackSequence: [1, 2, 3], // 攻击循环顺序：1=子弹、2=导弹、3=激光
             currentAttackIndex: 0, // 当前攻击在序列中的索引
@@ -2654,20 +2662,6 @@
             shipDisplay.style.transition = '';
             shipDisplay.style.transform = '';
             
-            // 播放主游戏 BGM
-            setTimeout(() => {
-                try {
-                    if (assets.mainBgm && assets.mainBgm.src) {
-                        assets.mainBgm.currentTime = 0;
-                        assets.mainBgm.play().catch(e => {
-                            console.log('主游戏 BGM 播放失败:', e);
-                        });
-                    }
-                } catch (e) {
-                    console.log('主游戏 BGM 播放异常:', e);
-                }
-            }, 0);
-            
             updateSkillUI();
         }
         
@@ -2698,11 +2692,16 @@
                                 assets.bossBgm.pause();
                                 assets.bossBgm.currentTime = 0;
                             }
+                            // 先确保主BGM已暂停
+                            if (assets.mainBgm && !assets.mainBgm.paused) {
+                                assets.mainBgm.pause();
+                            }
                             if (assets.mainBgm && assets.mainBgm.src) {
                                 assets.mainBgm.currentTime = 0;
                                 assets.mainBgm.play().catch(e => {
                                     console.log('主游戏 BGM 播放失败:', e);
                                 });
+                                bgmHasStarted = true;
                             }
                         } catch (e) {
                             console.log('BGM 切换异常:', e);
@@ -2717,11 +2716,16 @@
                                 assets.bossBgm.pause();
                                 assets.bossBgm.currentTime = 0;
                             }
+                            // 先确保主BGM已暂停
+                            if (assets.mainBgm && !assets.mainBgm.paused) {
+                                assets.mainBgm.pause();
+                            }
                             if (assets.mainBgm && assets.mainBgm.src) {
                                 assets.mainBgm.currentTime = 0;
                                 assets.mainBgm.play().catch(e => {
                                     console.log('主游戏 BGM 播放失败:', e);
                                 });
+                                bgmHasStarted = true;
                             }
                         } catch (e) {
                             console.log('BGM 切换异常:', e);
@@ -2999,6 +3003,11 @@
                 // 显示虚拟游戏按钮
                 updateVirtualControlsVisibility();
                 
+                // 确保 BGM 正在播放
+                if (!bgmHasStarted) {
+                    playBgmOnFirstInteraction();
+                }
+                
                 initGame();
                 
                 // 确保只有一个游戏循环在运行
@@ -3232,6 +3241,8 @@
             boss.hpAnimation.active = false;
             boss.hpBarEntry.active = false;
             boss.entryComplete = false;
+            // 重置入场透明度动画开始时间
+            boss.entryAlphaAnim.startTime = 0;
             boss.currentAttackIndex = 0;
             boss.laserActive = false;
             boss.laserWarning = false;
@@ -3300,6 +3311,9 @@
             gamePaused = false; // 确保游戏不是暂停状态
             score = 0;
             
+            // 重置BGM播放标志
+            bgmHasStarted = false;
+            
             // 重置Boss状态
             boss.active = false;
             boss.x = 2100;
@@ -3310,6 +3324,8 @@
             boss.hpAnimation.active = false;
             boss.hpBarEntry.active = false;
             boss.entryComplete = false;
+            // 重置入场透明度动画开始时间
+            boss.entryAlphaAnim.startTime = 0;
             boss.currentAttackIndex = 0;
             boss.laserActive = false;
             boss.laserWarning = false;
@@ -3354,6 +3370,7 @@
                         assets.mainBgm.play().catch(e => {
                             console.log('主游戏 BGM 播放失败:', e);
                         });
+                        bgmHasStarted = true;
                     }
                 } catch (e) {
                     console.log('BGM 切换异常:', e);
@@ -3610,6 +3627,8 @@
             boss.hpBarEntry.startTime = Date.now();
             boss.hpBarEntry.hpFillProgress = 0;
             boss.entryComplete = false;
+            // 记录入场透明度动画开始时间
+            boss.entryAlphaAnim.startTime = Date.now();
             boss.currentAttackIndex = 0;
             boss.lastAttackTime = Date.now();
             boss.laserPreparing = false;
@@ -4218,6 +4237,9 @@
             const victoryScreen = document.getElementById('victoryScreen');
             const victoryScoreEl = document.getElementById('victoryScore');
             const victorySideButtons = document.getElementById('victorySideButtons');
+            
+            // 重置通关界面选项
+            victoryOption = 0;
 
             // 如果还没有记录通关时间，则计算（减去暂停时长）
             if (finalGameTime === 0) {
@@ -4663,7 +4685,28 @@
             if (assets.boss.complete && assets.boss.naturalWidth > 0) {
                 // 应用后坐力偏移
                 const offsetY = boss.recoilEffect ? boss.recoilEffect.offsetY : 0;
+                
+                // 入场未完成时，透明度在 100%-50%-100% 循环变化
+                let alpha = 1;
+                if (!boss.entryComplete && boss.active) {
+                    const now = Date.now();
+                    const elapsed = now - boss.entryAlphaAnim.startTime;
+                    // 使用正弦函数实现 100%-50%-100% 的平滑变化
+                    const progress = (elapsed % boss.entryAlphaAnim.cycleDuration) / boss.entryAlphaAnim.cycleDuration;
+                    // 先 0-0.5 时从 1 降到 0.5，然后 0.5-1 时从 0.5 升到 1
+                    if (progress < 0.5) {
+                        // 前半周期：100% -> 50%
+                        alpha = 1 - (progress * 2) * 0.5;
+                    } else {
+                        // 后半周期：50% -> 100%
+                        alpha = 0.5 + ((progress - 0.5) * 2) * 0.5;
+                    }
+                }
+                
+                ctx.save();
+                ctx.globalAlpha = alpha;
                 ctx.drawImage(assets.boss, boss.x, boss.y + offsetY, boss.width, boss.height);
+                ctx.restore();
             }
         }
         
@@ -5579,8 +5622,8 @@
                     if (assets.waterSplashSound && assets.waterSplashSound.src) {
                         // 克隆音效对象以支持同时播放多个浪花音效
                         const sound = assets.waterSplashSound.cloneNode(true);
-                        // 基础音量0.3，随机变化±0.15，最终范围0.15-0.45
-                        const randomVolume = Math.max(0, Math.min(1, 0.3 + (Math.random() - 0.5) * 0.3));
+                        // 基础音量0.21（降低30%），随机变化±0.105，最终范围0.105-0.315
+                        const randomVolume = Math.max(0, Math.min(1, 0.21 + (Math.random() - 0.5) * 0.21));
                         sound.volume = randomVolume;
                         sound.play().catch(e => {
                             console.log('浪花音效播放失败:', e);
@@ -5834,6 +5877,8 @@
         
         // 游戏结束菜单选项
         let gameOverOption = 0; // 0 = 重新挑战, 1 = 重新配置
+        // 通关界面菜单选项
+        let victoryOption = 0; // 0 = 重新挑战, 1 = 配置战舰
         
         // 显示游戏结束画面
         function showGameOverScreen() {
@@ -7293,8 +7338,8 @@
                 }
             }
 
-            // 水雷 vs Boss（血条入场期间无敌，不掉血）
-            if (boss.active && boss.entryComplete && !boss.hpBarEntry.active) {
+            // 水雷 vs Boss（入场期间无敌，入场完成后可以被击中）
+            if (boss.active && boss.entryComplete) {
                 for (let mIndex = mines.length - 1; mIndex >= 0; mIndex--) {
                     const mine = mines[mIndex];
                     if (checkMineBossCollision(mine)) {
@@ -7683,16 +7728,75 @@
                 
                 // 游戏结束菜单导航
                 if (gameOver) {
-                    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                        // 上下键切换选项
-                        gameOverOption = gameOverOption === 0 ? 1 : 0;
-                        return;
-                    }
+                    // 检查是否是Boss被击败后的爆炸动画期间（还没显示通关界面）
+                    const victoryScreen = document.getElementById('victoryScreen');
+                    const isVictoryScreenActive = victoryScreen && victoryScreen.classList.contains('active');
+                    const gameOverScreen = document.getElementById('gameOverScreen');
+                    const isGameOverScreenActive = gameOverScreen && gameOverScreen.classList.contains('active');
+                    const leaderboardBubble = document.getElementById('leaderboardBubble');
+                    const isLeaderboardBubbleActive = leaderboardBubble && leaderboardBubble.classList.contains('active');
                     
-                    if (e.key === 'Enter') {
-                        handleGameOverAction();
-                        return;
+                    // 先检查是否是排行榜上传气泡显示中
+                    if (isLeaderboardBubbleActive) {
+                        // 排行榜上传气泡处理
+                        e.preventDefault(); // 阻止默认行为
+                        e.stopPropagation(); // 阻止事件冒泡
+                        
+                        if (e.key === 'Enter') {
+                            // 回车键触发上传
+                            playBtnClickSound();
+                            const playerNameInput = document.getElementById('playerNameInput');
+                            if (playerNameInput) {
+                                // 模拟点击上传按钮
+                                const uploadBtn = document.getElementById('btnUploadLeaderboard');
+                                if (uploadBtn) {
+                                    uploadBtn.click();
+                                }
+                            }
+                            return;
+                        }
+                    } else if (isVictoryScreenActive) {
+                        // 通关界面处理
+                        e.preventDefault(); // 阻止默认行为
+                        e.stopPropagation(); // 阻止事件冒泡
+                        
+                        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                            // 上下键切换选项
+                            victoryOption = victoryOption === 0 ? 1 : 0;
+                            return;
+                        }
+                        
+                        if (e.key === 'Enter') {
+                            // 处理通关界面选项
+                            if (victoryOption === 0) {
+                                // 重新挑战
+                                playBtnClickSound();
+                                hideVictoryScreen();
+                                resetGame();
+                            } else {
+                                // 配置战舰
+                                playBtnClickSound();
+                                transitionToSkillPanel('victory');
+                            }
+                            return;
+                        }
+                    } else if (isGameOverScreenActive) {
+                        // 游戏结束界面处理
+                        e.preventDefault(); // 阻止默认行为
+                        e.stopPropagation(); // 阻止事件冒泡
+                        
+                        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                            // 上下键切换选项
+                            gameOverOption = gameOverOption === 0 ? 1 : 0;
+                            return;
+                        }
+                        
+                        if (e.key === 'Enter') {
+                            handleGameOverAction();
+                            return;
+                        }
                     }
+                    // 如果没有任何界面显示，则不处理按键
                 }
                 
                 if (e.key === ' ' && mineAmmo > 0 && !gameOver && !gamePaused && hp > 0) {
@@ -8076,6 +8180,15 @@
         
         // 处理游戏结束选项
         function handleGameOverAction() {
+            // 先检查游戏结束界面是否真的显示
+            const gameOverScreen = document.getElementById('gameOverScreen');
+            const isGameOverScreenActive = gameOverScreen && gameOverScreen.classList.contains('active');
+            
+            if (!isGameOverScreenActive) {
+                // 如果游戏结束界面没有显示，则不执行任何操作
+                return;
+            }
+            
             if (gameOverOption === 0) {
                 // 重新挑战 - 重置选项并重新开始
                 hideGameOverScreen();
@@ -8188,8 +8301,8 @@
                 
                 submarines = [];
                 
-                // 对Boss造成伤害（如果Boss在场且血条入场完成）
-                if (boss.active && boss.entryComplete && !boss.hpBarEntry.active) {
+                // 对Boss造成伤害（如果Boss在场且入场完成）
+                if (boss.active && boss.entryComplete) {
                     boss.hp = Math.max(0, boss.hp - BOSS_DEFENSE.superWeaponDamage);
                     
                     // 启动血量动画
@@ -8223,6 +8336,32 @@
 
         // ==================== 启动游戏 ====================
         window.onload = initLoading;
+        
+        // ==================== BGM 自动播放 ====================
+        // 在用户第一次点击游戏页面时播放 BGM
+        function playBgmOnFirstInteraction() {
+            if (bgmHasStarted) return;
+            
+            setTimeout(() => {
+                try {
+                    if (assets.mainBgm && assets.mainBgm.src && assets.mainBgm.paused) {
+                        assets.mainBgm.currentTime = 0;
+                        assets.mainBgm.play().catch(e => {
+                            console.log('主游戏 BGM 播放失败:', e);
+                        });
+                        bgmHasStarted = true;
+                        console.log('BGM 已开始播放（用户首次交互）');
+                    }
+                } catch (e) {
+                    console.log('主游戏 BGM 播放异常:', e);
+                }
+            }, 0);
+        }
+        
+        // 添加全局点击事件监听
+        document.addEventListener('click', playBgmOnFirstInteraction, { once: true });
+        document.addEventListener('touchstart', playBgmOnFirstInteraction, { once: true });
+        document.addEventListener('keydown', playBgmOnFirstInteraction, { once: true });
     </script>
 </body>
 </html>
