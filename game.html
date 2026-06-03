@@ -1456,6 +1456,9 @@
             width: 188px;
             line-height: 29px;
             letter-spacing: -1.8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .leaderboardItemTime {
@@ -4476,16 +4479,51 @@
             localStorage.setItem('submarineWarLeaderboard', JSON.stringify(leaderboardData));
         }
         
+        // 显示错误提示弹窗
+        function showErrorToast(message) {
+            // 创建错误提示元素
+            let toast = document.getElementById('errorToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'errorToast';
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(0, 0, 0, 0.8);
+                    color: white;
+                    padding: 20px 40px;
+                    border-radius: 12px;
+                    font-size: 18px;
+                    z-index: 1000;
+                    text-align: center;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                    pointer-events: none;
+                `;
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.style.opacity = '1';
+            
+            // 2秒后自动隐藏
+            setTimeout(() => {
+                toast.style.opacity = '0';
+            }, 2000);
+        }
+        
         // 上传分数到排行榜（保存到 Supabase）
         async function uploadToLeaderboard(playerName) {
             if (!playerName || playerName.trim() === '') {
-                alert('请输入姓名！');
+                showErrorToast('请输入ID！');
                 return false;
             }
             
-            // 检查是否只包含英文
+            // 检查是否只包含英文和数字
             if (!/^[a-zA-Z0-9\s]+$/.test(playerName)) {
-                alert('只能输入英文字母和数字！');
+                showErrorToast('请输入英文ID');
                 return false;
             }
             
@@ -7739,8 +7777,16 @@
                     // 先检查是否是排行榜上传气泡显示中
                     if (isLeaderboardBubbleActive) {
                         // 排行榜上传气泡处理
-                        e.preventDefault(); // 阻止默认行为
-                        e.stopPropagation(); // 阻止事件冒泡
+                        // 允许输入相关的按键正常工作（字母、数字、删除键、方向键、快捷键等）
+                        const allowedKeys = ['Delete', 'Backspace', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'Tab', 'Shift', 'CapsLock'];
+                        const isInputKey = allowedKeys.includes(e.key) || 
+                                          (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) ||
+                                          /^[a-zA-Z0-9\s]$/.test(e.key); // 允许字母、数字和空格输入
+                        
+                        if (!isInputKey) {
+                            e.preventDefault(); // 阻止默认行为
+                            e.stopPropagation(); // 阻止事件冒泡
+                        }
                         
                         if (e.key === 'Enter') {
                             // 回车键触发上传
