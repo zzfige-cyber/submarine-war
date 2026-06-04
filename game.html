@@ -1452,8 +1452,8 @@
         }
         
         .leaderboardItemName {
-            margin-left: 150px;
-            width: 188px;
+            margin-left: 120px;
+            width: 380px;
             line-height: 29px;
             letter-spacing: -1.8px;
             white-space: nowrap;
@@ -1462,7 +1462,7 @@
         }
         
         .leaderboardItemTime {
-            margin-left: 249px;
+            margin-left: 180px;
             width: 164px;
             line-height: 29px;
             letter-spacing: 0;
@@ -1484,7 +1484,7 @@
         }
         
         .leaderboardItemCombo {
-            margin-left: 162px;
+            margin-left: 120px;
             width: 160px;
             line-height: 29px;
             letter-spacing: -1.8px;
@@ -2028,9 +2028,90 @@
         // MP满了音效播放标志
         let mpFullSoundPlayed = false;
         
-        // BGM是否已播放标志
-        let bgmHasStarted = false;
+        // ==================== BGM统一管理系统 ====================
+        let bgmHasStarted = false;  // 主BGM是否已启动（用于浏览器自动播放策略）
+        let currentBgmType = 'none';  // 当前BGM类型: 'main' | 'boss' | 'none'
+
+        // 统一播放主游戏BGM
+        function playMainBgm() {
+            try {
+                // 先停止Boss BGM（如果在播放）
+                if (assets.bossBgm && !assets.bossBgm.paused) {
+                    assets.bossBgm.pause();
+                    assets.bossBgm.currentTime = 0;
+                }
+                // 播放主BGM
+                if (assets.mainBgm && assets.mainBgm.src) {
+                    assets.mainBgm.currentTime = 0;
+                    assets.mainBgm.volume = 0.5;
+                    assets.mainBgm.loop = true;
+                    const playPromise = assets.mainBgm.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            currentBgmType = 'main';
+                            bgmHasStarted = true;
+                            console.log('主游戏BGM播放成功');
+                        }).catch(e => {
+                            console.log('主游戏BGM播放失败:', e);
+                        });
+                    } else {
+                        currentBgmType = 'main';
+                        bgmHasStarted = true;
+                    }
+                }
+            } catch (e) {
+                console.log('主游戏BGM播放异常:', e);
+            }
+        }
+
+        // 统一播放Boss BGM
+        function playBossBgm() {
+            try {
+                // 先停止主BGM（如果在播放）
+                if (assets.mainBgm && !assets.mainBgm.paused) {
+                    assets.mainBgm.pause();
+                    assets.mainBgm.currentTime = 0;
+                }
+                // 播放Boss BGM
+                if (assets.bossBgm && assets.bossBgm.src) {
+                    assets.bossBgm.currentTime = 0;
+                    assets.bossBgm.volume = 0.6;
+                    assets.bossBgm.loop = true;
+                    const playPromise = assets.bossBgm.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            currentBgmType = 'boss';
+                            console.log('Boss BGM播放成功');
+                        }).catch(e => {
+                            console.log('Boss BGM播放失败:', e);
+                        });
+                    } else {
+                        currentBgmType = 'boss';
+                    }
+                }
+            } catch (e) {
+                console.log('Boss BGM播放异常:', e);
+            }
+        }
+
+        // 停止所有BGM
+        function stopAllBgm() {
+            try {
+                if (assets.mainBgm && !assets.mainBgm.paused) {
+                    assets.mainBgm.pause();
+                    assets.mainBgm.currentTime = 0;
+                }
+                if (assets.bossBgm && !assets.bossBgm.paused) {
+                    assets.bossBgm.pause();
+                    assets.bossBgm.currentTime = 0;
+                }
+                currentBgmType = 'none';
+            } catch (e) {
+                console.log('BGM停止异常:', e);
+            }
+        }
         
+        // ==================== 场景速度过渡状态 ====================
         // 场景速度过渡状态
         let sceneSpeedTransition = {
             active: false,
@@ -2118,8 +2199,8 @@
             bossLaserSound: '音效/boss激光.WAV', // Boss激光发射音效
             explosionSound: '音效/爆炸.AAC', // 爆炸音效
             waterSplashSound: '音效/浪花声音.AAC', // 浪花音效
-            bossBgm: '音效/boss bgm.mp3', // Boss阶段BGM
-            mainBgm: '音效/潜艇大战bgm.mp3', // 主游戏BGM
+            bossBgm: '音效/BOSS出场BGM.mp3', // Boss阶段BGM
+            mainBgm: '音效/游戏主循环BGM.mp3', // 主游戏BGM
             btnClickSound: '音效/btn点击.AAC', // 按钮点击音效
             bossWarningSound: '音效/boss出场警告.AAC', // Boss出场警告音效
             diceSound: '音效/骰子音效.AAC', // 骰子音效
@@ -2686,54 +2767,18 @@
                 // 根据来源界面隐藏对应界面
                 if (fromScreen === 'pause') {
                     hidePauseScreen();
+                    // 暂停界面离开时，确保主BGM继续播放
+                    if (currentBgmType !== 'main') {
+                        playMainBgm();
+                    }
                 } else if (fromScreen === 'gameover') {
                     hideGameOverScreen();
                     // 从游戏结束界面离开时重新开始主BGM
-                    setTimeout(() => {
-                        try {
-                            if (assets.bossBgm) {
-                                assets.bossBgm.pause();
-                                assets.bossBgm.currentTime = 0;
-                            }
-                            // 先确保主BGM已暂停
-                            if (assets.mainBgm && !assets.mainBgm.paused) {
-                                assets.mainBgm.pause();
-                            }
-                            if (assets.mainBgm && assets.mainBgm.src) {
-                                assets.mainBgm.currentTime = 0;
-                                assets.mainBgm.play().catch(e => {
-                                    console.log('主游戏 BGM 播放失败:', e);
-                                });
-                                bgmHasStarted = true;
-                            }
-                        } catch (e) {
-                            console.log('BGM 切换异常:', e);
-                        }
-                    }, 0);
+                    playMainBgm();
                 } else if (fromScreen === 'victory') {
                     hideVictoryScreen();
                     // 从通关界面离开时停止Boss BGM，重新开始主BGM
-                    setTimeout(() => {
-                        try {
-                            if (assets.bossBgm) {
-                                assets.bossBgm.pause();
-                                assets.bossBgm.currentTime = 0;
-                            }
-                            // 先确保主BGM已暂停
-                            if (assets.mainBgm && !assets.mainBgm.paused) {
-                                assets.mainBgm.pause();
-                            }
-                            if (assets.mainBgm && assets.mainBgm.src) {
-                                assets.mainBgm.currentTime = 0;
-                                assets.mainBgm.play().catch(e => {
-                                    console.log('主游戏 BGM 播放失败:', e);
-                                });
-                                bgmHasStarted = true;
-                            }
-                        } catch (e) {
-                            console.log('BGM 切换异常:', e);
-                        }
-                    }, 0);
+                    playMainBgm();
                 }
                 
                 // 隐藏游戏画布和虚拟按钮
@@ -3006,9 +3051,9 @@
                 // 显示虚拟游戏按钮
                 updateVirtualControlsVisibility();
                 
-                // 确保 BGM 正在播放
-                if (!bgmHasStarted) {
-                    playBgmOnFirstInteraction();
+                // 确保 BGM 正在播放（用户点击开始游戏按钮后开始播放）
+                if (!bgmHasStarted || currentBgmType !== 'main') {
+                    playMainBgm();
                 }
                 
                 initGame();
@@ -3362,23 +3407,8 @@
             controlHintBubble.hasPlayerFired = false;
             
             // 停止所有BGM，然后重新开始主游戏BGM
-            setTimeout(() => {
-                try {
-                    if (assets.bossBgm) {
-                        assets.bossBgm.pause();
-                        assets.bossBgm.currentTime = 0;
-                    }
-                    if (assets.mainBgm && assets.mainBgm.src) {
-                        assets.mainBgm.currentTime = 0;
-                        assets.mainBgm.play().catch(e => {
-                            console.log('主游戏 BGM 播放失败:', e);
-                        });
-                        bgmHasStarted = true;
-                    }
-                } catch (e) {
-                    console.log('BGM 切换异常:', e);
-                }
-            }, 0);
+            bgmHasStarted = false;
+            playMainBgm();
             
             // 重新初始化游戏
             initGame();
@@ -3659,24 +3689,7 @@
             // Boss出场时不清除现有潜艇，让它们继续移动直到离开画面
             
             // 停止主游戏BGM，播放Boss BGM
-            setTimeout(() => {
-                try {
-                    // 先停止主游戏BGM
-                    if (assets.mainBgm) {
-                        assets.mainBgm.pause();
-                        assets.mainBgm.currentTime = 0;
-                    }
-                    // 播放Boss BGM
-                    if (assets.bossBgm && assets.bossBgm.src) {
-                        assets.bossBgm.currentTime = 0;
-                        assets.bossBgm.play().catch(e => {
-                            console.log('Boss BGM播放失败:', e);
-                        });
-                    }
-                } catch (e) {
-                    console.log('BGM切换异常:', e);
-                }
-            }, 0);
+            playBossBgm();
             
             console.log('Boss激活，开始入场');
         }
@@ -4162,17 +4175,17 @@
             }
             
             // 只停止主BGM，Boss BGM继续播放到通关界面
-            setTimeout(() => {
-                try {
-                    if (assets.mainBgm) {
-                        assets.mainBgm.pause();
-                        assets.mainBgm.currentTime = 0;
-                    }
-                    // Boss BGM不停止，在通关界面继续播放
-                } catch (e) {
-                    console.log('BGM停止异常:', e);
+            try {
+                if (assets.mainBgm && !assets.mainBgm.paused) {
+                    assets.mainBgm.pause();
+                    assets.mainBgm.currentTime = 0;
                 }
-            }, 0);
+                // Boss BGM不停止，在通关界面继续播放
+                // 记录当前是Boss BGM状态
+                currentBgmType = 'boss';
+            } catch (e) {
+                console.log('BGM停止异常:', e);
+            }
         }
 
         // 玩家死亡爆炸动画（参考Boss失败的爆炸动画）
@@ -4194,20 +4207,7 @@
             }
             
             // 停止所有BGM
-            setTimeout(() => {
-                try {
-                    if (assets.mainBgm) {
-                        assets.mainBgm.pause();
-                        assets.mainBgm.currentTime = 0;
-                    }
-                    if (assets.bossBgm) {
-                        assets.bossBgm.pause();
-                        assets.bossBgm.currentTime = 0;
-                    }
-                } catch (e) {
-                    console.log('BGM停止异常:', e);
-                }
-            }, 0);
+            stopAllBgm();
         }
 
         // 更新玩家死亡爆炸效果
@@ -8241,18 +8241,7 @@
                 gameOverOption = 0;
                 
                 // 确保主游戏 BGM 正在播放
-                setTimeout(() => {
-                    try {
-                        if (assets.mainBgm && assets.mainBgm.src && assets.mainBgm.paused) {
-                            assets.mainBgm.currentTime = 0;
-                            assets.mainBgm.play().catch(e => {
-                                console.log('主游戏 BGM 播放失败:', e);
-                            });
-                        }
-                    } catch (e) {
-                        console.log('主游戏 BGM 播放异常:', e);
-                    }
-                }, 0);
+                playMainBgm();
                 
                 initGame();
             } else {
@@ -8384,24 +8373,11 @@
         window.onload = initLoading;
         
         // ==================== BGM 自动播放 ====================
-        // 在用户第一次点击游戏页面时播放 BGM
+        // 在用户第一次点击游戏页面时播放 BGM（符合浏览器自动播放策略）
         function playBgmOnFirstInteraction() {
             if (bgmHasStarted) return;
-            
-            setTimeout(() => {
-                try {
-                    if (assets.mainBgm && assets.mainBgm.src && assets.mainBgm.paused) {
-                        assets.mainBgm.currentTime = 0;
-                        assets.mainBgm.play().catch(e => {
-                            console.log('主游戏 BGM 播放失败:', e);
-                        });
-                        bgmHasStarted = true;
-                        console.log('BGM 已开始播放（用户首次交互）');
-                    }
-                } catch (e) {
-                    console.log('主游戏 BGM 播放异常:', e);
-                }
-            }, 0);
+            // 使用统一的主BGM播放函数
+            playMainBgm();
         }
         
         // 添加全局点击事件监听
